@@ -1,0 +1,311 @@
+```astro
+---
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  category: string;
+}
+
+const { title, description, pubDate, category } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title} — The Marginalia</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="page">
+      <header>
+        <a class="brand" href="/">The <span>Marginalia</span></a>
+
+        <nav aria-label="Main navigation">
+          <a href="/#writing">Writing</a>
+          <a href="/#fiction">Fiction</a>
+          <a href="/#about">About</a>
+        </nav>
+      </header>
+
+      <main>
+        <a class="back" href="/#writing">← Back to writing</a>
+
+        <article>
+          <div class="category">{category}</div>
+
+          <h1>{title}</h1>
+
+          <p class="description">{description}</p>
+
+          <div class="metadata">
+            <time datetime={pubDate.toISOString()}>
+              {pubDate.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                timeZone: "UTC",
+              })}
+            </time>
+            <span>·</span>
+            <span>The Marginalia</span>
+          </div>
+
+          <div class="article-body">
+            <slot />
+          </div>
+
+          <div class="endmark">* * *</div>
+
+          <a class="back-bottom" href="/#writing">
+            Return to the journal ↑
+          </a>
+        </article>
+      </main>
+
+      <footer>
+        <a class="footer-brand" href="/">The Marginalia.</a>
+        <span>Written slowly, published occasionally.</span>
+        <span>© {new Date().getFullYear()}</span>
+      </footer>
+    </div>
+  </body>
+</html>
+
+<style>
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  :global(html) {
+    scroll-behavior: smooth;
+  }
+
+  :global(body) {
+    margin: 0;
+    background: #f8f6f0;
+    color: #24241f;
+    font-family: "DM Sans", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .page {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 54px;
+  }
+
+  header {
+    min-height: 86px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #dcd9d0;
+  }
+
+  .brand {
+    font-family: "Libre Baskerville", serif;
+    font-size: 22px;
+    letter-spacing: -1.1px;
+  }
+
+  .brand span {
+    color: #9c4935;
+  }
+
+  nav {
+    display: flex;
+    gap: 29px;
+    font-size: 12px;
+  }
+
+  nav a,
+  .back,
+  .back-bottom {
+    color: #69665e;
+  }
+
+  nav a:hover,
+  .back:hover,
+  .back-bottom:hover {
+    color: #9c4935;
+  }
+
+  main {
+    padding: 45px 0 100px;
+  }
+
+  .back {
+    font-size: 12px;
+  }
+
+  article {
+    max-width: 680px;
+    margin: 70px auto 0;
+  }
+
+  .category {
+    color: #9c4935;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 24px 0 20px;
+    font-family: "Libre Baskerville", serif;
+    font-size: clamp(36px, 5vw, 55px);
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -2px;
+  }
+
+  .description {
+    color: #69665e;
+    font-size: 15px;
+    line-height: 1.9;
+  }
+
+  .metadata {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 27px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #dcd9d0;
+    color: #777269;
+    font-size: 11px;
+  }
+
+  .article-body {
+    padding-top: 32px;
+    font-family: "Libre Baskerville", serif;
+    font-size: 16px;
+    line-height: 2.15;
+    overflow-wrap: anywhere;
+  }
+
+  .article-body :global(p) {
+    margin: 0 0 27px;
+  }
+
+  .article-body :global(h2) {
+    margin: 48px 0 20px;
+    font-size: 27px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .article-body :global(h3) {
+    margin: 36px 0 18px;
+    font-size: 21px;
+    font-weight: 400;
+  }
+
+  .article-body :global(blockquote) {
+    margin: 35px 0;
+    padding-left: 24px;
+    border-left: 2px solid #9c4935;
+    color: #69665e;
+    font-style: italic;
+  }
+
+  .article-body :global(a) {
+    color: #9c4935;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .article-body :global(img) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .endmark {
+    margin: 55px 0 30px;
+    color: #9c4935;
+    text-align: center;
+    letter-spacing: 7px;
+  }
+
+  .back-bottom {
+    display: block;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  footer {
+    min-height: 95px;
+    border-top: 1px solid #dcd9d0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    color: #777269;
+    font-size: 10px;
+  }
+
+  .footer-brand {
+    color: #24241f;
+    font-family: "Libre Baskerville", serif;
+    font-size: 16px;
+  }
+
+  @media (max-width: 650px) {
+    .page {
+      padding: 0 23px;
+    }
+
+    header {
+      min-height: 75px;
+    }
+
+    .brand {
+      font-size: 18px;
+    }
+
+    nav {
+      gap: 14px;
+      font-size: 10px;
+    }
+
+    main {
+      padding-top: 30px;
+    }
+
+    article {
+      margin-top: 55px;
+    }
+
+    h1 {
+      letter-spacing: -1.5px;
+    }
+
+    .article-body {
+      font-size: 15px;
+      line-height: 2;
+    }
+
+    footer {
+      flex-wrap: wrap;
+      padding: 25px 0;
+    }
+  }
+</style>
+```

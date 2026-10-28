@@ -1,11 +1,423 @@
+```astro
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import { getCollection } from "astro:content";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const essays = (await getCollection("posts"))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const base = import.meta.env.BASE_URL;
+const postUrl = (id: string) =>
+  `${base.replace(/\/$/, "")}/posts/${id}/`;
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Essays on philosophy, fiction, and the strange business of being alive."
+    />
+    <meta name="theme-color" content="#f8f6f0" />
+    <title>The Marginalia — Essays & Fiction</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :global(*) {
+        box-sizing: border-box;
+      }
+
+      :global(html) {
+        scroll-behavior: smooth;
+      }
+
+      :global(body) {
+        margin: 0;
+        background: #f8f6f0;
+        color: #24241f;
+        font-family: "DM Sans", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 54px;
+      }
+
+      header {
+        min-height: 86px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #dcd9d0;
+      }
+
+      .brand {
+        font-family: "Libre Baskerville", serif;
+        font-size: 22px;
+        letter-spacing: -1.1px;
+      }
+
+      .brand span {
+        color: #9c4935;
+      }
+
+      nav {
+        display: flex;
+        gap: 29px;
+        font-size: 12px;
+      }
+
+      nav a {
+        color: #625f57;
+        transition: color 0.2s;
+      }
+
+      nav a:hover {
+        color: #9c4935;
+      }
+
+      .intro {
+        padding: 102px 0 83px;
+        max-width: 790px;
+      }
+
+      .eyebrow {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2.5px;
+        color: #9c4935;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin: 25px 0 23px;
+        font-family: "Libre Baskerville", serif;
+        font-size: clamp(42px, 6.2vw, 72px);
+        line-height: 1.17;
+        font-weight: 400;
+        letter-spacing: -3.5px;
+      }
+
+      h1 em {
+        color: #9c4935;
+        font-weight: 400;
+      }
+
+      .intro-text {
+        max-width: 530px;
+        color: #69665e;
+        font-size: 15px;
+        line-height: 1.95;
+      }
+
+      .intro-link {
+        display: inline-block;
+        margin-top: 20px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #9c4935;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .section-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 22px 0;
+        border-top: 1px solid #24241f;
+      }
+
+      .section-heading h2 {
+        margin: 0;
+        font-family: "Libre Baskerville", serif;
+        font-size: 23px;
+        font-weight: 400;
+        letter-spacing: -0.8px;
+      }
+
+      .section-heading a {
+        color: #777269;
+        font-size: 11px;
+      }
+
+      .essay {
+        display: grid;
+        grid-template-columns: 125px 1fr 110px;
+        gap: 25px;
+        align-items: start;
+        padding: 31px 0;
+        border-top: 1px solid #dedbd2;
+        transition: padding 0.2s;
+      }
+
+      .essay:hover {
+        padding-left: 6px;
+      }
+
+      .category {
+        padding-top: 8px;
+        color: #9c4935;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+      }
+
+      .essay h3 {
+        margin-bottom: 11px;
+        font-family: "Libre Baskerville", serif;
+        font-size: 22px;
+        font-weight: 400;
+        line-height: 1.5;
+        letter-spacing: -0.6px;
+      }
+
+      .essay h3 a:hover {
+        color: #9c4935;
+      }
+
+      .essay p {
+        max-width: 500px;
+        margin-bottom: 0;
+        color: #777269;
+        font-size: 12px;
+        line-height: 1.9;
+      }
+
+      .date {
+        padding-top: 8px;
+        color: #777269;
+        font-size: 10px;
+        text-align: right;
+      }
+
+      .empty {
+        padding: 35px 0;
+        border-top: 1px solid #dedbd2;
+        color: #777269;
+        font-size: 13px;
+        line-height: 1.8;
+      }
+
+      .note {
+        margin: 73px 0 85px;
+        padding: 35px 0;
+        border-top: 1px solid #dcd9d0;
+        border-bottom: 1px solid #dcd9d0;
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+        align-items: center;
+      }
+
+      .note h2 {
+        max-width: 470px;
+        margin: 0;
+        font-family: "Libre Baskerville", serif;
+        font-size: 25px;
+        font-weight: 400;
+        line-height: 1.6;
+      }
+
+      .note p {
+        max-width: 280px;
+        margin: 0;
+        color: #777269;
+        font-size: 12px;
+        line-height: 1.9;
+      }
+
+      footer {
+        min-height: 95px;
+        border-top: 1px solid #dcd9d0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #777269;
+        font-size: 10px;
+      }
+
+      footer .brand {
+        color: #24241f;
+        font-size: 16px;
+      }
+
+      @media (max-width: 650px) {
+        .page {
+          padding: 0 23px;
+        }
+
+        header {
+          min-height: 75px;
+        }
+
+        .brand {
+          font-size: 18px;
+        }
+
+        nav {
+          gap: 14px;
+          font-size: 10px;
+        }
+
+        .intro {
+          padding: 75px 0 65px;
+        }
+
+        h1 {
+          letter-spacing: -2px;
+        }
+
+        .essay {
+          grid-template-columns: 1fr auto;
+          gap: 12px;
+          padding: 25px 0;
+        }
+
+        .category {
+          grid-column: 1 / -1;
+          padding-top: 0;
+        }
+
+        .essay h3 {
+          font-size: 19px;
+        }
+
+        .essay p {
+          font-size: 11px;
+        }
+
+        .date {
+          font-size: 9px;
+        }
+
+        .note {
+          align-items: flex-start;
+          flex-direction: column;
+          margin: 55px 0 65px;
+        }
+
+        .note h2 {
+          font-size: 22px;
+        }
+
+        footer {
+          gap: 12px;
+          flex-wrap: wrap;
+          padding: 20px 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page">
+      <header>
+        <a class="brand" href={base}>The <span>Marginalia</span></a>
+
+        <nav aria-label="Main navigation">
+          <a href="#writing">Writing</a>
+          <a href="#fiction">Fiction</a>
+          <a href="#about">About</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="intro">
+          <div class="eyebrow">A journal of ideas & imagination</div>
+
+          <h1>
+            Thoughts at<br />
+            the <em>edges</em> of things.
+          </h1>
+
+          <p class="intro-text">
+            A small corner of the internet for essays on philosophy, stories
+            about being human, and reflections on the things we rarely stop
+            to question.
+          </p>
+
+          <a class="intro-link" href="#writing">
+            Explore the writing &nbsp; ↗
+          </a>
+        </section>
+
+        <section id="writing">
+          <div class="section-heading">
+            <h2>Recent writing</h2>
+            <a href="#writing">An archive of ideas &nbsp; ↗</a>
+          </div>
+
+          {essays.length > 0 ? (
+            essays.map((essay) => (
+              <article class="essay">
+                <div class="category">
+                  {essay.data.category.toUpperCase()}
+                </div>
+
+                <div>
+                  <h3>
+                    <a href={postUrl(essay.id)}>{essay.data.title}</a>
+                  </h3>
+                  <p>{essay.data.description}</p>
+                </div>
+
+                <time
+                  class="date"
+                  datetime={essay.data.pubDate.toISOString()}
+                >
+                  {essay.data.pubDate.toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    timeZone: "UTC",
+                  })}
+                </time>
+              </article>
+            ))
+          ) : (
+            <p class="empty">
+              The page is still being written. Check back soon.
+            </p>
+          )}
+        </section>
+
+        <section class="note" id="about">
+          <h2>“The unexamined life is not worth living.”</h2>
+
+          <p>
+            Notes from an ongoing attempt to understand the world, question
+            its assumptions, and make something of the time we have in it.
+          </p>
+        </section>
+      </main>
+
+      <footer>
+        <a class="brand" href={base}>The Marginalia.</a>
+        <span>Written slowly, published occasionally.</span>
+        <span>© 2026</span>
+      </footer>
+    </div>
+  </body>
+</html>
+```
