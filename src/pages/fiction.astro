@@ -1,0 +1,572 @@
+---
+import { getCollection } from "astro:content";
+
+const base = import.meta.env.BASE_URL;
+
+const fictionPosts = (await getCollection("posts"))
+  .filter((post) => !post.data.draft && post.data.title === "The Experiment")
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+
+const postUrl = (id: string) =>
+  `${base.replace(/\/$/, "")}/posts/${id.replace(/\.md$/, "")}/`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Fiction from The Marginalia: imagined worlds, difficult questions, and stories that linger."
+    />
+    <meta name="theme-color" content="#f8f5ed" />
+
+    <title>Fiction — The Marginalia</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="page">
+      <div class="topline">
+        <span>INDEPENDENT JOURNAL</span>
+        <span class="topline-center">Essays, fiction &amp; reflections</span>
+        <span>EST. 2025</span>
+      </div>
+
+      <header>
+        <a class="brand" href={base}>
+          The <em>Marginalia</em>
+        </a>
+
+        <nav aria-label="Main navigation">
+          <a href={`${base}#writing`}>Writing</a>
+          <a class="active" href={`${base}fiction/`}>Fiction</a>
+          <a href={`${base}about/`}>About</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="intro">
+          <p class="eyebrow">THE FICTION ARCHIVE</p>
+
+          <h1>Worlds imagined.<br /><em>Questions left open.</em></h1>
+
+          <p class="intro-text">
+            Fiction gives us another way of approaching the questions that
+            resist easy answers. Through imagined lives and circumstances, we
+            can examine familiar ideas from unfamiliar places.
+          </p>
+
+          <p class="intro-note">
+            Stories from The Marginalia, written slowly and published
+            occasionally.
+          </p>
+        </section>
+
+        <section class="archive" aria-labelledby="archive-heading">
+          <div class="archive-heading">
+            <h2 id="archive-heading">The collection</h2>
+            <span>
+              {fictionPosts.length.toString().padStart(2, "0")}
+              {fictionPosts.length === 1 ? " STORY" : " STORIES"}
+            </span>
+          </div>
+
+          {
+            fictionPosts.length > 0 ? (
+              <div class="story-list">
+                {fictionPosts.map((post, index) => (
+                  <article class="story">
+                    <div class="story-number">
+                      {(index + 1).toString().padStart(2, "0")}
+                    </div>
+
+                    <div class="story-content">
+                      <div class="story-meta">
+                        <span>SHORT FICTION</span>
+                        <span class="separator">·</span>
+                        <time datetime={post.data.pubDate.toISOString()}>
+                          {formatDate(post.data.pubDate)}
+                        </time>
+                      </div>
+
+                      <h3>
+                        <a href={postUrl(post.id)}>{post.data.title}</a>
+                      </h3>
+
+                      <p class="story-description">
+                        {post.data.description}
+                      </p>
+
+                      <a class="read-link" href={postUrl(post.id)}>
+                        Read the story <span aria-hidden="true">↗</span>
+                      </a>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div class="empty-state">
+                <p class="empty-mark">* * *</p>
+                <h3>A story is yet to find its place.</h3>
+                <p>
+                  There are no published fiction pieces here just yet. In the
+                  meantime, explore the journal's essays and reflections.
+                </p>
+                <a class="read-link" href={`${base}#writing`}>
+                  Explore the essays <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            )
+          }
+        </section>
+
+        <section class="closing">
+          <p class="eyebrow">ELSEWHERE IN THE JOURNAL</p>
+          <p>
+            Interested in the ideas behind the stories? Explore essays on
+            philosophy, ethics, and the questions that shape how we live.
+          </p>
+          <a class="return-link" href={`${base}#writing`}>
+            Browse all writing <span aria-hidden="true">↗</span>
+          </a>
+        </section>
+      </main>
+
+      <footer>
+        <a class="footer-brand" href={base}>
+          The <em>Marginalia.</em>
+        </a>
+        <span>Written slowly, published occasionally.</span>
+        <span>© {new Date().getFullYear()} Hemang Jindal</span>
+      </footer>
+    </div>
+  </body>
+</html>
+
+<style>
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  :global(html) {
+    scroll-behavior: smooth;
+  }
+
+  :global(body) {
+    margin: 0;
+    background: #f8f5ed;
+    color: #24221f;
+    font-family: "DM Sans", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .page {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 54px;
+  }
+
+  .topline {
+    min-height: 29px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    border-bottom: 1px dashed #bdb7aa;
+    color: #81786c;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .topline-center {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 10px;
+    font-style: italic;
+    letter-spacing: 0;
+    text-align: center;
+    text-transform: none;
+  }
+
+  .topline > :last-child {
+    text-align: right;
+  }
+
+  header {
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px dashed #bdb7aa;
+  }
+
+  .brand {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 22px;
+    letter-spacing: -1.1px;
+    white-space: nowrap;
+  }
+
+  .brand em,
+  .footer-brand em {
+    color: #a64d36;
+    font-weight: 400;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    font-size: 10px;
+  }
+
+  nav a {
+    color: #625b51;
+    transition: color 180ms ease;
+  }
+
+  nav a:hover,
+  nav a.active {
+    color: #a64d36;
+  }
+
+  main {
+    padding: 65px 0 80px;
+  }
+
+  .intro {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 20px 0 55px;
+    border-bottom: 1px solid #dcd6ca;
+  }
+
+  .eyebrow {
+    margin: 0 0 22px;
+    color: #a64d36;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(37px, 5.5vw, 61px);
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: -2.5px;
+  }
+
+  h1 em {
+    color: #a64d36;
+    font-weight: 400;
+  }
+
+  .intro-text {
+    max-width: 650px;
+    margin: 26px 0 0;
+    color: #5f594f;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 15px;
+    line-height: 2;
+  }
+
+  .intro-note {
+    margin: 20px 0 0;
+    color: #81786c;
+    font-size: 10px;
+    line-height: 1.8;
+  }
+
+  .archive {
+    max-width: 850px;
+    margin: 55px auto 0;
+  }
+
+  .archive-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 17px;
+    border-bottom: 1px solid #4d473e;
+  }
+
+  .archive-heading h2 {
+    margin: 0;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 23px;
+    font-weight: 400;
+    letter-spacing: -0.7px;
+  }
+
+  .archive-heading > span {
+    color: #81786c;
+    font-size: 9px;
+    letter-spacing: 1.3px;
+  }
+
+  .story {
+    display: grid;
+    grid-template-columns: 50px minmax(0, 1fr);
+    gap: 20px;
+    padding: 35px 0 39px;
+    border-bottom: 1px solid #dcd6ca;
+  }
+
+  .story-number {
+    padding-top: 3px;
+    color: #a64d36;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 15px;
+    font-style: italic;
+  }
+
+  .story-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: #81786c;
+    font-size: 9px;
+    letter-spacing: 0.6px;
+  }
+
+  .story-meta > span:first-child {
+    color: #a64d36;
+    letter-spacing: 1.4px;
+  }
+
+  .separator {
+    color: #a64d36;
+  }
+
+  .story h3 {
+    margin: 17px 0 13px;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(25px, 4vw, 34px);
+    font-weight: 400;
+    line-height: 1.45;
+    letter-spacing: -1px;
+  }
+
+  .story h3 a {
+    transition: color 180ms ease;
+  }
+
+  .story h3 a:hover {
+    color: #a64d36;
+  }
+
+  .story-description {
+    max-width: 650px;
+    margin: 0;
+    color: #625b51;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 13px;
+    line-height: 2;
+  }
+
+  .read-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 22px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #a64d36;
+    color: #a64d36;
+    font-size: 10px;
+    transition: color 180ms ease;
+  }
+
+  .read-link:hover {
+    color: #24221f;
+  }
+
+  .empty-state {
+    padding: 65px 20px;
+    text-align: center;
+  }
+
+  .empty-mark {
+    color: #a64d36;
+    letter-spacing: 7px;
+  }
+
+  .empty-state h3 {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 25px;
+    font-weight: 400;
+  }
+
+  .empty-state > p:not(.empty-mark) {
+    max-width: 450px;
+    margin: 0 auto;
+    color: #625b51;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 13px;
+    line-height: 2;
+  }
+
+  .closing {
+    max-width: 740px;
+    margin: 65px auto 0;
+    padding-top: 30px;
+    border-top: 1px solid #dcd6ca;
+  }
+
+  .closing > p:not(.eyebrow) {
+    max-width: 650px;
+    color: #625b51;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 14px;
+    line-height: 2;
+  }
+
+  .return-link {
+    display: inline-flex;
+    gap: 12px;
+    margin-top: 10px;
+    color: #a64d36;
+    font-size: 10px;
+  }
+
+  footer {
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    border-top: 1px solid #dcd6ca;
+    color: #81786c;
+    font-size: 9px;
+  }
+
+  .footer-brand {
+    color: #24221f;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 16px;
+    letter-spacing: -0.4px;
+  }
+
+  @media (max-width: 800px) {
+    .page {
+      padding: 0 30px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .page {
+      padding: 0 21px;
+    }
+
+    .topline {
+      min-height: 27px;
+      font-size: 7px;
+      letter-spacing: 0.8px;
+    }
+
+    .topline-center {
+      font-size: 8px;
+    }
+
+    header {
+      min-height: 69px;
+      gap: 12px;
+    }
+
+    .brand {
+      font-size: 17px;
+      letter-spacing: -0.8px;
+    }
+
+    nav {
+      gap: 12px;
+      font-size: 9px;
+    }
+
+    main {
+      padding: 42px 0 55px;
+    }
+
+    .intro {
+      padding-bottom: 38px;
+    }
+
+    h1 {
+      font-size: clamp(33px, 8.5vw, 46px);
+      line-height: 1.35;
+      letter-spacing: -1.6px;
+    }
+
+    .intro-text {
+      font-size: 13px;
+    }
+
+    .archive {
+      margin-top: 40px;
+    }
+
+    .archive-heading h2 {
+      font-size: 20px;
+    }
+
+    .story {
+      grid-template-columns: 25px minmax(0, 1fr);
+      gap: 12px;
+      padding: 28px 0;
+    }
+
+    .story h3 {
+      font-size: 25px;
+    }
+
+    .story-description {
+      font-size: 12px;
+    }
+
+    .closing {
+      margin-top: 45px;
+    }
+
+    footer {
+      flex-wrap: wrap;
+      padding: 20px 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html) {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
