@@ -1,3 +1,4 @@
+# Deploy The Marginalia through GitHub Pages
 name: Deploy The Marginalia
 
 on:
