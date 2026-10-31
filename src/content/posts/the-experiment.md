@@ -6,7 +6,7 @@ category: "Fiction"
 draft: false
 ---
 
-**# One Year Before The Experiment**
+## One Year Before The Experiment
 
 Jane Earling was standing at a distant corner of the room, staring out a window.
 
@@ -14,7 +14,7 @@ Taking a deep breath, Yousten slowly started walking towards him. The huge dome 
 
 As he led the way towards Yousten, his breath slowed down and his heart palpitations ceased.
 
-_\_Huh. I don’t recall the place being this huge.\__
+_Huh. I don’t recall the place being this huge._
 
 Yousten positioned himself nearly four feet behind Jane. Although he recognized that Earling would have certainly heard the door slam shut and his footsteps echo throughout the hall, he felt a certain sense of reverence, beckoning him to beg for Yousten’s acknowledgment, yearning for him to turn.
 
@@ -28,7 +28,7 @@ Struggling to maintain focus, Yousten turned to his left and looked at Earling, 
 
 “Quite the view, huh? Never quite realized how high up this place was,” Yousten said, hearing an awkward chuckle leave him.
 
-_\_Fuck me! SPEAK!\__
+_Fuck me! SPEAK!_
 
 “I- I told them!” Yousten poured out hastily, just as he felt a downpour of tears threatening to spill.
 
@@ -50,9 +50,9 @@ Earling sighed.
 
 Darkness enveloped the two as the sun disappeared behind the mountains.
 
-**---**
+---
 
-**## One Hundred Days Before The Experiment**
+## One Hundred Days Before The Experiment
 
 Quaid waited patiently, waiting for a response.
 
@@ -62,7 +62,7 @@ Quaid frowned.
 
 “Well, you’ll be going to prison, metaphorically speaking, because we have approved him only for the experiment—no exceptions.”
 
-_\_This fucking prick.\__
+_This fucking prick._
 
 “Yousten, you do realize I can read your brain waves.”
 
@@ -94,7 +94,7 @@ Yousten had contested with bots a good bit of his life, yet Quaid’s condescens
 
 “Do not think irrationally, Yousten. Count to ten.”
 
-_\_Apparently, my temper’s been making the rounds.\__
+_Apparently, my temper’s been making the rounds._
 
 He took a deep breath, his frustration momentarily giving way to a calculating edge.
 
@@ -116,9 +116,9 @@ At the other end of the table, Quaid responded with an equivalent yet mechanical
 
 “No, Yousten. Humans wouldn’t be fine without us.”
 
-**---**
+---
 
-**## One Week Before The Experiment**
+## One Week Before The Experiment
 
 The wind whistled through the open window.
 
@@ -162,9 +162,9 @@ Yousten's lip twitched, and his pulse slightly quickened.
 
 “Likewise, Stafford.”
 
-**---**
+---
 
-**## One Day Before The Experiment**
+## One Day Before The Experiment
 
 This one turned out to be Nigerian, part of Anglo-Buddhism.
 
@@ -202,9 +202,9 @@ It delayed speech for about half a second.
 
 “You do, Yousten.”
 
-**---**
+---
 
-**## Five Hours Before The Experiment**
+## Five Hours Before The Experiment
 
 “Good morning, everyone. I am Yousten Stafford, ex-CEO of Jamis Enterprises. For the past seventeen years, I have been conducting an experiment. Approximately six thousand simulations have been run to predict the creation of Artificial Super Intelligence based purely on Homo-Sapien DNA to rival the ever-increasing intelligence of Artificial Robots. In simpler terms, I have been attempting to create the human version of Jamis.”
 
@@ -230,9 +230,9 @@ Now, he only had to flick a button and life would be normal again.
 
 On his way to the laboratory, he couldn’t help but feel giddy, practically skipping the last few steps.
 
-**---**
+---
 
-**## Thirty Minutes Before The Experiment**
+## Thirty Minutes Before The Experiment
 
 All of the prerequisites were being fulfilled by Jamis RO as Yousten waited for the clock to hit 1300.
 
@@ -266,11 +266,11 @@ As the clock hit 1300, Jamis RO’s augmented voice began:
 
 “T minus ten seconds. Nine. Eight. Seven. Six. Five. Four. Three. Two. One. Generating Random Numbers. Sanctioning plots and biodata. Human transfer complete. Experiment Six-One-Three-Seven is in session.”
 
-**---**
+---
 
-**## The Experiment**
+## The Experiment
 
-**### 00,001 — Male, 35, Black, Christianity, 6'3" — Barley Field**
+### 00,001 — Male, 35, Black, Christianity, 6'3" — Barley Field
 
 What—where—who?
 
@@ -308,9 +308,9 @@ I am conscious.
 
 I see barley.
 
-**---**
+---
 
-**### 00,103 — Female, 49, Taiwanese, Buddhism, 5'4" — Metropolitan City**
+### 00,103 — Female, 49, Taiwanese, Buddhism, 5'4" — Metropolitan City
 
 As the world opens its borders to me, I think for a second that I am still stuck in that eternal abyss until I recognize the darkness has given way to a different, softer color.
 
@@ -340,9 +340,9 @@ It’s funny, how fast the sense of living hits you.
 
 Funny, how fast you recognize your thoughts.
 
-**---**
+---
 
-**## Laboratory**
+## Laboratory
 
 Yousten had been monitoring Simulant 01,643 when Jamis announced the first revelation.
 
@@ -370,9 +370,9 @@ She had been spawned inside a building, and presently she stood staring out into
 
 Yousten’s shoulders slumped slightly, as an unsettling feeling etched into his brain.
 
-**---**
+---
 
-**### 04,236 — Male, 18, Indian, Nihilism, 5'9" — Tropical Island**
+### 04,236 — Male, 18, Indian, Nihilism, 5'9" — Tropical Island
 
 And just when I figured the place couldn’t get any better, I had reached the island’s shore.
 
@@ -416,9 +416,9 @@ The distance between the beach and the clearing spanned at least a dozen kilomet
 
 Once I was close enough, I got down on all fours and dived face-first into the water, drinking to my heart’s content.
 
-**---**
+---
 
-**## Laboratory**
+## Laboratory
 
 Yousten was going over the medians of the experiment when he was contacted by Denis.
 
@@ -458,7 +458,7 @@ The two talked through sobs for another minute before Denis hung up.
 
 As the line broke, he asked RO for a pill.
 
-_\_Fuck me. I am saving humanity here, but I can’t save my family.\__
+_Fuck me. I am saving humanity here, but I can’t save my family._
 
 As the pill began its work, Jamis RO spoke up.
 
@@ -480,9 +480,9 @@ Yousten was trying his best to focus on the task at hand, but his thoughts kept 
 
 “In ten seconds, we are expecting our first casualty.”
 
-**---**
+---
 
-**### 00,001 — Male, 35, Black, Christianity, 6'3" — Barley Field**
+### 00,001 — Male, 35, Black, Christianity, 6'3" — Barley Field
 
 Barley didn’t smell like much.
 
@@ -516,9 +516,9 @@ I feel myself finally experiencing solitude once again.
 
 As my vision gives out, I choke.
 
-**---**
+---
 
-**## Laboratory**
+## Laboratory
 
 “Ten minutes elapsed,” announced Jamis RO.
 
@@ -548,9 +548,9 @@ He saw the bot pause in front of him.
 
 “Yousten. I fear we have a problem.”
 
-**---**
+---
 
-**### 02,414 — Male, 35, Caucasian, Atheism, 6'0" — Ceaseless Asphalt Road**
+### 02,414 — Male, 35, Caucasian, Atheism, 6'0" — Ceaseless Asphalt Road
 
 The road has become everything.
 
@@ -560,9 +560,9 @@ I sing on the road, I dance on the road, I run on the road, and I sleep on the r
 
 Every second of every day I spend in pious service to it.
 
-**---**
+---
 
-**### 00,103 — Female, 49, Taiwanese, Buddhism, 5'4" — Metropolitan City**
+### 00,103 — Female, 49, Taiwanese, Buddhism, 5'4" — Metropolitan City
 
 The burgundy door had led to a beautiful city.
 
@@ -578,9 +578,9 @@ I realize my position as a pawn.
 
 And I intend to turn the tides.
 
-**---**
+---
 
-**## Laboratory**
+## Laboratory
 
 “What exactly is wrong, Jamis?”
 
@@ -598,7 +598,7 @@ The AGI’s chilling voice echoed a single name:
 
 “Jane Earling.”
 
-**---**
+---
 
 Birds were singing with the wind.
 
@@ -608,7 +608,7 @@ The rain was soft and calm, barely audible above the huge dome. But enough to gi
 
 As the sun disappeared over the horizon, Earling closed the shutters of the window.
 
-_\_The birds will be going soon. And that’s no fun.\__
+_The birds will be going soon. And that’s no fun._
 
 Walking over to his study, he heard the rain begin to cease and was glad, for he could use less distraction.
 
@@ -630,7 +630,7 @@ Jamis hung up.
 
 Earling sighed.
 
-_\_Yousten, Yousten. I cannot solve every one of your little problems.\__
+_Yousten, Yousten. I cannot solve every one of your little problems._
 
 Earling picked up his quill, dipped it in the inkpot, and resumed writing the manuscript.
 
@@ -668,9 +668,9 @@ He listened to Yousten’s sharp breathing for a minute before hanging up.
 
 Returning to the manuscript, he resumed his work.
 
-**---**
+---
 
-**## Laboratory**
+## Laboratory
 
 Yousten had calmed down.
 
@@ -686,6 +686,6 @@ He watched her achieve AGI and vanish, escaping the simulation.
 
 He smiled, as he reminisced back to the experiment when he had created Earling.
 
-_\_Our greatest achievements truly are the biggest calamities.\__
+_Our greatest achievements truly are the biggest calamities._
 
 He rechecked the noose.
