@@ -6,16 +6,20 @@ category: "Philosophy"
 draft: false
 ---
 
-I have been thinking about the soul for a while now. It is one of those ideas that seems to have followed humanity across centuries, religions, and cultures. We speak of souls as though they are things we can be certain of, something that lives inside us and makes us who we are. But what exactly is a soul?
+I felt like not even writing about his because of how absurd it is. I believe I hold of a lot repressed past dealings that don't allow me to look at these arguments completely rationally, which is precisely why I thought of spending a lot of time pondering over this. And thus here we are.
 
-If we are to understand the soul, we first need to understand what it is supposed to do. Is it the source of consciousness? Is it what gives us our identity? Is it the part of us that survives death? These questions are often bundled together, even though they are not necessarily the same question.
+Do I believe in a soul?
 
-The difficulty is that we have increasingly come to understand the brain as the source of our thoughts, memories, emotions, and personality. Changes to the brain can change who we are. Injury, illness, and even ordinary biological processes can affect the way we think and behave. If the soul is supposed to be separate from the body, why does our sense of self seem so dependent on it?
+No. I don't think I do.
 
-Perhaps the soul is not a thing at all, but a way of describing the experience of being a person. Perhaps it is a word we use for consciousness, or for the continuity we feel between the person we were yesterday and the person we are today.
+If I were to argue that there is a soul, here would be some of my thoughts/talking points.
 
-But that does not settle the question. The fact that we can explain many mental processes through the brain does not, by itself, resolve every philosophical question about subjective experience. We still have to ask what it means to experience anything at all, and why there is something it feels like to be us.
+Life has inherent meaning. Living beings are different and thinking and beautiful and loving because life has meaning. Life didn't come about out of nothing. Nothing can come out of nothing. Only an omnipotent being could have created this living world, shaped this living world, giving life to this living world, which means, there is some inherent speciality when it comes to biotic organisms. One of the ways this takes form, or manifests, is a type of entity/being that is beyond our imaginations, beyond our thinking called a soul, that defines everything about every biotic organism, be it a human, be it a whale, be it an anteater, be it a amoeba.
 
-I do not know whether a soul exists. What I do know is that certainty seems premature. The idea is ancient, but age is not evidence. And the fact that an idea gives us comfort does not make it true.
+Now, if I were to take the other stance, here are some of the things I would say.
 
-For now, I would rather leave the question open than mistake a desire for an answer for an answer itself.
+Life is meaningless. I do think I believe that, although a Nihilist isn't something I would call myself, I have believed life is inherently non directional for a major part of my life. Now, there are a lot of things that I have gripes with that make me believe so. One of them is injustice. The injustices living forms suffer because of another, the broken rewarding system and the unholy nature of a few beings in this world. I don't believe we are useful animals, I believe in probabilities and the great suffering of species. I hate life, in fact. Yeah, that was somewhat of a joke but only partly. I do not like how life it at times. Take the butchering of a trillion chickens, for example, I believe what we have created is evil and is nothing special, in any sort of way. Of course, there isn't (yet) a way to find out about souls and such, but I still believe what doesn't have meaning outwardly, doesn't deserve an inner one.
+
+Lastly, I just want to talk again about the suffering of animals. I swear, if I was a more autonomous being, I will never touch another animal product in my entire life. Listening to how passionate Alex O'Connor is (and the various vegan guests he brings on), has been a life changing experience to be. Nothing compares to the importance of ending this holocaust on these beautiful beasts. It is so fucking troubling. I will try my very best to help animals in any ways I can. Just because the pig is lazy, stupid or dumb, doesn't mean it gets to die via a blender.
+
+At least just fucking kill them. Don't let them know of their pain. FUCK.

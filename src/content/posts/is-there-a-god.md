@@ -6,18 +6,20 @@ category: "Philosophy"
 draft: false
 ---
 
-The question of God is one of the oldest questions humanity has asked. It is also one of the most consequential. For some, God is the foundation of morality, the creator of the universe, and the source of meaning. For others, the idea is an explanation that humanity has outgrown.
+I stopped around a hundred and fifty pages in The God Delusion because of the shift in topic. In the first few chapters, Dawkins breaks down the God hypothesis and confronts the various arguments for God's existence. That's all I was here for; I didn't really want to bother much with the morals of religion and what not he goes into further in the book.
 
-I find it difficult to accept a claim simply because it has been repeated for centuries. A belief can be deeply meaningful, widely shared, and central to a person's identity without being true. We must be willing to ask what reasons we have for believing it.
+Other than that, though, it was a good read. Surprisingly wasn't anything extraordinary. As a kid, The Selfish Gene was an eye-opener. But yeah, Dawkins does a great job at tackling all the arguments, destroying each and every one of the popular ones quite easily honestly. I'll be honest if I didn't think that his school of thought wasn't in the right about this either. Perhaps the only way to prove the existence of God is not through the scientific way, but rather through faith's dimension.
 
-The universe exists. We are here to observe it, to question it, and to wonder why there is something rather than nothing. But does the existence of the universe require a creator? Even if we were to accept that the universe has a cause, it would not automatically follow that this cause is a personal God, that it has intentions, or that it resembles the deity described by any particular religion.
+I was having a conversation with my mother about God; I made her aware of my views, while she said that she believed. She couldn't possibly prove it. She wasn't too privy with how evolution worked exactly, but that wouldn't have mattered for her. She held her belief out of faith. I couldn't think of a retort and after a few seconds decided against it. When you don't even invoke probabilities, when your belief system doesn’t even stem from a rationalists’ perspective, I don't know what to say or think. I don't know. You believe, I suppose.
 
-The problem of suffering is another difficult question. If God is all-powerful, all-knowing, and perfectly good, why is the world filled with so much apparently needless suffering? There are responses to this problem, but the existence of responses does not mean the problem disappears.
+But there is no god.
 
-Of course, the absence of a convincing argument for God is not the same as a proof that no God exists. There may be things we do not know. There may be explanations we have not yet discovered. Intellectual honesty requires that we distinguish what we can establish from what we merely suspect.
+If I hadn't been clearer in my views, I am an atheist. I would have considered myself an agnostic just a few weeks ago (I guess that's the Richard effect, although I think Thomas Aquinas would have convinced me similarly) but now I truly don't believe in a god. Especially since finishing up [[Why We Love Dogs, Eat Pigs, and Wear Cows]] yesterday.
 
-I do not think belief should be a matter of comfort alone, nor should disbelief be treated as an automatic sign of intelligence. Both require us to examine our assumptions and to be honest about the limits of our knowledge.
+But I would still like to ponder on this pivotal question. Is there a God?
 
-Perhaps the most reasonable position is not to pretend that we have settled the matter. We can ask, investigate, disagree, and remain uncertain without treating uncertainty as a failure.
+The universe is small and vast. It's utterly beautiful. We have smart insects, we have crashing meteors, we have gas giants, and we have black holes. What is life if not meaningless in all meaningful ways? Life is and isn't. God is and isn't.
 
-The question remains: is there a God? I do not have an answer that I can honestly call conclusive. But I believe the question deserves better than inherited certainty.
+I agree, faith isn’t mindless chatter. It’s home. It’s warmth. It’s beautiful. But I’ll let Richard invoke a separate system of belief within you:
+
+"The feeling of awed wonder that science can give us is one of the highest experiences of which the human psyche is capable. It is a deep aesthetic passion to rank with the finest that music and poetry can deliver." - Richard Dawkins

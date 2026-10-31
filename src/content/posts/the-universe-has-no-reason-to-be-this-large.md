@@ -1,24 +1,19 @@
----  
+---
 title: The Universe Has No Reason to Be This Large
 description: A reflection on the sheer absurdity of the universe's size, the mysteries of the Big Bang, and why anything exists at all.
 pubDate: 2025-06-29T00:00:00.000Z
-category: "Philosophy"  
-draft: false  
----  
-  
-The question of God is one of the oldest questions humanity has asked. It is also one of the most consequential. For some, God is the foundation of morality, the creator of the universe, and the source of meaning. For others, the idea is an explanation that humanity has outgrown.  
-  
-I find it difficult to accept a claim simply because it has been repeated for centuries. A belief can be deeply meaningful, widely shared, and central to a person's identity without being true. We must be willing to ask what reasons we have for believing it.  
-  
-The universe exists. We are here to observe it, to question it, and to wonder why there is something rather than nothing. But does the existence of the universe require a creator? Even if we were to accept that the universe has a cause, it would not automatically follow that this cause is a personal God, that it has intentions, or that it resembles the deity described by any particular religion.  
-  
-The problem of suffering is another difficult question. If God is all-powerful, all-knowing, and perfectly good, why is the world filled with so much apparently needless suffering? There are responses to this problem, but the existence of responses does not mean the problem disappears.  
-  
-Of course, the absence of a convincing argument for God is not the same as a proof that no God exists. There may be things we do not know. There may be explanations we have not yet discovered. Intellectual honesty requires that we distinguish what we can establish from what we merely suspect.  
-  
-I do not think belief should be a matter of comfort alone, nor should disbelief be treated as an automatic sign of intelligence. Both require us to examine our assumptions and to be honest about the limits of our knowledge.  
-  
-Perhaps the most reasonable position is not to pretend that we have settled the matter. We can ask, investigate, disagree, and remain uncertain without treating uncertainty as a failure.  
-  
-The question remains: is there a God? I do not have an answer that I can honestly call conclusive. But I believe the question deserves better than inherited certainty.  
+category: "Philosophy"
+draft: false
+---
+
+It’s so huge. As a kid, I remember watching this video where the camera expands from an eye to cover the known universe. It’s just so goddamn big; it has no reason for being like this.
+
+I read like ten or so pages into _A Short History of Nearly Everything_, and it’s already expounding the mysteries of the universe to me.
+
+At t = 0, there was an infinitely dense point, known as the singularity. In fact, it is antithetical to even call it a “point”; it was spaceless, massless, dimensionless, volume-less—only infinitely dense. This is t = 0, which means we don’t know what happened before this, how long the universe was like this, or how t = 0 came to be. As a corollary, we know nothing of this singularity because we can’t know. There was no gravity, no time, no atoms, no protons, no quarks. There was no before.
+
+For reasons still unknown, this singularity decided to expand, and within a fraction of a second (more like one ten-millionth of a trillionth of a trillionth of a trillionth), we had good ol’ gravity. The most nuts thing possible. Why do particles attract each other? What is the reason? A person may argue for consciousness, for the world to conceive, since if any small thing was different about physics, our presence would not have been possible. But why even that? Why did we have to just come by? It’s just so bizarre. The concept of things attracting one another, and still, planets, stars, and dwarfs are drifting further and further apart.
+
+Anyway, within about three minutes, 98% of the universe had been formulated. Three minutes—it took for this massive universe to formulate. We have to be missing a puzzle.
+
  
