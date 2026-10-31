@@ -72,19 +72,26 @@ const featuredReadingTime = featured
       <!-- MASTHEAD -->
 
       <div class="topline">
-        <span>Independent Journal</span>
-        <span class="topline-center">Essays, fiction &amp; reflections</span>
-        <span>Est. 2025</span>
+        <span>A personal literary journal</span>
+        <span class="topline-center">Essays · Fiction · Reflections</span>
+        <span>Established 2025</span>
       </div>
 
       <header class="masthead">
-        <a class="wordmark" href={base}>
-          The <em>Marginalia</em>
-        </a>
+        <div class="masthead-main">
+          <a class="wordmark" href={base}>
+            The <em>Marginalia</em><span class="wordmark-period">.</span>
+          </a>
+          <p class="tagline">
+            Notes on philosophy, life, and the things in between.
+          </p>
+        </div>
 
-        <p class="tagline">
-          Notes on philosophy, life, and the things in between.
-        </p>
+        <div class="masthead-imprint" aria-label="Publication details">
+          <span class="imprint-label">An independent journal</span>
+          <span class="imprint-volume">Volume <em>I</em></span>
+          <span class="imprint-years">2025 — {new Date().getFullYear()}</span>
+        </div>
       </header>
 
       <nav class="navigation" aria-label="Main navigation">
@@ -121,6 +128,8 @@ const featuredReadingTime = featured
                       timeZone: "UTC",
                     })}
                   </time>
+                  <span class="meta-separator" aria-hidden="true">/</span>
+                  <span>{featuredReadingTime} min read</span>
                 </div>
 
                 <h1 id="featured-title">
@@ -139,7 +148,7 @@ const featuredReadingTime = featured
                     <span aria-hidden="true">↗</span>
                   </a>
 
-                  <span class="featured-label">Featured writing</span>
+                  <span class="featured-label">Journal entry no. 01</span>
                 </div>
               </div>
 
@@ -411,6 +420,10 @@ const featuredReadingTime = featured
         <span class="copyright">
           © {new Date().getFullYear()} Hemang Jindal
         </span>
+
+        <a class="rss-link" href={`${base}rss.xml`} aria-label="RSS feed">
+          RSS <span aria-hidden="true">↗</span>
+        </a>
       </footer>
     </div>
   </body>
@@ -1347,6 +1360,21 @@ const featuredReadingTime = featured
     font-size: 9px;
   }
 
+  .rss-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #a64d36;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 180ms ease;
+  }
+
+  .rss-link:hover {
+    color: #24221f;
+  }
+
   /* TABLET */
 
   @media (max-width: 800px) {
@@ -1680,7 +1708,8 @@ const featuredReadingTime = featured
     }
 
     .footer-note,
-    .copyright {
+    .copyright,
+    .rss-link {
       font-size: 8px;
     }
 
@@ -1700,6 +1729,231 @@ const featuredReadingTime = featured
     *::after {
       transition-duration: 0.01ms !important;
       animation-duration: 0.01ms !important;
+    }
+  }
+
+
+  /* EDITORIAL IDENTITY — masthead and featured entry */
+
+  .topline {
+    min-height: 34px;
+    font-size: 8px;
+    letter-spacing: 1.65px;
+  }
+
+  .topline-center {
+    color: #a64d36;
+    font-size: 10px;
+  }
+
+  .masthead {
+    min-height: 142px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 25px 0 27px;
+    text-align: left;
+  }
+
+  .masthead-main {
+    min-width: 0;
+  }
+
+  .wordmark {
+    font-size: clamp(42px, 5.2vw, 68px);
+    letter-spacing: -3.8px;
+  }
+
+  .wordmark-period {
+    color: #a64d36;
+  }
+
+  .tagline {
+    margin-top: 7px;
+    font-size: 11px;
+    letter-spacing: 0.1px;
+  }
+
+  .masthead-imprint {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 7px;
+    padding: 5px 0 5px 25px;
+    border-left: 1px solid #d8d0c3;
+    color: #81786c;
+    text-align: right;
+  }
+
+  .imprint-label,
+  .imprint-years {
+    font-size: 8px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+  }
+
+  .imprint-volume {
+    color: #24221f;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 17px;
+  }
+
+  .imprint-volume em {
+    color: #a64d36;
+    font-size: 22px;
+  }
+
+  .navigation {
+    min-height: 45px;
+  }
+
+  .featured-section {
+    position: relative;
+    padding-top: 59px;
+    padding-bottom: 76px;
+  }
+
+  .featured-section::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 54px;
+    border-top: 2px solid #a64d36;
+    content: "";
+  }
+
+  .featured-grid {
+    gap: 62px;
+    margin-top: 25px;
+  }
+
+  .featured-content h1 {
+    max-width: 760px;
+    font-size: clamp(44px, 5.7vw, 76px);
+  }
+
+  .featured-description {
+    max-width: 650px;
+    font-size: 15px;
+  }
+
+  .featured-label {
+    letter-spacing: 1.5px;
+  }
+
+  .featured-aside {
+    background:
+      linear-gradient(to bottom, transparent 0, transparent 13px, #e6dfd3 13px, #e6dfd3 14px, transparent 14px);
+  }
+
+  .aside-eyebrow {
+    letter-spacing: 2.2px;
+  }
+
+  .piece-count {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .archive-section {
+    padding-top: 30px;
+  }
+
+  .archive-heading h2 {
+    letter-spacing: -1.9px;
+  }
+
+  .year-heading {
+    border-bottom-style: solid;
+    border-bottom-color: #d2c9bb;
+  }
+
+  .archive-entry:hover {
+    background: rgba(166, 77, 54, 0.035);
+  }
+
+  @media (max-width: 800px) {
+    .masthead {
+      min-height: 125px;
+    }
+
+    .masthead-imprint {
+      padding-left: 16px;
+    }
+
+    .featured-grid {
+      gap: 35px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .topline {
+      min-height: 27px;
+      font-size: 6px;
+      letter-spacing: 0.7px;
+    }
+
+    .topline-center {
+      font-size: 7px;
+    }
+
+    .masthead {
+      min-height: auto;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 23px 0 21px;
+    }
+
+    .wordmark {
+      font-size: clamp(34px, 8.7vw, 48px);
+      letter-spacing: -2.5px;
+    }
+
+    .tagline {
+      max-width: 245px;
+      margin-top: 5px;
+      font-size: 9px;
+    }
+
+    .masthead-imprint {
+      gap: 5px;
+      padding: 3px 0 3px 10px;
+    }
+
+    .imprint-label,
+    .imprint-years {
+      max-width: 82px;
+      font-size: 6px;
+      letter-spacing: 0.7px;
+      line-height: 1.6;
+    }
+
+    .imprint-volume {
+      font-size: 13px;
+    }
+
+    .imprint-volume em {
+      font-size: 17px;
+    }
+
+    .featured-section {
+      padding-top: 39px;
+      padding-bottom: 48px;
+    }
+
+    .featured-grid {
+      gap: 26px;
+    }
+
+    .featured-description {
+      font-size: 12px;
+    }
+
+    .featured-aside {
+      background: none;
     }
   }
 </style>
