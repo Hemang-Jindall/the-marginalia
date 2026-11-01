@@ -12,6 +12,7 @@ const posts = defineCollection({
     description: z.string(),
     pubDate: z.coerce.date(),
     category: z.enum(["Philosophy", "Fiction", "Reflections"]),
+    pinned: z.boolean().default(false),
     draft: z.boolean().default(false),
   }),
 });

@@ -5,13 +5,21 @@ const essays = (await getCollection("posts"))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const featured = essays[0];
+const pinnedEssays = essays.filter((essay) => essay.data.pinned);
+
+if (pinnedEssays.length > 1) {
+  throw new Error(
+    `Multiple posts are pinned (${pinnedEssays.map((essay) => essay.id).join(", ")}). Please set pinned: true on only one post.`,
+  );
+}
+
+const featured = pinnedEssays[0] ?? essays[0];
+const isPinned = pinnedEssays.length === 1;
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 
-const postUrl = (id: string) =>
-  `${base.replace(/\/$/, "")}/posts/${id}/`;
+const postUrl = (id: string) => `${base.replace(/\/$/, "")}/posts/${id}/`;
 
 const categories = [
   ...new Set(essays.map((essay) => essay.data.category)),
@@ -38,9 +46,7 @@ const years = Object.keys(groupedEssays)
 const getReadingTime = (content: string) =>
   Math.max(1, Math.ceil(content.trim().split(/\s+/).length / 220));
 
-const featuredReadingTime = featured
-  ? getReadingTime(featured.body)
-  : 0;
+const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
 ---
 
 <!doctype html>
@@ -118,68 +124,74 @@ const featuredReadingTime = featured
       <main>
         <!-- FEATURED ARTICLE -->
 
-        {featured && (
-          <section class="featured-section" aria-labelledby="featured-title">
-            <div class="section-eyebrow">
-              <span class="eyebrow-dot"></span>
-              The latest from the journal
-            </div>
-
-            <div class="featured-grid">
-              <div class="featured-content">
-                <div class="featured-meta">
-                  <span class="pill">{featured.data.category}</span>
-
-                  <time datetime={featured.data.pubDate.toISOString()}>
-                    {featured.data.pubDate.toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                      timeZone: "UTC",
-                    })}
-                  </time>
-                  <span class="meta-separator" aria-hidden="true">/</span>
-                  <span>{featuredReadingTime} min read</span>
-                </div>
-
-                <h1 id="featured-title">
-                  <a href={postUrl(featured.id)}>
-                    {featured.data.title}
-                  </a>
-                </h1>
-
-                <p class="featured-description">
-                  {featured.data.description}
-                </p>
-
-                <div class="featured-bottom">
-                  <a class="read-button" href={postUrl(featured.id)}>
-                    Read the essay
-                    <span aria-hidden="true">↗</span>
-                  </a>
-
-                  <span class="featured-label">Journal entry no. 01</span>
-                </div>
+        {
+          featured && (
+            <section class="featured-section" aria-labelledby="featured-title">
+              <div class="section-eyebrow">
+                <span class="eyebrow-dot" />
+                {isPinned
+                  ? "Pinned from the journal"
+                  : "The latest from the journal"}
               </div>
 
-              <aside class="featured-aside" aria-label="Journal statistics">
-                <div class="aside-eyebrow">Ideas in the margins</div>
+              <div class="featured-grid">
+                <div class="featured-content">
+                  <div class="featured-meta">
+                    <span class="pill">{featured.data.category}</span>
 
-                <div class="piece-count">{essays.length}</div>
+                    <time datetime={featured.data.pubDate.toISOString()}>
+                      {featured.data.pubDate.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        timeZone: "UTC",
+                      })}
+                    </time>
+                    <span class="meta-separator" aria-hidden="true">
+                      /
+                    </span>
+                    <span>{featuredReadingTime} min read</span>
+                  </div>
 
-                <div class="aside-divider"></div>
+                  <h1 id="featured-title">
+                    <a href={postUrl(featured.id)}>{featured.data.title}</a>
+                  </h1>
 
-                <p class="aside-caption">
-                  Philosophy · Fiction · The human condition
-                </p>
+                  <p class="featured-description">
+                    {featured.data.description}
+                  </p>
 
-                <span class="aside-vertical">
-                  The Marginalia / Vol. I
-                </span>
-              </aside>
-            </div>
-          </section>
-        )}
+                  <div class="featured-bottom">
+                    <a class="read-button" href={postUrl(featured.id)}>
+                      Read the essay
+                      <span aria-hidden="true">↗</span>
+                    </a>
+
+                    <span class="featured-label">
+                      {isPinned
+                        ? "Selected by the editor"
+                        : "Journal entry no. 01"}
+                    </span>
+                  </div>
+                </div>
+
+                <aside class="featured-aside" aria-label="Journal statistics">
+                  <div class="aside-eyebrow">Ideas in the margins</div>
+
+                  <div class="piece-count">{essays.length}</div>
+
+                  <div class="aside-divider" />
+
+                  <p class="aside-caption">
+                    Philosophy · Fiction · The human condition
+                  </p>
+
+                  <span class="aside-vertical">The Marginalia / Vol. I</span>
+                </aside>
+              </div>
+            </section>
+          )
+        }
 
         <!-- ARCHIVE -->
 
@@ -221,12 +233,7 @@ const featuredReadingTime = featured
               <kbd>ESC</kbd>
             </label>
 
-            <button
-              id="clear-search"
-              class="clear-search"
-              type="button"
-              hidden
-            >
+            <button id="clear-search" class="clear-search" type="button" hidden>
               Clear search
             </button>
           </div>
@@ -289,9 +296,7 @@ const featuredReadingTime = featured
 
                     <span class="year-count">
                       {groupedEssays[year].length}
-                      {groupedEssays[year].length === 1
-                        ? " piece"
-                        : " pieces"}
+                      {groupedEssays[year].length === 1 ? " piece" : " pieces"}
                     </span>
                   </div>
 
@@ -311,9 +316,7 @@ const featuredReadingTime = featured
 
                         <div class="entry-main">
                           <h4>
-                            <a href={postUrl(essay.id)}>
-                              {essay.data.title}
-                            </a>
+                            <a href={postUrl(essay.id)}>{essay.data.title}</a>
                           </h4>
 
                           <p class="entry-description">
@@ -349,8 +352,8 @@ const featuredReadingTime = featured
               <h3>No essays found.</h3>
 
               <p>
-                Nothing in the journal matches your search. Try another
-                phrase or choose a different category.
+                Nothing in the journal matches your search. Try another phrase
+                or choose a different category.
               </p>
 
               <button id="reset-filters" type="button">
@@ -359,9 +362,7 @@ const featuredReadingTime = featured
             </div>
           </div>
 
-          <p class="archive-footnote">
-            Every piece, in its own time.
-          </p>
+          <p class="archive-footnote">Every piece, in its own time.</p>
         </section>
 
         <!-- FICTION -->
@@ -373,13 +374,10 @@ const featuredReadingTime = featured
               Beyond the argument
             </div>
 
-            <h2>
-              Sometimes, a story asks what an argument cannot.
-            </h2>
+            <h2>Sometimes, a story asks what an argument cannot.</h2>
 
             <p>
-              Fiction, imagined worlds, and questions about what makes us
-              human.
+              Fiction, imagined worlds, and questions about what makes us human.
             </p>
 
             <a class="text-link" href={`${base}fiction/`}>
@@ -409,9 +407,9 @@ const featuredReadingTime = featured
 
           <p class="about-copy">
             The Marginalia is an independent journal by Hemang Jindal,
-            collecting essays on philosophy, fiction, ethics, and the
-            everyday questions that deserve a second look. Not answers
-            handed down, but thoughts worked through in public.
+            collecting essays on philosophy, fiction, ethics, and the everyday
+            questions that deserve a second look. Not answers handed down, but
+            thoughts worked through in public.
           </p>
         </section>
       </main>
@@ -440,17 +438,14 @@ const featuredReadingTime = featured
 </html>
 
 <script>
-  const searchInput = document.querySelector<HTMLInputElement>(
-    "#archive-search",
-  );
+  const searchInput =
+    document.querySelector<HTMLInputElement>("#archive-search");
 
-  const clearSearchButton = document.querySelector<HTMLButtonElement>(
-    "#clear-search",
-  );
+  const clearSearchButton =
+    document.querySelector<HTMLButtonElement>("#clear-search");
 
-  const resetFiltersButton = document.querySelector<HTMLButtonElement>(
-    "#reset-filters",
-  );
+  const resetFiltersButton =
+    document.querySelector<HTMLButtonElement>("#reset-filters");
 
   const filterButtons = Array.from(
     document.querySelectorAll<HTMLButtonElement>(".filter-button"),
@@ -509,8 +504,7 @@ const featuredReadingTime = featured
           group.querySelectorAll<HTMLElement>(".archive-entry"),
         ).filter((entry) => !entry.hidden).length;
 
-        yearCount.textContent =
-          `${visibleInYear} ${visibleInYear === 1 ? "piece" : "pieces"}`;
+        yearCount.textContent = `${visibleInYear} ${visibleInYear === 1 ? "piece" : "pieces"}`;
       }
     });
 
@@ -581,7 +575,6 @@ const featuredReadingTime = featured
       searchInput.blur();
     }
   });
-
 </script>
 
 <style>
@@ -1742,7 +1735,6 @@ const featuredReadingTime = featured
     }
   }
 
-
   /* EDITORIAL IDENTITY — masthead and featured entry */
 
   .topline {
@@ -1854,8 +1846,14 @@ const featuredReadingTime = featured
   }
 
   .featured-aside {
-    background:
-      linear-gradient(to bottom, transparent 0, transparent 13px, #e6dfd3 13px, #e6dfd3 14px, transparent 14px);
+    background: linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 13px,
+      #e6dfd3 13px,
+      #e6dfd3 14px,
+      transparent 14px
+    );
   }
 
   .aside-eyebrow {
