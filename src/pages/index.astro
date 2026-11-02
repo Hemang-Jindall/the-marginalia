@@ -3041,6 +3041,12 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
   @media (max-width: 600px) {
     .opening-scene {
       min-height: 145vh;
+      /* Bleed the dark opening all the way to the phone's screen edges.
+         .page has 21px gutters, so compensate without changing other sections. */
+      margin-inline: -21px;
+    }
+    .opening-stage {
+      padding-inline: 21px;
     }
     .opening-scroll-type {
       top: 43%;
