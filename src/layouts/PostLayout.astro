@@ -3,8 +3,11 @@ import { getCollection } from "astro:content";
 
 interface Props {
   title: string;
+
   description: string;
+
   pubDate: Date;
+
   category: string;
 }
 
@@ -13,17 +16,17 @@ const { title, description, pubDate, category } = Astro.props;
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
+
 const homeUrl = base;
+
 const archiveUrl = `${base}#archive`;
 
-const currentPath = Astro.url.pathname;
-const currentId = currentPath
-  .replace(/^\/the-marginalia\/posts\//, "")
-  .replace(/^\/posts\//, "")
-  .replace(/\/$/, "");
+const currentId = Astro.url.pathname.split("/").filter(Boolean).at(-1) ?? "";
 
 const allPosts = (await getCollection("posts"))
+
   .filter((post) => !post.data.draft)
+
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const currentIndex = allPosts.findIndex(
@@ -31,6 +34,7 @@ const currentIndex = allPosts.findIndex(
 );
 
 const newerPost = currentIndex > 0 ? allPosts[currentIndex - 1] : undefined;
+
 const olderPost =
   currentIndex >= 0 && currentIndex < allPosts.length - 1
     ? allPosts[currentIndex + 1]
@@ -43,12 +47,16 @@ const readingTime = (body: string) =>
   Math.max(1, Math.ceil(body.trim().split(/\s+/).length / 220));
 
 const currentPost = currentIndex >= 0 ? allPosts[currentIndex] : undefined;
-const minutes = currentPost ? readingTime(currentPost.body) : 1;
+
+const minutes = currentPost ? readingTime(currentPost.body ?? "") : 1;
 
 const formattedDate = pubDate.toLocaleDateString("en-US", {
   year: "numeric",
+
   month: "long",
+
   day: "numeric",
+
   timeZone: "UTC",
 });
 ---
@@ -57,27 +65,32 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <meta name="description" content={description} />
+
     <meta name="theme-color" content="#f8f5ed" />
 
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+
     <link rel="icon" href={`${base}favicon.ico`} sizes="any" />
+
     <link
       rel="icon"
       href={`${base}favicon-32x32.png`}
       type="image/png"
       sizes="32x32"
     />
-    <link
-      rel="apple-touch-icon"
-      href={`${base}apple-touch-icon.png`}
-    />
+
+    <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
 
     <title>{title} — The Marginalia</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
       rel="stylesheet"
@@ -92,7 +105,9 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     <div class="page">
       <div class="topline">
         <span>A personal literary journal</span>
+
         <span class="topline-center">Essays · Fiction · Reflections</span>
+
         <span>Established 2025</span>
       </div>
 
@@ -103,7 +118,9 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
         <nav aria-label="Main navigation">
           <a href={archiveUrl}>Writing</a>
+
           <a href={`${base}fiction/`}>Fiction</a>
+
           <a href={`${base}about/`}>About</a>
         </nav>
       </header>
@@ -112,6 +129,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
         <div class="article-navigation-top">
           <a class="back" href={archiveUrl}>
             <span aria-hidden="true">←</span>
+
             Back to the journal
           </a>
 
@@ -128,9 +146,13 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
             <div class="metadata">
               <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+
               <span class="metadata-dot">·</span>
+
               <span>{minutes} min read</span>
+
               <span class="metadata-dot">·</span>
+
               <span>The Marginalia</span>
             </div>
           </header>
@@ -147,7 +169,9 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
           <div class="author-colophon">
             <span class="colophon-rule" aria-hidden="true"></span>
+
             <span class="colophon-name">Hemang Jindal</span>
+
             <span class="colophon-note">Written for The Marginalia</span>
           </div>
         </article>
@@ -155,10 +179,13 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
         <nav class="post-navigation" aria-label="More articles">
           <div class="post-navigation-heading">
             <span class="section-eyebrow">Continue reading</span>
+
             <span class="post-navigation-count">
-              {currentIndex >= 0
-                ? `${currentIndex + 1} of ${allPosts.length}`
-                : "The journal"}
+              {
+                currentIndex >= 0
+                  ? `${currentIndex + 1} of ${allPosts.length}`
+                  : "The journal"
+              }
             </span>
           </div>
 
@@ -169,7 +196,9 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
                   <span class="post-direction">
                     <span aria-hidden="true">←</span> Older essay
                   </span>
+
                   <span class="post-card-title">{olderPost.data.title}</span>
+
                   <span class="post-card-category">
                     {olderPost.data.category}
                   </span>
@@ -177,6 +206,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
               ) : (
                 <div class="post-card post-card-empty">
                   <span class="post-direction">Beginning of the journal</span>
+
                   <span class="post-card-title">
                     You've reached the earliest essay.
                   </span>
@@ -190,7 +220,9 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
                   <span class="post-direction">
                     Newer essay <span aria-hidden="true">→</span>
                   </span>
+
                   <span class="post-card-title">{newerPost.data.title}</span>
+
                   <span class="post-card-category">
                     {newerPost.data.category}
                   </span>
@@ -198,9 +230,8 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
               ) : (
                 <div class="post-card post-card-empty">
                   <span class="post-direction">Latest from the journal</span>
-                  <span class="post-card-title">
-                    You're all caught up.
-                  </span>
+
+                  <span class="post-card-title">You're all caught up.</span>
                 </div>
               )
             }
@@ -233,6 +264,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   const progressBar = document.querySelector<HTMLElement>(
     "#reading-progress-fill",
   );
+
   const articleBody = document.querySelector<HTMLElement>("#article-body");
 
   let ticking = false;
@@ -240,68 +272,133 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   function updateReadingProgress() {
     if (!progressBar || !articleBody) return;
 
-    const articleTop =
-      articleBody.getBoundingClientRect().top + window.scrollY;
+    const articleTop = articleBody.getBoundingClientRect().top + window.scrollY;
+
     const articleHeight = articleBody.offsetHeight;
+
     const readableHeight = articleHeight - window.innerHeight;
 
     if (readableHeight <= 0) {
       progressBar.style.width = "100%";
+
       ticking = false;
+
       return;
     }
 
     const distance = window.scrollY - articleTop;
-    const progress = Math.min(100, Math.max(0, (distance / readableHeight) * 100));
+
+    const progress = Math.min(
+      100,
+      Math.max(0, (distance / readableHeight) * 100),
+    );
 
     progressBar.style.width = `${progress}%`;
+
     ticking = false;
   }
 
   function requestProgressUpdate() {
     if (!ticking) {
       window.requestAnimationFrame(updateReadingProgress);
+
       ticking = true;
     }
   }
 
   window.addEventListener("scroll", requestProgressUpdate, { passive: true });
+
   window.addEventListener("resize", requestProgressUpdate);
+
   window.addEventListener("load", requestProgressUpdate);
 
   updateReadingProgress();
 </script>
 
-<style>
+<script>
+  const article = document.querySelector<HTMLElement>("article");
+  const articleBody = document.querySelector<HTMLElement>("#article-body");
+  const reduceMotionPreference = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+
+  if (
+    article &&
+    articleBody &&
+    !reduceMotionPreference &&
+    "IntersectionObserver" in window
+  ) {
+    article.classList.add("has-entrance-motion");
+    articleBody.classList.add("has-reading-motion");
+
+    const revealTargets = articleBody.querySelectorAll<HTMLElement>(
+      "p, h2, h3, h4, blockquote, ul, ol, img, table, .footnotes",
+    );
+
+    revealTargets.forEach((element, index) => {
+      element.classList.add("reading-reveal");
+      element.style.setProperty(
+        "--reading-reveal-delay",
+        `${Math.min(index % 4, 3) * 65}ms`,
+      );
+    });
+
+    const readingObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-reading-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.08,
+        rootMargin: "0px 0px -35px 0px",
+      },
+    );
+
+    revealTargets.forEach((element) => readingObserver.observe(element));
+  }
+</script>
+\n<style>
   :global(*) {
     box-sizing: border-box;
   }
 
   :global(html) {
     scroll-behavior: smooth;
+
     scroll-padding-top: 30px;
   }
 
   :global(body) {
     margin: 0;
+
     background: #f8f5ed;
+
     color: #24221f;
+
     font-family: "DM Sans", sans-serif;
+
     -webkit-font-smoothing: antialiased;
   }
 
   :global(::selection) {
     background: #ead6ca;
+
     color: #24221f;
   }
 
   :global(a:focus-visible) {
     outline: 2px solid #a64d36;
+
     outline-offset: 4px;
   }
 
   a {
     color: inherit;
+
     text-decoration: none;
   }
 
@@ -309,18 +406,27 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .reading-progress {
     position: fixed;
+
     z-index: 1000;
+
     top: 0;
+
     left: 0;
+
     width: 100%;
+
     height: 3px;
+
     background: transparent;
   }
 
   .reading-progress-fill {
     width: 0;
+
     height: 100%;
+
     background: #a64d36;
+
     transition: width 80ms linear;
   }
 
@@ -328,28 +434,43 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .page {
     max-width: 1120px;
+
     margin: 0 auto;
+
     padding: 0 54px;
   }
 
   .topline {
     min-height: 29px;
+
     display: grid;
+
     grid-template-columns: 1fr 1fr 1fr;
+
     align-items: center;
+
     border-bottom: 1px dashed #bdb7aa;
+
     color: #81786c;
+
     font-size: 9px;
+
     letter-spacing: 1.5px;
+
     text-transform: uppercase;
   }
 
   .topline-center {
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-size: 10px;
+
     font-style: italic;
+
     letter-spacing: 0;
+
     text-align: center;
+
     text-transform: none;
   }
 
@@ -361,35 +482,48 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .page > header {
     min-height: 76px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
+
     gap: 20px;
+
     border-bottom: 1px dashed #bdb7aa;
   }
 
   .brand {
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-size: 22px;
+
     letter-spacing: -1.1px;
+
     white-space: nowrap;
   }
 
   .brand em,
   .footer-brand em {
     color: #a64d36;
+
     font-weight: 400;
   }
 
   .page > header nav {
     display: flex;
+
     align-items: center;
+
     gap: 26px;
+
     font-size: 10px;
   }
 
   .page > header nav a {
     color: #625b51;
+
     transition: color 180ms ease;
   }
 
@@ -405,17 +539,25 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .article-navigation-top {
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
+
     gap: 15px;
   }
 
   .back {
     display: inline-flex;
+
     align-items: center;
+
     gap: 9px;
+
     color: #71695e;
+
     font-size: 11px;
+
     transition: color 180ms ease;
   }
 
@@ -429,8 +571,11 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .issue-label {
     color: #8a8073;
+
     font-size: 8px;
+
     letter-spacing: 1.5px;
+
     text-transform: uppercase;
   }
 
@@ -438,49 +583,73 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   article {
     max-width: 680px;
+
     margin: 67px auto 0;
   }
 
   .article-header {
     padding-bottom: 28px;
+
     border-bottom: 1px solid #dcd6ca;
   }
 
   .category {
     color: #a64d36;
+
     font-size: 9px;
+
     font-weight: 700;
+
     letter-spacing: 2px;
+
     text-transform: uppercase;
   }
 
   h1 {
     margin: 21px 0 20px;
+
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-size: clamp(37px, 5vw, 59px);
+
     font-weight: 400;
+
     line-height: 1.25;
+
     letter-spacing: -2.5px;
+
     overflow-wrap: anywhere;
   }
 
   .description {
     margin: 0;
+
     color: #696258;
+
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-size: 15px;
+
     font-style: italic;
+
     line-height: 1.95;
   }
 
   .metadata {
     display: flex;
+
     align-items: center;
+
     flex-wrap: wrap;
+
     gap: 10px;
+
     margin-top: 25px;
+
     color: #81786c;
+
     font-size: 9px;
+
     letter-spacing: 0.6px;
   }
 
@@ -492,20 +661,31 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .article-body {
     padding-top: 39px;
+
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-size: 16px;
+
     line-height: 2.05;
+
     overflow-wrap: anywhere;
+
     color: #302d28;
   }
 
   /* A restrained editorial drop cap: the first paragraph opens like a printed essay. */
+
   .article-body > :global(p:first-child)::first-letter {
     float: left;
+
     margin: 8px 9px 0 0;
+
     color: #a64d36;
+
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-size: 3.35em;
+
     line-height: 0.78;
   }
 
@@ -515,68 +695,98 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .article-body :global(h2) {
     margin: 51px 0 21px;
+
     font-size: 27px;
+
     font-weight: 400;
+
     line-height: 1.5;
+
     letter-spacing: -0.8px;
   }
 
   .article-body :global(h3) {
     margin: 38px 0 17px;
+
     font-size: 21px;
+
     font-weight: 400;
+
     line-height: 1.6;
   }
 
   .article-body :global(h4) {
     margin: 30px 0 14px;
+
     font-size: 17px;
+
     font-weight: 700;
+
     line-height: 1.6;
   }
 
   .article-body :global(ul),
   .article-body :global(ol) {
     margin: 0 0 28px;
+
     padding-left: 27px;
   }
 
   .article-body :global(li) {
     margin-bottom: 9px;
+
     padding-left: 4px;
   }
 
   .article-body :global(blockquote) {
     position: relative;
+
     margin: 42px 0;
+
     padding: 5px 0 5px 27px;
+
     border-left: 2px solid #a64d36;
+
     color: #696258;
+
     font-style: italic;
   }
 
   .article-body :global(blockquote p) {
     font-size: 0.96em;
+
     line-height: 1.95;
   }
 
   .article-body :global(.footnotes) {
     margin-top: 58px;
+
     padding-top: 22px;
+
     border-top: 1px solid #dcd6ca;
+
     color: #71695e;
+
     font-family: "DM Sans", sans-serif;
+
     font-size: 12px;
+
     line-height: 1.8;
   }
 
   .article-body :global(.footnotes::before) {
     content: "NOTES";
+
     display: block;
+
     margin-bottom: 14px;
+
     color: #a64d36;
+
     font-size: 9px;
+
     font-weight: 600;
+
     letter-spacing: 1.8px;
   }
 
@@ -586,12 +796,15 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .article-body :global(sup) {
     color: #a64d36;
+
     font-family: "DM Sans", sans-serif;
+
     font-size: 0.7em;
   }
 
   .article-body :global(:target) {
     scroll-margin-top: 28px;
+
     background: rgba(166, 77, 54, 0.06);
   }
 
@@ -601,8 +814,11 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .article-body :global(a) {
     color: #a64d36;
+
     text-decoration: underline;
+
     text-decoration-thickness: 1px;
+
     text-underline-offset: 4px;
   }
 
@@ -612,52 +828,68 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .article-body :global(img) {
     display: block;
+
     max-width: 100%;
+
     height: auto;
+
     margin: 35px auto;
   }
 
   .article-body :global(hr) {
-    width: 60px;
-    margin: 45px auto;
-    border: 0;
-    border-top: 1px solid #bdb5a7;
+    display: none !important;
   }
 
   .article-body :global(pre) {
     max-width: 100%;
+
     overflow-x: auto;
+
     padding: 18px;
+
     border: 1px solid #ddd6c9;
+
     background: #f1ede3;
+
     font-family: monospace;
+
     font-size: 13px;
+
     line-height: 1.7;
   }
 
   .article-body :global(code) {
     font-family: monospace;
+
     font-size: 0.9em;
   }
 
   .article-body :global(table) {
     width: 100%;
+
     margin: 28px 0;
+
     border-collapse: collapse;
+
     font-family: "DM Sans", sans-serif;
+
     font-size: 12px;
+
     line-height: 1.7;
   }
 
   .article-body :global(th),
   .article-body :global(td) {
     padding: 10px;
+
     border: 1px solid #dcd6ca;
+
     text-align: left;
   }
 
   .article-body :global(th) {
     background: #f1ede3;
+
     font-weight: 600;
   }
 
@@ -665,49 +897,73 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .endmark {
     margin: 48px 0 19px;
+
     color: #a64d36;
+
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-size: 14px;
+
     text-align: center;
+
     letter-spacing: 7px;
   }
 
   .endnote {
     margin: 0;
+
     color: #81786c;
+
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-size: 11px;
+
     font-style: italic;
+
     line-height: 1.8;
+
     text-align: center;
   }
 
   .author-colophon {
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     gap: 7px;
+
     margin-top: 32px;
+
     text-align: center;
   }
 
   .colophon-rule {
     width: 28px;
+
     margin-bottom: 5px;
+
     border-top: 1px solid #bdb5a7;
   }
 
   .colophon-name {
     color: #4b453d;
+
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-size: 13px;
+
     font-style: italic;
   }
 
   .colophon-note {
     color: #9a9082;
+
     font-size: 8px;
+
     letter-spacing: 1.2px;
+
     text-transform: uppercase;
   }
 
@@ -715,45 +971,65 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .post-navigation {
     max-width: 850px;
+
     margin: 78px auto 0;
+
     padding-top: 23px;
+
     border-top: 1px solid #4d473e;
   }
 
   .post-navigation-heading {
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
+
     gap: 15px;
+
     margin-bottom: 17px;
   }
 
   .section-eyebrow {
     color: #a64d36;
+
     font-size: 9px;
+
     font-weight: 600;
+
     letter-spacing: 1.8px;
+
     text-transform: uppercase;
   }
 
   .post-navigation-count {
     color: #8a8073;
+
     font-size: 9px;
   }
 
   .post-navigation-grid {
     display: grid;
+
     grid-template-columns: repeat(2, minmax(0, 1fr));
+
     gap: 15px;
   }
 
   .post-card {
     min-height: 145px;
+
     display: flex;
+
     flex-direction: column;
+
     align-items: flex-start;
+
     padding: 20px;
+
     border: 1px solid #ded7ca;
+
     transition:
       border-color 180ms ease,
       background 180ms ease;
@@ -761,31 +1037,45 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .post-card:hover {
     border-color: #a64d36;
+
     background: #f4efe5;
   }
 
   .post-direction {
     display: flex;
+
     align-items: center;
+
     gap: 7px;
+
     color: #a64d36;
+
     font-size: 9px;
+
     letter-spacing: 1px;
+
     text-transform: uppercase;
   }
 
   .post-card-title {
     margin: 13px 0 10px;
+
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-size: 16px;
+
     line-height: 1.6;
   }
 
   .post-card-category {
     margin-top: auto;
+
     color: #8a8073;
+
     font-size: 8px;
+
     letter-spacing: 1px;
+
     text-transform: uppercase;
   }
 
@@ -795,12 +1085,19 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .archive-link {
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     gap: 10px;
+
     margin-top: 28px;
+
     color: #71695e;
+
     font-size: 10px;
+
     transition: color 180ms ease;
   }
 
@@ -812,30 +1109,47 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   footer {
     min-height: 90px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
+
     gap: 15px;
+
     border-top: 1px solid #dcd6ca;
+
     color: #81786c;
+
     font-size: 9px;
   }
 
   .footer-brand {
     color: #24221f;
+
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-size: 16px;
+
     letter-spacing: -0.4px;
   }
 
   .rss-link {
     display: inline-flex;
+
     align-items: center;
+
     gap: 5px;
+
     color: #a64d36;
+
     font-size: 9px;
+
     letter-spacing: 1px;
+
     text-transform: uppercase;
+
     transition: color 180ms ease;
   }
 
@@ -868,7 +1182,9 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     .topline {
       min-height: 27px;
+
       font-size: 7px;
+
       letter-spacing: 0.8px;
     }
 
@@ -878,16 +1194,19 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     .page > header {
       min-height: 69px;
+
       gap: 12px;
     }
 
     .brand {
       font-size: 17px;
+
       letter-spacing: -0.8px;
     }
 
     .page > header nav {
       gap: 12px;
+
       font-size: 9px;
     }
 
@@ -901,6 +1220,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     .issue-label {
       font-size: 7px;
+
       letter-spacing: 1px;
     }
 
@@ -910,25 +1230,33 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     .category {
       font-size: 8px;
+
       letter-spacing: 1.6px;
     }
 
     h1 {
       margin: 17px 0;
+
       font-size: clamp(34px, 9vw, 47px);
+
       line-height: 1.27;
+
       letter-spacing: -1.8px;
     }
 
     .description {
       font-size: 12px;
+
       line-height: 1.9;
     }
 
     .metadata {
       gap: 8px;
+
       margin-top: 21px;
+
       font-size: 8px;
+
       line-height: 1.8;
     }
 
@@ -938,12 +1266,15 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     .article-body {
       padding-top: 29px;
+
       font-size: 14px;
+
       line-height: 1.98;
     }
 
     .article-body > :global(p:first-child)::first-letter {
       margin: 6px 7px 0 0;
+
       font-size: 3em;
     }
 
@@ -953,12 +1284,15 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     .article-body :global(h2) {
       margin: 39px 0 16px;
+
       font-size: 23px;
+
       line-height: 1.5;
     }
 
     .article-body :global(h3) {
       margin: 31px 0 14px;
+
       font-size: 19px;
     }
 
@@ -968,6 +1302,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     .article-body :global(blockquote) {
       margin: 28px 0;
+
       padding-left: 17px;
     }
 
@@ -978,6 +1313,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     .article-body :global(table) {
       display: block;
+
       overflow-x: auto;
     }
 
@@ -995,11 +1331,13 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     .post-navigation-grid {
       grid-template-columns: 1fr;
+
       gap: 10px;
     }
 
     .post-card {
       min-height: 120px;
+
       padding: 17px;
     }
 
@@ -1013,9 +1351,13 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     footer {
       min-height: 90px;
+
       flex-wrap: wrap;
+
       justify-content: space-between;
+
       gap: 12px;
+
       padding: 20px 0;
     }
 
@@ -1030,7 +1372,73 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     footer > span:nth-child(2) {
       order: 3;
+
       width: 100%;
+    }
+  }
+
+  /* QUIET READING MOTION */
+
+  .has-entrance-motion .article-header {
+    animation: article-header-arrive 850ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .has-entrance-motion .article-navigation-top {
+    animation: article-header-arrive 650ms ease both;
+  }
+
+  .article-body.has-reading-motion .reading-reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 700ms ease,
+      transform 800ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: var(--reading-reveal-delay, 0ms);
+  }
+
+  .article-body.has-reading-motion .reading-reveal.is-reading-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .post-card {
+    position: relative;
+    overflow: hidden;
+    transition:
+      border-color 220ms ease,
+      background 220ms ease,
+      transform 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .post-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .post-card::after {
+    content: "";
+    position: absolute;
+    right: 20px;
+    bottom: 0;
+    left: 20px;
+    height: 2px;
+    background: #a64d36;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .post-card:hover::after {
+    transform: scaleX(1);
+  }
+
+  @keyframes article-header-arrive {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
@@ -1043,6 +1451,219 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     *::before,
     *::after {
       transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      transform: none !important;
     }
+  }
+
+  /* EDITORIAL READING EXPERIENCE */
+  .page > .topline {
+    opacity: 0.72;
+  }
+  .page > header {
+    position: relative;
+  }
+  .brand {
+    transition: color 220ms ease;
+  }
+  .brand:hover {
+    color: #a64d36;
+  }
+  .article-navigation-top {
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(189, 181, 167, 0.45);
+  }
+  .back {
+    transition:
+      transform 220ms ease,
+      color 180ms ease;
+  }
+  .back:hover {
+    transform: translateX(-4px);
+  }
+  article {
+    position: relative;
+  }
+  .article-header {
+    position: relative;
+    padding-top: 8px;
+  }
+  .article-header::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 38px;
+    border-top: 2px solid #a64d36;
+    opacity: 0.8;
+  }
+  .category {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .category::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #a64d36;
+  }
+  h1 {
+    text-wrap: balance;
+  }
+  .description {
+    max-width: 610px;
+  }
+  .metadata {
+    font-variant-numeric: tabular-nums;
+  }
+  .article-body {
+    text-wrap: pretty;
+  }
+  .article-body :global(p) {
+    text-wrap: pretty;
+  }
+  .article-body :global(h2),
+  .article-body :global(h3),
+  .article-body :global(h4) {
+    text-wrap: balance;
+  }
+  .article-body :global(h2) {
+    position: relative;
+    padding-top: 13px;
+  }
+  .article-body :global(h2)::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 25px;
+    border-top: 1px solid #bdb5a7;
+  }
+  .article-body :global(blockquote) {
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+  .article-body :global(blockquote)::after {
+    content: "”";
+    position: absolute;
+    right: 5px;
+    bottom: -25px;
+    color: #d8cfc1;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 56px;
+    line-height: 1;
+  }
+  .article-body :global(img) {
+    box-shadow: 0 12px 34px rgba(44, 37, 27, 0.08);
+  }
+  .article-body :global(figure) {
+    margin: 42px 0;
+  }
+  .article-body :global(figcaption) {
+    margin-top: 10px;
+    color: #8a8073;
+    font-family: "DM Sans", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3px;
+    text-align: center;
+  }
+  .article-body :global(a) {
+    transition:
+      color 180ms ease,
+      text-decoration-color 180ms ease;
+    text-decoration-color: rgba(166, 77, 54, 0.45);
+  }
+  .article-body :global(a:hover) {
+    text-decoration-color: #24221f;
+  }
+  .endmark {
+    letter-spacing: 9px;
+  }
+  .author-colophon {
+    position: relative;
+  }
+  .colophon-name {
+    transition: color 180ms ease;
+  }
+  .post-navigation {
+    position: relative;
+  }
+  .post-navigation-heading {
+    padding-bottom: 5px;
+  }
+  .post-card {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.12);
+    transition:
+      transform 240ms ease,
+      border-color 180ms ease,
+      background 180ms ease;
+  }
+  .post-card::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 2px;
+    background: #a64d36;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 260ms ease;
+  }
+  .post-card:hover {
+    transform: translateY(-3px);
+  }
+  .post-card:hover::after {
+    transform: scaleX(1);
+  }
+  .post-card-title {
+    text-wrap: balance;
+  }
+  .archive-link {
+    width: fit-content;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  footer {
+    margin-top: 8px;
+  }
+
+  @media (min-width: 1100px) {
+    article {
+      max-width: 700px;
+    }
+    .article-body {
+      font-size: 16.5px;
+      line-height: 2.08;
+    }
+  }
+  @media (max-width: 600px) {
+    .article-header::before {
+      width: 28px;
+    }
+    .article-body :global(h2) {
+      padding-top: 10px;
+    }
+    .article-body :global(blockquote)::after {
+      font-size: 42px;
+      bottom: -18px;
+    }
+  }
+
+  /* Suppress Markdown thematic breaks inside essays.
+     The global selector is intentional: it avoids Astro scoped-style
+     specificity issues with content rendered through the slot. */
+  :global(hr),
+  :global(.article-body hr),
+  .article-body :global(hr) {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
   }
 </style>
