@@ -3556,4 +3556,24 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
       display: none;
     }
   }
+
+  /* FINAL MOBILE EDGE-TO-EDGE FIX
+     The page has both a constrained width and inner padding. Center the
+     opening section against the viewport, not the page's padded content box. */
+  @media (max-width: 600px) {
+    .opening-scene {
+      box-sizing: border-box;
+      width: 100vw;
+      max-width: none;
+      margin-left: calc((100% - 100vw) / 2) !important;
+      margin-right: calc((100% - 100vw) / 2) !important;
+      padding-left: 21px;
+      padding-right: 21px;
+    }
+
+    .opening-stage {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
 </style>
