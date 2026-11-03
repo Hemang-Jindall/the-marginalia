@@ -47,6 +47,18 @@ const getReadingTime = (content: string) =>
   Math.max(1, Math.ceil(content.trim().split(/\s+/).length / 220));
 
 const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
+
+const getPreviewExcerpt = (content: string) =>
+  content
+    .replace(/^---[\s\S]*?---\s*/, "")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/[*_`>#~]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 190)
+    .replace(/\s+\S*$/, "") + "…";
 ---
 
 <!doctype html>
@@ -112,14 +124,6 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
         <!-- IMMERSIVE INTRO -->
         <section class="opening-scene" aria-labelledby="opening-title">
           <div class="opening-stage">
-            <div class="opening-scroll-type" aria-hidden="true">
-              <span class="scroll-type-line scroll-type-one"
-                >THE WORLD IS WIDER</span
-              >
-              <span class="scroll-type-line scroll-type-two"
-                >THAN THE WORDS WE HAVE</span
-              >
-            </div>
             <div class="opening-topline">
               <div class="opening-publication">
                 <a class="opening-publication-name" href={base}>
@@ -129,6 +133,9 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
                   Notes on philosophy, life, and the things in between.
                 </span>
               </div>
+              <a class="opening-about-link" href={`${base}about/`}>
+                About <span aria-hidden="true">↗</span>
+              </a>
               <div class="opening-imprint" aria-label="Publication details">
                 <span>An independent journal</span>
                 <strong>Volume <em>I</em></strong>
@@ -141,9 +148,13 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
                 <p class="opening-kicker">
                   <span></span> A journal of ideas and imagination
                 </p>
-                <h1 id="opening-title">
-                  The world,<br />in the <em>margins.</em>
-                </h1>
+                <div class="headline-interaction" id="headline-interaction">
+                  <h1 id="opening-title">
+                    The world,<br />in the <em>margins.</em>
+                  </h1>
+                  <canvas class="headline-particles" aria-hidden="true"
+                  ></canvas>
+                </div>
                 <div class="opening-bottomline">
                   <p>
                     Essays, fiction, and observations on being human.
@@ -163,6 +174,15 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
               </div>
 
               <div class="opening-art reading-compass" id="reading-compass">
+                <span class="orbit-ring orbit-ring-one" aria-hidden="true">
+                  <i></i>
+                </span>
+                <span class="orbit-ring orbit-ring-two" aria-hidden="true">
+                  <i></i>
+                </span>
+                <span class="orbit-ring orbit-ring-three" aria-hidden="true">
+                  <i></i>
+                </span>
                 <span class="compass-brand" aria-hidden="true">
                   <svg
                     class="marginalia-mark"
@@ -384,6 +404,24 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
                             timeZone: "UTC",
                           })}
                         </time>
+
+                        <div class="entry-preview" aria-hidden="true">
+                          <div class="entry-preview-topline">
+                            <span>{essay.data.category}</span>
+                            <span>
+                              {getReadingTime(essay.body ?? "")} min read
+                            </span>
+                          </div>
+                          <h5>{essay.data.title}</h5>
+                          <p>
+                            {getPreviewExcerpt(
+                              essay.body ?? essay.data.description,
+                            )}
+                          </p>
+                          <span class="entry-preview-link">
+                            Read essay <span>↗</span>
+                          </span>
+                        </div>
                       </article>
                     ))}
                   </div>
@@ -493,6 +531,89 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
         </a>
       </footer>
     </div>
+
+    <script>
+      (() => {
+        const finePointer = window.matchMedia(
+          "(hover: hover) and (pointer: fine)",
+        );
+        const reducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        );
+
+        if (!finePointer.matches || reducedMotion.matches) return;
+
+        const cursor = document.createElement("div");
+        cursor.className = "marginalia-cursor";
+        cursor.setAttribute("aria-hidden", "true");
+        cursor.innerHTML =
+          '<span class="marginalia-cursor__dot"></span><span class="marginalia-cursor__ring"></span>';
+        document.body.appendChild(cursor);
+        document.documentElement.classList.add("has-marginalia-cursor");
+
+        let pointerX = window.innerWidth / 2;
+        let pointerY = window.innerHeight / 2;
+        let ringX = pointerX;
+        let ringY = pointerY;
+        let frame = 0;
+
+        const move = (event: PointerEvent) => {
+          pointerX = event.clientX;
+          pointerY = event.clientY;
+          cursor.classList.add("is-visible");
+          cursor.style.setProperty("--cursor-x", `${pointerX}px`);
+          cursor.style.setProperty("--cursor-y", `${pointerY}px`);
+
+          if (!frame) frame = window.requestAnimationFrame(animateRing);
+        };
+
+        const animateRing = () => {
+          ringX += (pointerX - ringX) * 0.18;
+          ringY += (pointerY - ringY) * 0.18;
+          cursor.style.setProperty("--ring-x", `${ringX}px`);
+          cursor.style.setProperty("--ring-y", `${ringY}px`);
+
+          if (
+            Math.abs(pointerX - ringX) > 0.1 ||
+            Math.abs(pointerY - ringY) > 0.1
+          ) {
+            frame = window.requestAnimationFrame(animateRing);
+          } else {
+            frame = 0;
+          }
+        };
+
+        const setTargetState = (event: PointerEvent) => {
+          const target = event.target instanceof Element ? event.target : null;
+          const interactive = target?.closest(
+            'a, button, input, textarea, select, [role="button"], [tabindex]:not([tabindex="-1"])',
+          );
+          const textField = target?.closest(
+            'input, textarea, [contenteditable="true"]',
+          );
+
+          cursor.classList.toggle("is-interactive", Boolean(interactive));
+          cursor.classList.toggle("is-text-entry", Boolean(textField));
+        };
+
+        document.addEventListener("pointermove", move, { passive: true });
+        document.addEventListener("pointerover", setTargetState, {
+          passive: true,
+        });
+        document.addEventListener("pointerout", (event: PointerEvent) => {
+          if (!event.relatedTarget) cursor.classList.remove("is-visible");
+        });
+        document.addEventListener("pointerdown", () =>
+          cursor.classList.add("is-pressed"),
+        );
+        document.addEventListener("pointerup", () =>
+          cursor.classList.remove("is-pressed"),
+        );
+        window.addEventListener("blur", () =>
+          cursor.classList.remove("is-visible"),
+        );
+      })();
+    </script>
   </body>
 </html>
 
@@ -559,15 +680,14 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
       );
       openingScene.style.setProperty("--scroll-progress", progress.toFixed(4));
 
-      const darkPaper = [33, 31, 28];
-      const lightPaper = [238, 233, 223];
-      const blendedPaper = darkPaper.map((start, index) =>
-        Math.round(start + (lightPaper[index] - start) * progress),
+      // Let the dark opening scene dissolve into the site's paper background.
+      const from = [33, 31, 28]; // #211f1c
+      const to = [238, 233, 223]; // #eee9df — actual page background
+      const eased = progress * progress * (3 - 2 * progress);
+      const background = from.map((channel, index) =>
+        Math.round(channel + (to[index] - channel) * eased),
       );
-      openingScene.style.setProperty(
-        "--scene-background",
-        `rgb(${blendedPaper.join(" ")})`,
-      );
+      openingScene.style.backgroundColor = `rgb(${background.join(", ")})`;
 
       if (openingCopy) {
         openingCopy.style.setProperty("--copy-shift", `${progress * -170}px`);
@@ -914,6 +1034,255 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
       if (!frame) frame = window.requestAnimationFrame(animateReveal);
     });
   }
+</script>
+
+<script>
+  // Particle typography: sample the actual rendered headline so every word,
+  // including "in the", uses the exact browser layout and font styling.
+  (() => {
+    const root = document.querySelector<HTMLElement>("#headline-interaction");
+    const title = root?.querySelector<HTMLElement>("#opening-title");
+    const canvas = root?.querySelector<HTMLCanvasElement>(
+      ".headline-particles",
+    );
+    if (!root || !title || !canvas) return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const finePointer = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
+    if (reduceMotion || !finePointer) return;
+
+    const ctx = canvas.getContext("2d", { alpha: true });
+    if (!ctx) return;
+
+    type Particle = {
+      x: number;
+      y: number;
+      ox: number;
+      oy: number;
+      vx: number;
+      vy: number;
+      size: number;
+      color: string;
+    };
+
+    const particles: Particle[] = [];
+    const pointer = { x: -1000, y: -1000, active: false };
+    let width = 1;
+    let height = 1;
+    let dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    let raf = 0;
+    let visible = true;
+    let last = 0;
+
+    const sampleRenderedHeadline = () => {
+      const rect = root.getBoundingClientRect();
+      width = Math.max(1, rect.width);
+      height = Math.max(1, rect.height);
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const mask = document.createElement("canvas");
+      mask.width = Math.ceil(width * dpr);
+      mask.height = Math.ceil(height * dpr);
+      const maskCtx = mask.getContext("2d", { willReadFrequently: true });
+      if (!maskCtx) return;
+      maskCtx.scale(dpr, dpr);
+      maskCtx.textBaseline = "alphabetic";
+
+      // Walk the real DOM text nodes rather than recreating the heading with
+      // guessed line positions. This captures "The world,", "in the ", and
+      // the italic "margins." at their exact rendered positions.
+      const walker = document.createTreeWalker(title, NodeFilter.SHOW_TEXT);
+      let node = walker.nextNode();
+      while (node) {
+        const textNode = node as Text;
+        const parent = textNode.parentElement;
+        const text = textNode.data;
+        if (parent && text.trim()) {
+          const style = getComputedStyle(parent);
+          maskCtx.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+          maskCtx.fillStyle = style.color;
+          const range = document.createRange();
+
+          for (let offset = 0; offset < text.length;) {
+            const codePoint = text.codePointAt(offset);
+            if (codePoint === undefined) break;
+            const character = String.fromCodePoint(codePoint);
+            const nextOffset = offset + character.length;
+            range.setStart(textNode, offset);
+            range.setEnd(textNode, nextOffset);
+            const glyphRect = range.getBoundingClientRect();
+
+            if (
+              glyphRect.width > 0 &&
+              glyphRect.height > 0 &&
+              character.trim()
+            ) {
+              const x = glyphRect.left - rect.left;
+              const y = glyphRect.top - rect.top;
+              const fontSize = parseFloat(style.fontSize) || glyphRect.height;
+              const baseline =
+                y + (glyphRect.height - fontSize) / 2 + fontSize * 0.82;
+              maskCtx.fillText(character, x, baseline);
+            }
+            offset = nextOffset;
+          }
+          range.detach();
+        }
+        node = walker.nextNode();
+      }
+
+      const pixels = maskCtx.getImageData(0, 0, mask.width, mask.height).data;
+      particles.length = 0;
+      const sampleStep = Math.max(2, Math.round(3 * dpr));
+      for (let y = 0; y < mask.height; y += sampleStep) {
+        for (let x = 0; x < mask.width; x += sampleStep) {
+          const index = (y * mask.width + x) * 4;
+          const alpha = pixels[index + 3];
+          if (alpha > 90) {
+            particles.push({
+              x: x / dpr,
+              y: y / dpr,
+              ox: x / dpr,
+              oy: y / dpr,
+              vx: 0,
+              vy: 0,
+              size: 1.2 + Math.random() * 0.65,
+              color:
+                pixels[index] > 170 && pixels[index + 1] < 190
+                  ? "rgba(224,139,111,1)"
+                  : "rgba(255,255,255,1)",
+            });
+          }
+        }
+      }
+
+      // The HTML heading remains the accessible text alternative. Once the
+      // canvas has been populated, the particle version becomes the visual.
+      root.classList.add("particle-ready");
+      renderStatic();
+    };
+
+    const drawParticles = () => {
+      ctx.clearRect(0, 0, width, height);
+      for (const p of particles) {
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+      }
+      ctx.globalAlpha = 1;
+    };
+
+    const renderStatic = () => drawParticles();
+
+    const draw = (now: number) => {
+      raf = 0;
+      if (!visible || document.hidden) return;
+
+      const dt = Math.min(2, (now - (last || now)) / 16.67);
+      last = now;
+      ctx.clearRect(0, 0, width, height);
+      let moving = false;
+
+      for (const p of particles) {
+        const dx = p.x - pointer.x;
+        const dy = p.y - pointer.y;
+        const distance = Math.hypot(dx, dy) || 0.001;
+
+        if (pointer.active && distance < 45) {
+          const force = Math.pow(1 - distance / 45, 2) * 9.2;
+          p.vx += (dx / distance) * force * dt;
+          p.vy += (dy / distance) * force * dt;
+        }
+
+        // A damped spring pulls displaced particles back into their glyphs.
+        p.vx += (p.ox - p.x) * 0.026 * dt;
+        p.vy += (p.oy - p.y) * 0.026 * dt;
+        p.vx *= Math.pow(0.88, dt);
+        p.vy *= Math.pow(0.88, dt);
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+
+        const displacement = Math.hypot(p.x - p.ox, p.y - p.oy);
+        if (displacement > 0.65 || Math.abs(p.vx) + Math.abs(p.vy) > 0.1) {
+          moving = true;
+        }
+
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+      }
+
+      ctx.globalAlpha = 1;
+      if (pointer.active || moving) {
+        raf = window.requestAnimationFrame(draw);
+      } else {
+        last = 0;
+      }
+    };
+
+    const start = () => {
+      if (!raf && visible) raf = window.requestAnimationFrame(draw);
+    };
+
+    root.addEventListener(
+      "pointermove",
+      (event) => {
+        const rect = root.getBoundingClientRect();
+        pointer.x = event.clientX - rect.left;
+        pointer.y = event.clientY - rect.top;
+        pointer.active = true;
+        start();
+      },
+      { passive: true },
+    );
+
+    root.addEventListener("pointerleave", () => {
+      pointer.active = false;
+      start();
+    });
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (!visible && raf) {
+          cancelAnimationFrame(raf);
+          raf = 0;
+        } else if (visible) {
+          renderStatic();
+          if (pointer.active) start();
+        }
+      },
+      { threshold: 0.01 },
+    );
+    observer.observe(root);
+
+    let resizeFrame = 0;
+    window.addEventListener(
+      "resize",
+      () => {
+        if (resizeFrame) cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(() => {
+          resizeFrame = 0;
+          sampleRenderedHeadline();
+        });
+      },
+      { passive: true },
+    );
+
+    // Wait for the webfont before sampling, otherwise fallback-font particles
+    // can be misaligned with the visible headline.
+    document.fonts.ready.then(sampleRenderedHeadline);
+  })();
 </script>
 
 <style>
@@ -2222,8 +2591,9 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
 
   .opening-scene {
     position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
     overflow: hidden;
-    margin: 0 calc((100% - 100vw) / 2);
     padding: 30px max(38px, calc((100vw - 1360px) / 2)) 0;
     background: #211f1c;
     color: #f2eee5;
@@ -2271,6 +2641,38 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
     letter-spacing: 0;
     line-height: 1.6;
     text-transform: none;
+  }
+
+  .opening-about-link {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    align-self: center;
+    gap: 7px;
+    margin-left: auto;
+    color: #c6bfb2;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 220ms ease;
+  }
+
+  .opening-about-link span {
+    color: #c47a60;
+    font-size: 12px;
+    transition: transform 220ms ease;
+  }
+
+  .opening-about-link:hover,
+  .opening-about-link:focus-visible {
+    color: #f2eee5;
+  }
+
+  .opening-about-link:hover span,
+  .opening-about-link:focus-visible span {
+    transform: translate(2px, -2px);
   }
 
   .opening-imprint {
@@ -2351,7 +2753,7 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
   }
 
   .opening-copy h1 em {
-    color: #c47a60;
+    color: #d18469;
     font-weight: 400;
   }
 
@@ -2657,6 +3059,14 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
     .opening-publication-tagline {
       max-width: 230px;
       font-size: 8px;
+    }
+    .opening-about-link {
+      gap: 4px;
+      font-size: 6px;
+      letter-spacing: 0.7px;
+    }
+    .opening-about-link span {
+      font-size: 10px;
     }
     .opening-imprint {
       gap: 5px;
@@ -3017,6 +3427,9 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
     .opening-scene {
       min-height: 170vh;
     }
+    .opening-stage {
+      padding-inline: 20px;
+    }
     .scroll-type-line {
       font-size: 15vw;
     }
@@ -3032,12 +3445,10 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
   @media (max-width: 600px) {
     .opening-scene {
       min-height: 145vh;
-      /* Bleed the dark opening all the way to the phone's screen edges.
-         .page has 21px gutters, so compensate without changing other sections. */
-      margin-inline: -21px;
+      margin-left: calc(50% - 50vw);
     }
     .opening-stage {
-      padding-inline: 21px;
+      padding-inline: 18px;
     }
     .opening-scroll-type {
       top: 43%;
@@ -3268,8 +3679,8 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
   }
 
   .opening-scene {
-    background: var(--scene-background, #211f1c);
-    transition: background-color 80ms linear;
+    background: #211f1c;
+    transition: none;
   }
 
   .opening-stage {
@@ -4048,6 +4459,480 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
 
     .archive-heading {
       margin-bottom: 16px;
+    }
+  }
+
+  /* THE MARGINALIA — CUSTOM EDITORIAL CURSOR */
+  :global(.marginalia-cursor) {
+    position: fixed;
+    inset: 0 auto auto 0;
+    z-index: 99999;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 180ms ease;
+    mix-blend-mode: normal;
+  }
+
+  :global(.marginalia-cursor.is-visible) {
+    opacity: 1;
+  }
+
+  :global(.marginalia-cursor__dot) {
+    position: absolute;
+    left: var(--cursor-x, -100px);
+    top: var(--cursor-y, -100px);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #a64d36;
+    transform: translate(-50%, -50%);
+    transition:
+      transform 180ms ease,
+      opacity 180ms ease;
+  }
+
+  :global(.marginalia-cursor__ring) {
+    position: absolute;
+    left: var(--ring-x, -100px);
+    top: var(--ring-y, -100px);
+    width: 31px;
+    height: 31px;
+    border: 1px solid rgba(166, 77, 54, 0.72);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition:
+      width 220ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      height 220ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      border-color 220ms ease,
+      background 220ms ease,
+      opacity 180ms ease;
+  }
+
+  :global(.marginalia-cursor.is-interactive .marginalia-cursor__ring) {
+    width: 48px;
+    height: 48px;
+    border-color: #a64d36;
+    background: rgba(166, 77, 54, 0.07);
+  }
+
+  :global(.marginalia-cursor.is-interactive .marginalia-cursor__dot) {
+    transform: translate(-50%, -50%) scale(0.65);
+  }
+
+  :global(.marginalia-cursor.is-pressed .marginalia-cursor__ring) {
+    width: 25px;
+    height: 25px;
+    background: rgba(166, 77, 54, 0.14);
+  }
+
+  :global(.marginalia-cursor.is-text-entry .marginalia-cursor__ring) {
+    opacity: 0;
+  }
+
+  :global(.has-marginalia-cursor),
+  :global(.has-marginalia-cursor body),
+  :global(.has-marginalia-cursor a),
+  :global(.has-marginalia-cursor button),
+  :global(.has-marginalia-cursor input),
+  :global(.has-marginalia-cursor textarea),
+  :global(.has-marginalia-cursor select) {
+    cursor: none !important;
+  }
+
+  @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+    :global(.marginalia-cursor) {
+      display: none !important;
+    }
+
+    :global(.has-marginalia-cursor),
+    :global(.has-marginalia-cursor body),
+    :global(.has-marginalia-cursor a),
+    :global(.has-marginalia-cursor button),
+    :global(.has-marginalia-cursor input),
+    :global(.has-marginalia-cursor textarea),
+    :global(.has-marginalia-cursor select) {
+      cursor: auto !important;
+    }
+  }
+
+  /* ESSAY HOVER PREVIEWS */
+  .archive-entry {
+    position: relative;
+  }
+
+  .entry-preview {
+    position: absolute;
+    z-index: 8;
+    top: 50%;
+    right: 22px;
+    width: min(330px, 38%);
+    padding: 21px 23px 19px;
+    border: 1px solid #d8cfc0;
+    background: #f8f5ed;
+    box-shadow: 0 18px 45px rgba(36, 34, 31, 0.12);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate(12px, -44%);
+    transition:
+      opacity 220ms ease,
+      visibility 220ms ease,
+      transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .entry-preview::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 22px;
+    width: 35px;
+    height: 2px;
+    background: #a64d36;
+  }
+
+  .entry-preview-topline {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: #948879;
+    font-size: 8px;
+    letter-spacing: 1.25px;
+    text-transform: uppercase;
+  }
+
+  .entry-preview h5 {
+    margin: 17px 0 9px;
+    color: #24221f;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.45;
+  }
+
+  .entry-preview p {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 0;
+    color: #71695e;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 10px;
+    font-style: italic;
+    line-height: 1.85;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .entry-preview-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    color: #a64d36;
+    font-size: 8px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+  }
+
+  .entry-preview-link span {
+    font-size: 12px;
+    transition: transform 180ms ease;
+  }
+
+  .archive-entry:hover .entry-preview,
+  .archive-entry:focus-within .entry-preview {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0, -44%);
+  }
+
+  .archive-entry:hover .entry-date,
+  .archive-entry:focus-within .entry-date {
+    opacity: 0;
+  }
+
+  .entry-date {
+    transition: opacity 180ms ease;
+  }
+
+  @media (hover: none), (pointer: coarse), (max-width: 760px) {
+    .entry-preview {
+      display: none;
+    }
+
+    .archive-entry:hover {
+      padding-right: 0;
+      padding-left: 0;
+    }
+
+    .archive-entry:hover .entry-date {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .entry-preview,
+    .entry-date {
+      transition: none !important;
+    }
+  }
+
+  /* HOMEPAGE SHADER: restrained, moving pools of warm light. */
+  .opening-stage {
+    position: sticky;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    padding-inline: max(38px, calc((100vw - 1360px) / 2));
+    isolation: isolate;
+    background: transparent;
+  }
+
+  .opening-shader {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: calc(0.78 * (1 - var(--scroll-progress, 0)));
+    pointer-events: none;
+    /* No fixed mask: the pointer glow must remain visible anywhere in the hero. */
+    transition: opacity 100ms linear;
+  }
+
+  .opening-scroll-type {
+    z-index: 1;
+    mix-blend-mode: screen;
+  }
+
+  .opening-topline,
+  .opening-composition {
+    z-index: 2;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .opening-shader {
+      display: none;
+    }
+  }
+
+  /* Restored orbital motion around the Marginalia monogram. */
+  .reading-compass .orbit-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block !important;
+    width: 82%;
+    height: 34%;
+    border: 1px solid rgba(196, 122, 96, 0.44);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%) rotate(-28deg);
+    z-index: 1;
+  }
+
+  .reading-compass .orbit-ring-one {
+    animation: marginalia-orbit-one 22s linear infinite;
+  }
+
+  .reading-compass .orbit-ring-two {
+    width: 91%;
+    height: 47%;
+    border-color: rgba(242, 238, 229, 0.22);
+    border-style: dashed;
+    transform: translate(-50%, -50%) rotate(54deg);
+    animation: marginalia-orbit-two 34s linear infinite;
+  }
+
+  .reading-compass .orbit-ring-three {
+    width: 72%;
+    height: 25%;
+    border-color: rgba(196, 122, 96, 0.24);
+    transform: translate(-50%, -50%) rotate(78deg);
+    animation: marginalia-orbit-three 28s linear infinite reverse;
+  }
+
+  .reading-compass .orbit-ring i {
+    position: absolute;
+    top: 50%;
+    right: -4px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #c47a60;
+    box-shadow: 0 0 12px rgba(196, 122, 96, 0.38);
+    transform: translateY(-50%);
+  }
+
+  .reading-compass .orbit-ring-two i {
+    right: auto;
+    left: -3px;
+    width: 5px;
+    height: 5px;
+    background: #e7d8c8;
+    box-shadow: 0 0 10px rgba(231, 216, 200, 0.3);
+  }
+
+  .reading-compass .orbit-ring-three i {
+    width: 4px;
+    height: 4px;
+    background: #a64d36;
+  }
+
+  @keyframes marginalia-orbit-one {
+    from {
+      transform: translate(-50%, -50%) rotate(-28deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(332deg);
+    }
+  }
+
+  @keyframes marginalia-orbit-two {
+    from {
+      transform: translate(-50%, -50%) rotate(54deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(414deg);
+    }
+  }
+
+  @keyframes marginalia-orbit-three {
+    from {
+      transform: translate(-50%, -50%) rotate(78deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(438deg);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .reading-compass .orbit-ring {
+      width: 105%;
+    }
+    .reading-compass .orbit-ring-two {
+      width: 112%;
+    }
+    .reading-compass .orbit-ring-three {
+      width: 92%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reading-compass .orbit-ring {
+      animation: none !important;
+    }
+  }
+
+  /* Particle-rendered headline; the semantic heading remains available to assistive tech. */
+  .headline-interaction {
+    position: relative;
+    width: min(100%, 850px);
+    isolation: isolate;
+  }
+
+  .headline-interaction > #opening-title {
+    user-select: none;
+  }
+
+  .headline-interaction.particle-ready > #opening-title {
+    color: transparent;
+  }
+
+  .headline-particles {
+    position: absolute;
+    z-index: 3;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+    .headline-particles {
+      display: none;
+    }
+    .headline-interaction > #opening-title {
+      color: #f2eee5;
+    }
+    .headline-interaction > #opening-title em {
+      color: #c47a60;
+    }
+  }
+</style>
+
+<style>
+  /* Clean hero: no shader, no ghost lettering, no cursor-shaped mask. */
+  .opening-scene {
+    background: #211f1c;
+    transition: none;
+  }
+
+  .opening-shader,
+  .opening-scroll-type {
+    display: none !important;
+  }
+
+  .opening-copy h1 {
+    color: #fffdf7;
+  }
+
+  .opening-copy h1 em {
+    color: #d18469;
+  }
+
+  .headline-interaction {
+    position: relative;
+    width: min(100%, 850px);
+    isolation: isolate;
+  }
+
+  .headline-interaction > #opening-title {
+    color: #fffdf7;
+    user-select: none;
+  }
+
+  .headline-interaction > #opening-title em {
+    color: #d18469;
+  }
+
+  .headline-interaction.particle-ready > #opening-title {
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+
+  .headline-interaction.particle-ready > #opening-title em {
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+
+  .headline-particles {
+    position: absolute;
+    z-index: 3;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+    .headline-particles {
+      display: none !important;
+    }
+
+    .headline-interaction > #opening-title,
+    .headline-interaction.particle-ready > #opening-title {
+      color: #fffdf7 !important;
+      -webkit-text-fill-color: #fffdf7 !important;
+    }
+
+    .headline-interaction > #opening-title em,
+    .headline-interaction.particle-ready > #opening-title em {
+      color: #d18469 !important;
+      -webkit-text-fill-color: #d18469 !important;
     }
   }
 </style>

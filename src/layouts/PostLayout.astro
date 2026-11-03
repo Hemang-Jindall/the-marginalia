@@ -87,17 +87,34 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     <title>{title} — The Marginalia</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https\://fonts.googleapis.com" />
 
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https\://fonts.gstatic.com" crossorigin />
 
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+      href="https\://fonts.googleapis.com/css2?family=DM+Sans:wght\@400;500;600;700&family=Libre+Baskerville:ital,wght\@0,400;0,700;1,400&display=swap"
       rel="stylesheet"
     />
   </head>
 
   <body>
+    <div
+      class="article-intro-curtain"
+      id="article-intro-curtain"
+      data-article-id={currentId}
+      aria-label={`Introducing ${title}`}
+    >
+      <div class="article-intro-inner">
+        <span class="article-intro-overline">{category} · {formattedDate}</span>
+        <h1 class="article-intro-title">{title}</h1>
+        <span class="article-intro-rule" aria-hidden="true"></span>
+        <span class="article-intro-enter">An essay from The Marginalia</span>
+      </div>
+      <button class="article-intro-skip" id="article-intro-skip" type="button">
+        Skip intro <span aria-hidden="true">↗</span>
+      </button>
+    </div>
+
     <div class="reading-progress" aria-hidden="true">
       <div class="reading-progress-fill" id="reading-progress-fill"></div>
     </div>
@@ -257,8 +274,140 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
         </a>
       </footer>
     </div>
+
+    <script>
+      (() => {
+        const finePointer = window.matchMedia(
+          "(hover: hover) and (pointer: fine)",
+        );
+        const reducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        );
+
+        if (!finePointer.matches || reducedMotion.matches) return;
+
+        const cursor = document.createElement("div");
+        cursor.className = "marginalia-cursor";
+        cursor.setAttribute("aria-hidden", "true");
+        cursor.innerHTML =
+          '<span class="marginalia-cursor__dot"></span><span class="marginalia-cursor__ring"></span>';
+        document.body.appendChild(cursor);
+        document.documentElement.classList.add("has-marginalia-cursor");
+
+        let pointerX = window.innerWidth / 2;
+        let pointerY = window.innerHeight / 2;
+        let ringX = pointerX;
+        let ringY = pointerY;
+        let frame = 0;
+
+        const move = (event: PointerEvent) => {
+          pointerX = event.clientX;
+          pointerY = event.clientY;
+          cursor.classList.add("is-visible");
+          cursor.style.setProperty("--cursor-x", `${pointerX}px`);
+          cursor.style.setProperty("--cursor-y", `${pointerY}px`);
+
+          if (!frame) frame = window.requestAnimationFrame(animateRing);
+        };
+
+        const animateRing = () => {
+          ringX += (pointerX - ringX) * 0.18;
+          ringY += (pointerY - ringY) * 0.18;
+          cursor.style.setProperty("--ring-x", `${ringX}px`);
+          cursor.style.setProperty("--ring-y", `${ringY}px`);
+
+          if (
+            Math.abs(pointerX - ringX) > 0.1 ||
+            Math.abs(pointerY - ringY) > 0.1
+          ) {
+            frame = window.requestAnimationFrame(animateRing);
+          } else {
+            frame = 0;
+          }
+        };
+
+        const setTargetState = (event: PointerEvent) => {
+          const target = event.target instanceof Element ? event.target : null;
+          const interactive = target?.closest(
+            'a, button, input, textarea, select, [role="button"], [tabindex]:not([tabindex="-1"])',
+          );
+          const textField = target?.closest(
+            'input, textarea, [contenteditable="true"]',
+          );
+
+          cursor.classList.toggle("is-interactive", Boolean(interactive));
+          cursor.classList.toggle("is-text-entry", Boolean(textField));
+        };
+
+        document.addEventListener("pointermove", move, { passive: true });
+        document.addEventListener("pointerover", setTargetState, {
+          passive: true,
+        });
+        document.addEventListener("pointerout", (event: PointerEvent) => {
+          if (!event.relatedTarget) cursor.classList.remove("is-visible");
+        });
+        document.addEventListener("pointerdown", () =>
+          cursor.classList.add("is-pressed"),
+        );
+        document.addEventListener("pointerup", () =>
+          cursor.classList.remove("is-pressed"),
+        );
+        window.addEventListener("blur", () =>
+          cursor.classList.remove("is-visible"),
+        );
+      })();
+    </script>
   </body>
 </html>
+
+<script>
+  // Show the opening once for each article in the current browser tab.
+  const articleIntro = document.querySelector<HTMLElement>(
+    "#article-intro-curtain",
+  );
+  const articleIntroSkip = document.querySelector<HTMLButtonElement>(
+    "#article-intro-skip",
+  );
+  const articleIntroReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  const articleIntroKey = `marginalia-article-intro-${articleIntro?.dataset.articleId ?? "unknown"}`;
+  let articleIntroDismissed = false;
+
+  const dismissArticleIntro = () => {
+    if (!articleIntro || articleIntroDismissed) return;
+    articleIntroDismissed = true;
+    articleIntro.classList.add("article-intro-leaving");
+    document.documentElement.classList.remove("article-intro-active");
+    window.setTimeout(
+      () => articleIntro.remove(),
+      articleIntroReducedMotion ? 0 : 850,
+    );
+  };
+
+  if (articleIntro) {
+    let alreadySeen = false;
+
+    try {
+      alreadySeen = sessionStorage.getItem(articleIntroKey) === "1";
+      sessionStorage.setItem(articleIntroKey, "1");
+    } catch {
+      alreadySeen = false;
+    }
+
+    if (alreadySeen || articleIntroReducedMotion) {
+      articleIntro.remove();
+    } else {
+      document.documentElement.classList.add("article-intro-active");
+      articleIntro.classList.add("article-intro-ready");
+      window.setTimeout(dismissArticleIntro, 2500);
+      articleIntroSkip?.addEventListener("click", dismissArticleIntro);
+      articleIntro.addEventListener("click", (event) => {
+        if (event.target === articleIntro) dismissArticleIntro();
+      });
+    }
+  }
+</script>
 
 <script>
   const progressBar = document.querySelector<HTMLElement>(
@@ -290,6 +439,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     const progress = Math.min(
       100,
+
       Math.max(0, (distance / readableHeight) * 100),
     );
 
@@ -317,7 +467,9 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
 <script>
   const article = document.querySelector<HTMLElement>("article");
+
   const articleBody = document.querySelector<HTMLElement>("#article-body");
+
   const reduceMotionPreference = window.matchMedia(
     "(prefers-reduced-motion: reduce)",
   ).matches;
@@ -329,6 +481,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     "IntersectionObserver" in window
   ) {
     article.classList.add("has-entrance-motion");
+
     articleBody.classList.add("has-reading-motion");
 
     const revealTargets = articleBody.querySelectorAll<HTMLElement>(
@@ -337,8 +490,10 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     revealTargets.forEach((element, index) => {
       element.classList.add("reading-reveal");
+
       element.style.setProperty(
         "--reading-reveal-delay",
+
         `${Math.min(index % 4, 3) * 65}ms`,
       );
     });
@@ -348,12 +503,15 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-reading-visible");
+
             observer.unobserve(entry.target);
           }
         });
       },
+
       {
         threshold: 0.08,
+
         rootMargin: "0px 0px -35px 0px",
       },
     );
@@ -361,6 +519,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     revealTargets.forEach((element) => readingObserver.observe(element));
   }
 </script>
+
 \n<style>
   :global(*) {
     box-sizing: border-box;
@@ -400,6 +559,227 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     color: inherit;
 
     text-decoration: none;
+  }
+
+  /* ARTICLE INTRO CURTAIN */
+  :global(html.article-intro-active),
+  :global(html.article-intro-active body) {
+    overflow: hidden;
+  }
+
+  .article-intro-curtain {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    padding: 28px;
+    background: #211f1c;
+    color: #f2eee5;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 850ms cubic-bezier(0.76, 0, 0.24, 1),
+      visibility 850ms;
+  }
+
+  .article-intro-curtain::before,
+  .article-intro-curtain::after {
+    position: absolute;
+    width: 70vmax;
+    height: 70vmax;
+    border: 1px solid rgba(196, 122, 96, 0.18);
+    border-radius: 50%;
+    content: "";
+    transform: scale(0.3);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .article-intro-curtain::before {
+    animation: article-intro-ring 2.2s 0.05s cubic-bezier(0.2, 0.7, 0.2, 1)
+      forwards;
+  }
+
+  .article-intro-curtain::after {
+    width: 48vmax;
+    height: 48vmax;
+    animation: article-intro-ring 2.2s 0.18s cubic-bezier(0.2, 0.7, 0.2, 1)
+      forwards;
+  }
+
+  .article-intro-curtain.article-intro-ready {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .article-intro-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: min(100%, 1100px);
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .article-intro-overline,
+  .article-intro-enter {
+    color: #bdb3a5;
+    font-family: "DM Sans", sans-serif;
+    font-size: 9px;
+    letter-spacing: 2.7px;
+    line-height: 1.8;
+    text-transform: uppercase;
+    opacity: 0;
+  }
+
+  .article-intro-overline {
+    animation: article-intro-rise 700ms 0.15s ease forwards;
+  }
+
+  .article-intro-title {
+    max-width: 100%;
+    margin: 27px 0 25px;
+    color: #f2eee5;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(38px, 8.3vw, 108px);
+    font-weight: 400;
+    letter-spacing: -0.075em;
+    line-height: 1.14;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+    clip-path: inset(0 50% 0 50%);
+    animation: article-intro-unmask 1.05s 0.35s cubic-bezier(0.76, 0, 0.24, 1)
+      forwards;
+  }
+
+  .article-intro-rule {
+    width: 0;
+    height: 1px;
+    background: #a96a53;
+    animation: article-intro-rule 850ms 1s ease forwards;
+  }
+
+  .article-intro-enter {
+    margin-top: 18px;
+    animation: article-intro-rise 700ms 1.25s ease forwards;
+  }
+
+  .article-intro-skip {
+    position: absolute;
+    right: 34px;
+    bottom: 30px;
+    z-index: 2;
+    padding: 10px 0 10px 15px;
+    border: 0;
+    background: transparent;
+    color: #c6bfb2;
+    cursor: pointer;
+    font-family: "DM Sans", sans-serif;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .article-intro-skip span {
+    padding-left: 8px;
+    color: #c47a60;
+  }
+
+  .article-intro-skip:hover {
+    color: #fff;
+  }
+
+  .article-intro-curtain.article-intro-leaving {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .article-intro-curtain.article-intro-leaving .article-intro-inner {
+    transform: translateY(-35px) scale(0.96);
+    opacity: 0;
+    transition:
+      transform 700ms cubic-bezier(0.76, 0, 0.24, 1),
+      opacity 550ms;
+  }
+
+  @keyframes article-intro-ring {
+    0% {
+      transform: scale(0.3);
+      opacity: 0;
+    }
+    35% {
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0.55;
+    }
+  }
+
+  @keyframes article-intro-unmask {
+    from {
+      clip-path: inset(0 50% 0 50%);
+      letter-spacing: -0.12em;
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+      letter-spacing: -0.075em;
+    }
+  }
+
+  @keyframes article-intro-rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes article-intro-rule {
+    to {
+      width: min(280px, 55vw);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .article-intro-title {
+      font-size: clamp(36px, 10vw, 64px);
+      letter-spacing: -0.065em;
+    }
+
+    .article-intro-overline,
+    .article-intro-enter {
+      font-size: 8px;
+      letter-spacing: 2px;
+    }
+
+    .article-intro-skip {
+      right: 22px;
+      bottom: 20px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .article-intro-curtain,
+    .article-intro-curtain::before,
+    .article-intro-curtain::after,
+    .article-intro-inner,
+    .article-intro-title,
+    .article-intro-overline,
+    .article-intro-enter,
+    .article-intro-rule {
+      animation: none !important;
+      transition: none !important;
+    }
   }
 
   /* READING PROGRESS */
@@ -1389,21 +1769,27 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .article-body.has-reading-motion .reading-reveal {
     opacity: 0;
+
     transform: translateY(18px);
+
     transition:
       opacity 700ms ease,
       transform 800ms cubic-bezier(0.2, 0.7, 0.2, 1);
+
     transition-delay: var(--reading-reveal-delay, 0ms);
   }
 
   .article-body.has-reading-motion .reading-reveal.is-reading-visible {
     opacity: 1;
+
     transform: translateY(0);
   }
 
   .post-card {
     position: relative;
+
     overflow: hidden;
+
     transition:
       border-color 220ms ease,
       background 220ms ease,
@@ -1416,14 +1802,23 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .post-card::after {
     content: "";
+
     position: absolute;
+
     right: 20px;
+
     bottom: 0;
+
     left: 20px;
+
     height: 2px;
+
     background: #a64d36;
+
     transform: scaleX(0);
+
     transform-origin: left;
+
     transition: transform 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
   }
 
@@ -1434,10 +1829,13 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   @keyframes article-header-arrive {
     from {
       opacity: 0;
+
       transform: translateY(14px);
     }
+
     to {
       opacity: 1;
+
       transform: translateY(0);
     }
   }
@@ -1451,181 +1849,268 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     *::before,
     *::after {
       transition-duration: 0.01ms !important;
+
       animation-duration: 0.01ms !important;
+
       transform: none !important;
     }
   }
 
   /* EDITORIAL READING EXPERIENCE */
+
   .page > .topline {
     opacity: 0.72;
   }
+
   .page > header {
     position: relative;
   }
+
   .brand {
     transition: color 220ms ease;
   }
+
   .brand:hover {
     color: #a64d36;
   }
+
   .article-navigation-top {
     padding-bottom: 14px;
+
     border-bottom: 1px solid rgba(189, 181, 167, 0.45);
   }
+
   .back {
     transition:
       transform 220ms ease,
       color 180ms ease;
   }
+
   .back:hover {
     transform: translateX(-4px);
   }
+
   article {
     position: relative;
   }
+
   .article-header {
     position: relative;
+
     padding-top: 8px;
   }
+
   .article-header::before {
     content: "";
+
     position: absolute;
+
     top: -1px;
+
     left: 0;
+
     width: 38px;
+
     border-top: 2px solid #a64d36;
+
     opacity: 0.8;
   }
+
   .category {
     display: inline-flex;
+
     align-items: center;
+
     gap: 9px;
   }
+
   .category::before {
     content: "";
+
     width: 5px;
+
     height: 5px;
+
     border-radius: 50%;
+
     background: #a64d36;
   }
+
   h1 {
     text-wrap: balance;
   }
+
   .description {
     max-width: 610px;
   }
+
   .metadata {
     font-variant-numeric: tabular-nums;
   }
+
   .article-body {
     text-wrap: pretty;
   }
+
   .article-body :global(p) {
     text-wrap: pretty;
   }
+
   .article-body :global(h2),
   .article-body :global(h3),
   .article-body :global(h4) {
     text-wrap: balance;
   }
+
   .article-body :global(h2) {
     position: relative;
+
     padding-top: 13px;
   }
+
   .article-body :global(h2)::before {
     content: "";
+
     position: absolute;
+
     top: 0;
+
     left: 0;
+
     width: 25px;
+
     border-top: 1px solid #bdb5a7;
   }
+
   .article-body :global(blockquote) {
     padding-top: 9px;
+
     padding-bottom: 9px;
   }
+
   .article-body :global(blockquote)::after {
     content: "”";
+
     position: absolute;
+
     right: 5px;
+
     bottom: -25px;
+
     color: #d8cfc1;
+
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-size: 56px;
+
     line-height: 1;
   }
+
   .article-body :global(img) {
     box-shadow: 0 12px 34px rgba(44, 37, 27, 0.08);
   }
+
   .article-body :global(figure) {
     margin: 42px 0;
   }
+
   .article-body :global(figcaption) {
     margin-top: 10px;
+
     color: #8a8073;
+
     font-family: "DM Sans", sans-serif;
+
     font-size: 10px;
+
     letter-spacing: 0.3px;
+
     text-align: center;
   }
+
   .article-body :global(a) {
     transition:
       color 180ms ease,
       text-decoration-color 180ms ease;
+
     text-decoration-color: rgba(166, 77, 54, 0.45);
   }
+
   .article-body :global(a:hover) {
     text-decoration-color: #24221f;
   }
+
   .endmark {
     letter-spacing: 9px;
   }
+
   .author-colophon {
     position: relative;
   }
+
   .colophon-name {
     transition: color 180ms ease;
   }
+
   .post-navigation {
     position: relative;
   }
+
   .post-navigation-heading {
     padding-bottom: 5px;
   }
+
   .post-card {
     position: relative;
+
     overflow: hidden;
+
     background: rgba(255, 255, 255, 0.12);
+
     transition:
       transform 240ms ease,
       border-color 180ms ease,
       background 180ms ease;
   }
+
   .post-card::after {
     content: "";
+
     position: absolute;
+
     inset: auto 0 0;
+
     height: 2px;
+
     background: #a64d36;
+
     transform: scaleX(0);
+
     transform-origin: left;
+
     transition: transform 260ms ease;
   }
+
   .post-card:hover {
     transform: translateY(-3px);
   }
+
   .post-card:hover::after {
     transform: scaleX(1);
   }
+
   .post-card-title {
     text-wrap: balance;
   }
+
   .archive-link {
     width: fit-content;
+
     margin-right: auto;
+
     margin-left: auto;
   }
+
   footer {
     margin-top: 8px;
   }
@@ -1634,36 +2119,146 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     article {
       max-width: 700px;
     }
+
     .article-body {
       font-size: 16.5px;
+
       line-height: 2.08;
     }
   }
+
   @media (max-width: 600px) {
     .article-header::before {
       width: 28px;
     }
+
     .article-body :global(h2) {
       padding-top: 10px;
     }
+
     .article-body :global(blockquote)::after {
       font-size: 42px;
+
       bottom: -18px;
     }
   }
 
   /* Suppress Markdown thematic breaks inside essays.
+
      The global selector is intentional: it avoids Astro scoped-style
+
      specificity issues with content rendered through the slot. */
+
   :global(hr),
   :global(.article-body hr),
   .article-body :global(hr) {
     display: none !important;
+
     height: 0 !important;
+
     min-height: 0 !important;
+
     margin: 0 !important;
+
     padding: 0 !important;
+
     border: 0 !important;
+
     background: transparent !important;
+  }
+
+  /* THE MARGINALIA — CUSTOM EDITORIAL CURSOR */
+  :global(.marginalia-cursor) {
+    position: fixed;
+    inset: 0 auto auto 0;
+    z-index: 99999;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 180ms ease;
+    mix-blend-mode: normal;
+  }
+
+  :global(.marginalia-cursor.is-visible) {
+    opacity: 1;
+  }
+
+  :global(.marginalia-cursor__dot) {
+    position: absolute;
+    left: var(--cursor-x, -100px);
+    top: var(--cursor-y, -100px);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #a64d36;
+    transform: translate(-50%, -50%);
+    transition:
+      transform 180ms ease,
+      opacity 180ms ease;
+  }
+
+  :global(.marginalia-cursor__ring) {
+    position: absolute;
+    left: var(--ring-x, -100px);
+    top: var(--ring-y, -100px);
+    width: 31px;
+    height: 31px;
+    border: 1px solid rgba(166, 77, 54, 0.72);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition:
+      width 220ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      height 220ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      border-color 220ms ease,
+      background 220ms ease,
+      opacity 180ms ease;
+  }
+
+  :global(.marginalia-cursor.is-interactive .marginalia-cursor__ring) {
+    width: 48px;
+    height: 48px;
+    border-color: #a64d36;
+    background: rgba(166, 77, 54, 0.07);
+  }
+
+  :global(.marginalia-cursor.is-interactive .marginalia-cursor__dot) {
+    transform: translate(-50%, -50%) scale(0.65);
+  }
+
+  :global(.marginalia-cursor.is-pressed .marginalia-cursor__ring) {
+    width: 25px;
+    height: 25px;
+    background: rgba(166, 77, 54, 0.14);
+  }
+
+  :global(.marginalia-cursor.is-text-entry .marginalia-cursor__ring) {
+    opacity: 0;
+  }
+
+  :global(.has-marginalia-cursor),
+  :global(.has-marginalia-cursor body),
+  :global(.has-marginalia-cursor a),
+  :global(.has-marginalia-cursor button),
+  :global(.has-marginalia-cursor input),
+  :global(.has-marginalia-cursor textarea),
+  :global(.has-marginalia-cursor select) {
+    cursor: none !important;
+  }
+
+  @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+    :global(.marginalia-cursor) {
+      display: none !important;
+    }
+
+    :global(.has-marginalia-cursor),
+    :global(.has-marginalia-cursor body),
+    :global(.has-marginalia-cursor a),
+    :global(.has-marginalia-cursor button),
+    :global(.has-marginalia-cursor input),
+    :global(.has-marginalia-cursor textarea),
+    :global(.has-marginalia-cursor select) {
+      cursor: auto !important;
+    }
   }
 </style>
