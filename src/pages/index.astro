@@ -254,13 +254,9 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
 
         <section class="archive-section" id="archive">
           <div class="archive-heading">
-            <div>
-              <div class="section-eyebrow">
-                <span class="eyebrow-dot"></span>
-                From the notebook
-              </div>
-
-              <h2>Writing by year.</h2>
+            <div class="section-eyebrow">
+              <span class="eyebrow-dot"></span>
+              From the notebook
             </div>
 
             <div class="archive-total">
@@ -349,15 +345,6 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
                   data-year-group={year}
                   aria-labelledby={`year-${year}`}
                 >
-                  <div class="year-heading">
-                    <h3 id={`year-${year}`}>{year}</h3>
-
-                    <span class="year-count">
-                      {groupedEssays[year].length}
-                      {groupedEssays[year].length === 1 ? " piece" : " pieces"}
-                    </span>
-                  </div>
-
                   <div class="year-essays">
                     {groupedEssays[year].map((essay) => (
                       <article
@@ -3800,6 +3787,196 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
 
     .archive-total {
       font-size: 6px;
+    }
+  }
+  /* MOBILE OPENING: give the headline the full line, then place the
+     monogram and exploration link beneath it instead of squeezing them beside it. */
+  @media (max-width: 600px) {
+    .opening-scene {
+      width: 100vw;
+      margin-left: calc((100% - 100vw) / 2) !important;
+      margin-right: calc((100% - 100vw) / 2) !important;
+      padding-left: 22px;
+      padding-right: 22px;
+    }
+
+    .opening-stage {
+      min-height: 100svh;
+      padding-top: clamp(74px, 10svh, 112px);
+    }
+
+    .opening-topline {
+      width: 100%;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .opening-publication {
+      flex: 1 1 auto;
+    }
+
+    .opening-publication-name {
+      font-size: clamp(22px, 6.2vw, 30px);
+      letter-spacing: -1.4px;
+      white-space: nowrap;
+    }
+
+    .opening-imprint {
+      flex: 0 0 auto;
+      padding-left: 10px;
+      font-size: 6px;
+    }
+
+    .opening-composition {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      min-height: 0;
+      padding: clamp(40px, 7svh, 62px) 0 22px;
+    }
+
+    .opening-copy {
+      width: 100%;
+    }
+
+    .opening-copy h1 {
+      width: 100%;
+      max-width: none;
+      font-size: clamp(56px, 14.2vw, 82px);
+      line-height: 1.02;
+      letter-spacing: -0.085em;
+    }
+
+    .opening-kicker {
+      margin-bottom: 24px;
+      font-size: 8px;
+      letter-spacing: 1.45px;
+    }
+
+    .opening-bottomline {
+      width: 100%;
+      max-width: none;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 22px;
+      margin-top: 25px;
+    }
+
+    .opening-bottomline p {
+      max-width: 100%;
+      font-size: 12px;
+    }
+
+    .opening-explore {
+      align-self: flex-start;
+      min-width: min(100%, 260px);
+      justify-content: space-between;
+      padding-bottom: 12px;
+    }
+
+    .reading-compass {
+      width: 100%;
+      min-height: clamp(165px, 27vw, 205px);
+      margin-top: 14px;
+      display: block;
+    }
+
+    .reading-compass .compass-brand {
+      width: clamp(138px, 39vw, 170px);
+    }
+  }
+
+  @media (max-width: 380px) {
+    .opening-stage {
+      padding-top: 68px;
+    }
+
+    .opening-composition {
+      padding-top: 34px;
+    }
+
+    .opening-copy h1 {
+      font-size: clamp(51px, 13.7vw, 58px);
+    }
+
+    .opening-imprint {
+      max-width: 112px;
+    }
+
+    .reading-compass {
+      min-height: 155px;
+    }
+  }
+
+  /* Archive now starts with its small editorial label; no year title or
+     year subheadings. The year grouping remains in the underlying list logic. */
+  .archive-heading {
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .archive-heading h2,
+  .year-heading {
+    display: none !important;
+  }
+
+  @media (max-width: 600px) {
+    .archive-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .archive-total {
+      position: static;
+      flex: 0 0 auto;
+      padding: 0;
+      font-size: 6.5px;
+    }
+
+    .year-group {
+      margin-bottom: 24px;
+    }
+  }
+
+  /* SPACING REFINEMENT
+     Shorten the pinned opening so the featured essay follows it without
+     an oversized stretch of empty paper. Keep enough scroll distance for
+     the opening transition to complete. */
+  @media (min-width: 601px) {
+    .opening-scene {
+      min-height: 125vh;
+    }
+
+    .featured-section {
+      padding-top: 46px;
+      padding-bottom: 62px;
+    }
+  }
+
+  /* Remove the archive-to-about divider and tighten the closing transition. */
+  .archive-section {
+    padding-bottom: 34px;
+  }
+
+  .archive-footnote {
+    margin-top: 20px;
+  }
+
+  .about-section {
+    border-top: 0;
+  }
+
+  @media (max-width: 600px) {
+    .archive-section {
+      padding-bottom: 28px;
+    }
+
+    .archive-footnote {
+      margin-top: 16px;
     }
   }
 </style>
