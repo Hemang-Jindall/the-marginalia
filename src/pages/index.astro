@@ -4014,4 +4014,13 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
       margin-top: 8px;
     }
   }
+
+  /* Keep the opening monogram clear of the headline on phones. */
+  @media (max-width: 600px) {
+    .reading-compass .compass-brand {
+      left: auto;
+      right: 0;
+      transform: translateY(-50%);
+    }
+  }
 </style>
