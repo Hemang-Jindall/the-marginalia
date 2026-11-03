@@ -84,7 +84,7 @@ const getPreviewExcerpt = (content: string) =>
       content="The Marginalia is an independent journal of essays on philosophy, fiction, ethics, and the everyday questions that deserve a second look."
     />
 
-    <meta name="theme-color" content="#f8f5ed" />
+    <meta name="theme-color" content="#f3ead9" />
 
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
     <link rel="icon" href={`${base}favicon.ico`} sizes="any" />
@@ -680,14 +680,12 @@ const getPreviewExcerpt = (content: string) =>
       );
       openingScene.style.setProperty("--scroll-progress", progress.toFixed(4));
 
-      // Let the dark opening scene dissolve into the site's paper background.
-      const from = [33, 31, 28]; // #211f1c
-      const to = [238, 233, 223]; // #eee9df — actual page background
+      // Fade the dark veil away to reveal the one continuous body paper texture.
       const eased = progress * progress * (3 - 2 * progress);
-      const background = from.map((channel, index) =>
-        Math.round(channel + (to[index] - channel) * eased),
+      openingScene.style.setProperty(
+        "--opening-darkness",
+        (1 - eased).toFixed(4),
       );
-      openingScene.style.backgroundColor = `rgb(${background.join(", ")})`;
 
       if (openingCopy) {
         openingCopy.style.setProperty("--copy-shift", `${progress * -170}px`);
@@ -2561,8 +2559,42 @@ const getPreviewExcerpt = (content: string) =>
 
   /* IMMERSIVE HOMEPAGE — editorial motion and oversized composition */
   :global(body) {
-    background: #eee9df;
     color: #211f1c;
+    /* Clearly visible warm paper stock: mottling, fibres and fine printed-paper grain. */
+    background-color: #f1e6d4;
+    background-image:
+      radial-gradient(
+        ellipse at 12% 16%,
+        rgba(132, 91, 52, 0.13),
+        transparent 43%
+      ),
+      radial-gradient(
+        ellipse at 86% 74%,
+        rgba(157, 94, 57, 0.1),
+        transparent 46%
+      ),
+      radial-gradient(
+        ellipse at 50% 48%,
+        rgba(255, 250, 239, 0.3),
+        transparent 72%
+      ),
+      repeating-linear-gradient(
+        2deg,
+        rgba(112, 83, 54, 0.035) 0,
+        rgba(112, 83, 54, 0.035) 1px,
+        transparent 1px,
+        transparent 5px
+      ),
+      url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMjAiIGhlaWdodD0iMzIwIj4KPGZpbHRlciBpZD0icGFwZXIiPgogIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuNzIiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjEzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIiByZXN1bHQ9Im4iLz4KICA8ZmVDb2xvck1hdHJpeCBpbj0ibiIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IgogICAgLjU1IC4zNSAuMTAgMCAuMDgKICAgIC40NSAuNDUgLjEwIDAgLjAyCiAgICAuMzUgLjQwIC4yNSAwIC0uMDQKICAgIDAgMCAwIDAgLjQyIi8+CjwvZmlsdGVyPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjcGFwZXIpIi8+Cjwvc3ZnPg==");
+    background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+    background-size:
+      auto,
+      auto,
+      auto,
+      100% 100%,
+      320px 320px;
+    background-attachment: fixed;
+    background-blend-mode: multiply, multiply, screen, multiply, multiply;
   }
 
   .page {
@@ -2583,7 +2615,7 @@ const getPreviewExcerpt = (content: string) =>
     position: sticky;
     top: 0;
     z-index: 20;
-    background: rgba(238, 233, 223, 0.9);
+    background: rgba(243, 234, 217, 0.88);
     backdrop-filter: blur(14px);
     border-top: 1px solid #d4ccbf;
     border-bottom: 1px solid #d4ccbf;
@@ -2595,7 +2627,41 @@ const getPreviewExcerpt = (content: string) =>
     margin-left: calc(50% - 50vw);
     overflow: hidden;
     padding: 30px max(38px, calc((100vw - 1360px) / 2)) 0;
-    background: #211f1c;
+    /* Clearly visible warm paper stock: mottling, fibres and fine printed-paper grain. */
+    background-color: #211f1c;
+    background-image:
+      radial-gradient(
+        ellipse at 12% 16%,
+        rgba(132, 91, 52, 0.13),
+        transparent 43%
+      ),
+      radial-gradient(
+        ellipse at 86% 74%,
+        rgba(157, 94, 57, 0.1),
+        transparent 46%
+      ),
+      radial-gradient(
+        ellipse at 50% 48%,
+        rgba(255, 250, 239, 0.3),
+        transparent 72%
+      ),
+      repeating-linear-gradient(
+        2deg,
+        rgba(112, 83, 54, 0.035) 0,
+        rgba(112, 83, 54, 0.035) 1px,
+        transparent 1px,
+        transparent 5px
+      ),
+      url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMjAiIGhlaWdodD0iMzIwIj4KPGZpbHRlciBpZD0icGFwZXIiPgogIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuNzIiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjEzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIiByZXN1bHQ9Im4iLz4KICA8ZmVDb2xvck1hdHJpeCBpbj0ibiIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IgogICAgLjU1IC4zNSAuMTAgMCAuMDgKICAgIC40NSAuNDUgLjEwIDAgLjAyCiAgICAuMzUgLjQwIC4yNSAwIC0uMDQKICAgIDAgMCAwIDAgLjQyIi8+CjwvZmlsdGVyPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjcGFwZXIpIi8+Cjwvc3ZnPg==");
+    background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+    background-size:
+      auto,
+      auto,
+      auto,
+      100% 100%,
+      320px 320px;
+    background-attachment: fixed;
+    background-blend-mode: multiply, multiply, screen, multiply, multiply;
     color: #f2eee5;
   }
 
@@ -3184,7 +3250,7 @@ const getPreviewExcerpt = (content: string) =>
     display: grid;
     place-items: center;
     overflow: hidden;
-    background: #211f1c;
+    background-color: #211f1c;
     color: #f2eee5;
     opacity: 0;
     visibility: hidden;
@@ -3679,7 +3745,7 @@ const getPreviewExcerpt = (content: string) =>
   }
 
   .opening-scene {
-    background: #211f1c;
+    background-color: #211f1c;
     transition: none;
   }
 
@@ -3812,7 +3878,7 @@ const getPreviewExcerpt = (content: string) =>
     }
 
     .opening-scene {
-      background: #211f1c;
+      background-color: #211f1c;
     }
   }
 
@@ -4866,7 +4932,7 @@ const getPreviewExcerpt = (content: string) =>
 <style>
   /* Clean hero: no shader, no ghost lettering, no cursor-shaped mask. */
   .opening-scene {
-    background: #211f1c;
+    background-color: #211f1c;
     transition: none;
   }
 
@@ -4934,5 +5000,31 @@ const getPreviewExcerpt = (content: string) =>
       color: #d18469 !important;
       -webkit-text-fill-color: #d18469 !important;
     }
+  }
+
+  /*
+   * One continuous paper stock across the whole homepage.
+   * The body owns the parchment; the opening scene only places a dark veil
+   * above it, which fades out as the user scrolls.
+   */
+  .opening-scene {
+    background: transparent !important;
+    isolation: isolate;
+  }
+
+  .opening-scene::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: #211f1c;
+    opacity: var(--opening-darkness, 1);
+    will-change: opacity;
+  }
+
+  .opening-stage {
+    position: sticky;
+    z-index: 1;
   }
 </style>

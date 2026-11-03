@@ -167,6 +167,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
           </div>
         </header>
 
+
         <div class="reading-layout">
           <aside class="section-index" aria-label="About this essay">
             <div class="section-index-toc">
@@ -868,13 +869,24 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   :global(body) {
     margin: 0;
 
-    background: #f8f5ed;
-
-    color: #24221f;
-
-    font-family: "DM Sans", sans-serif;
-
-    -webkit-font-smoothing: antialiased;
+    /* Clearly visible warm paper stock: mottling, fibres and fine printed-paper grain. */
+    background-color: #f1e6d4;
+    background-image:
+      radial-gradient(ellipse at 12% 16%, rgba(132, 91, 52, 0.13), transparent 43%),
+      radial-gradient(ellipse at 86% 74%, rgba(157, 94, 57, 0.10), transparent 46%),
+      radial-gradient(ellipse at 50% 48%, rgba(255, 250, 239, 0.30), transparent 72%),
+      repeating-linear-gradient(
+        2deg,
+        rgba(112, 83, 54, 0.035) 0,
+        rgba(112, 83, 54, 0.035) 1px,
+        transparent 1px,
+        transparent 5px
+      ),
+      url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMjAiIGhlaWdodD0iMzIwIj4KPGZpbHRlciBpZD0icGFwZXIiPgogIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuNzIiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjEzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIiByZXN1bHQ9Im4iLz4KICA8ZmVDb2xvck1hdHJpeCBpbj0ibiIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IgogICAgLjU1IC4zNSAuMTAgMCAuMDgKICAgIC40NSAuNDUgLjEwIDAgLjAyCiAgICAuMzUgLjQwIC4yNSAwIC0uMDQKICAgIDAgMCAwIDAgLjQyIi8+CjwvZmlsdGVyPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjcGFwZXIpIi8+Cjwvc3ZnPg==");
+    background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+    background-size: auto, auto, auto, 100% 100%, 320px 320px;
+    background-attachment: fixed;
+    background-blend-mode: multiply, multiply, screen, multiply, multiply;
   }
 
   :global(::selection) {
@@ -1335,6 +1347,8 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   }
 
   /* THREE-COLUMN EDITORIAL READING EXPERIENCE */
+
+
   .reading-layout {
     display: grid;
     grid-template-columns: minmax(145px, 190px) minmax(0, 1fr) minmax(
