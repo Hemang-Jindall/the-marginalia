@@ -4023,4 +4023,31 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
       transform: translateY(-50%);
     }
   }
+
+  /* Tighten the transition from the featured essay to the archive search. */
+  .featured-section {
+    padding-bottom: 34px;
+  }
+
+  .archive-section {
+    padding-top: 16px;
+  }
+
+  .archive-heading {
+    margin-bottom: 18px;
+  }
+
+  @media (max-width: 600px) {
+    .featured-section {
+      padding-bottom: 30px;
+    }
+
+    .archive-section {
+      padding-top: 16px;
+    }
+
+    .archive-heading {
+      margin-bottom: 16px;
+    }
+  }
 </style>
