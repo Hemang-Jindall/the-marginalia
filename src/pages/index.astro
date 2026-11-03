@@ -3646,4 +3646,160 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
       width: 125px;
     }
   }
+
+  /* MOBILE FEATURED / ARCHIVE COMPOSITION
+     Keep the journal count beside the featured essay, and give the archive
+     heading the full line so its title never breaks awkwardly. */
+  @media (max-width: 600px) {
+    .featured-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 58px;
+      column-gap: 12px;
+      row-gap: 18px;
+      align-items: center;
+    }
+
+    /* Let the featured content's children participate in the two-column grid. */
+    .featured-content {
+      display: contents;
+    }
+
+    .featured-meta {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      min-width: 0;
+      gap: 9px;
+      font-size: 7px;
+      letter-spacing: 0.8px;
+    }
+
+    .featured-content h1 {
+      grid-column: 1;
+      grid-row: 2;
+      align-self: center;
+      min-width: 0;
+      margin: 0;
+      font-size: clamp(35px, 9.5vw, 40px);
+      line-height: 1.16;
+      letter-spacing: -1.8px;
+      overflow-wrap: normal;
+      word-break: normal;
+    }
+
+    .featured-description {
+      grid-column: 1;
+      grid-row: 3;
+      align-self: start;
+      margin-top: 2px;
+      font-size: 11px;
+      line-height: 1.75;
+    }
+
+    .featured-aside {
+      grid-column: 2;
+      grid-row: 2 / 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      align-self: stretch;
+      min-width: 0;
+      min-height: 0;
+      gap: 5px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      text-align: center;
+    }
+
+    .aside-eyebrow {
+      font-size: 5.5px;
+      line-height: 1.5;
+      letter-spacing: 0.7px;
+      text-align: center;
+    }
+
+    .piece-count {
+      margin: 0;
+      font-size: clamp(58px, 15vw, 68px);
+      line-height: 0.95;
+      letter-spacing: -4px;
+    }
+
+    .aside-divider,
+    .aside-vertical {
+      display: none;
+    }
+
+    .aside-caption {
+      max-width: 58px;
+      margin: 0;
+      font-size: 5px;
+      line-height: 1.5;
+      letter-spacing: 0.45px;
+      text-align: center;
+    }
+
+    .featured-bottom {
+      grid-column: 1 / -1;
+      grid-row: 4;
+      width: 100%;
+      margin-top: 5px;
+    }
+
+    .archive-heading {
+      position: relative;
+      display: block;
+      margin-bottom: 22px;
+    }
+
+    .archive-heading > div:first-child {
+      min-width: 0;
+      width: 100%;
+    }
+
+    .archive-heading h2 {
+      width: 100%;
+      white-space: nowrap;
+      font-size: clamp(25px, 7.2vw, 30px);
+      line-height: 1.25;
+      letter-spacing: -1.35px;
+    }
+
+    .archive-total {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      gap: 3px;
+      padding: 0;
+      font-size: 6.5px;
+      letter-spacing: 0.35px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .featured-grid {
+      grid-template-columns: minmax(0, 1fr) 52px;
+      column-gap: 9px;
+    }
+
+    .featured-content h1 {
+      font-size: 34px;
+      letter-spacing: -1.6px;
+    }
+
+    .piece-count {
+      font-size: 56px;
+    }
+
+    .archive-heading h2 {
+      font-size: 24px;
+    }
+
+    .archive-total {
+      font-size: 6px;
+    }
+  }
 </style>
