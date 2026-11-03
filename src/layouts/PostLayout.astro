@@ -9,9 +9,24 @@ interface Props {
   pubDate: Date;
 
   category: string;
+  sections?: { title: string; anchor: string }[];
+  annotations?: {
+    anchor: string;
+    kind: string;
+    title: string;
+    body: string;
+    url?: string;
+  }[];
 }
 
-const { title, description, pubDate, category } = Astro.props;
+const {
+  title,
+  description,
+  pubDate,
+  category,
+  sections = [],
+  annotations = [],
+} = Astro.props;
 
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
@@ -87,12 +102,12 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     <title>{title} — The Marginalia</title>
 
-    <link rel="preconnect" href="https\://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
 
-    <link rel="preconnect" href="https\://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <link
-      href="https\://fonts.googleapis.com/css2?family=DM+Sans:wght\@400;500;600;700&family=Libre+Baskerville:ital,wght\@0,400;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -106,10 +121,14 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     >
       <div class="article-intro-inner">
         <span class="article-intro-overline">{category} · {formattedDate}</span>
+
         <h1 class="article-intro-title">{title}</h1>
+
         <span class="article-intro-rule" aria-hidden="true"></span>
+
         <span class="article-intro-enter">An essay from The Marginalia</span>
       </div>
+
       <button class="article-intro-skip" id="article-intro-skip" type="button">
         Skip intro <span aria-hidden="true">↗</span>
       </button>
@@ -120,14 +139,6 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     </div>
 
     <div class="page">
-      <div class="topline">
-        <span>A personal literary journal</span>
-
-        <span class="topline-center">Essays · Fiction · Reflections</span>
-
-        <span>Established 2025</span>
-      </div>
-
       <header>
         <a class="brand" href={homeUrl}>
           The <em>Marginalia.</em>
@@ -143,55 +154,57 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
       </header>
 
       <main>
-        <div class="article-navigation-top">
-          <a class="back" href={archiveUrl}>
-            <span aria-hidden="true">←</span>
+        <header class="article-header">
+          <span class="category">{category}</span>
+          <h1>{title}</h1>
+          <p class="description">{description}</p>
+          <div class="metadata">
+            <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+            <span class="metadata-dot" aria-hidden="true">·</span>
+            <span>{minutes} min read</span>
+            <span class="metadata-dot" aria-hidden="true">·</span>
+            <span>The Marginalia</span>
+          </div>
+        </header>
 
-            Back to the journal
-          </a>
-
-          <span class="issue-label">From the archive</span>
-        </div>
-
-        <article>
-          <header class="article-header">
-            <div class="category">{category}</div>
-
-            <h1>{title}</h1>
-
-            <p class="description">{description}</p>
-
-            <div class="metadata">
-              <time datetime={pubDate.toISOString()}>{formattedDate}</time>
-
-              <span class="metadata-dot">·</span>
-
-              <span>{minutes} min read</span>
-
-              <span class="metadata-dot">·</span>
-
-              <span>The Marginalia</span>
+        <div class="reading-layout">
+          <aside class="section-index" aria-label="About this essay">
+            <div class="section-index-toc">
+              <span class="rail-eyebrow">IN THIS ESSAY</span>
+              <nav id="section-index-list" aria-label="Sections" data-sections={JSON.stringify(sections)}></nav>
             </div>
-          </header>
+          </aside>
 
-          <div class="article-body" id="article-body">
-            <slot />
-          </div>
+          <article>
+            <div class="article-body" id="article-body">
+              <slot />
+            </div>
 
-          <div class="endmark" aria-label="End of article">* * *</div>
+            <div class="endmark" aria-label="End of article">* * *</div>
 
-          <p class="endnote">
-            Thank you for reading. Take the question with you.
-          </p>
+            <p class="endnote">
+              Thank you for reading. Take the question with you.
+            </p>
 
-          <div class="author-colophon">
-            <span class="colophon-rule" aria-hidden="true"></span>
+            <div class="author-colophon">
+              <span class="colophon-rule" aria-hidden="true"></span>
 
-            <span class="colophon-name">Hemang Jindal</span>
+              <span class="colophon-name">Hemang Jindal</span>
 
-            <span class="colophon-note">Written for The Marginalia</span>
-          </div>
-        </article>
+              <span class="colophon-note">Written for The Marginalia</span>
+            </div>
+          </article>
+
+          <aside
+            class="marginalia-sidebar is-empty"
+            id="marginalia-sidebar"
+            aria-label="Marginalia"
+            data-annotations={JSON.stringify(annotations)}
+          >
+            <span class="rail-eyebrow">MARGINALIA</span>
+            <div class="marginalia-notes" id="marginalia-notes"></div>
+          </aside>
+        </div>
 
         <nav class="post-navigation" aria-label="More articles">
           <div class="post-navigation-heading">
@@ -280,6 +293,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
         const finePointer = window.matchMedia(
           "(hover: hover) and (pointer: fine)",
         );
+
         const reducedMotion = window.matchMedia(
           "(prefers-reduced-motion: reduce)",
         );
@@ -287,24 +301,37 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
         if (!finePointer.matches || reducedMotion.matches) return;
 
         const cursor = document.createElement("div");
+
         cursor.className = "marginalia-cursor";
+
         cursor.setAttribute("aria-hidden", "true");
+
         cursor.innerHTML =
           '<span class="marginalia-cursor__dot"></span><span class="marginalia-cursor__ring"></span>';
+
         document.body.appendChild(cursor);
+
         document.documentElement.classList.add("has-marginalia-cursor");
 
         let pointerX = window.innerWidth / 2;
+
         let pointerY = window.innerHeight / 2;
+
         let ringX = pointerX;
+
         let ringY = pointerY;
+
         let frame = 0;
 
         const move = (event: PointerEvent) => {
           pointerX = event.clientX;
+
           pointerY = event.clientY;
+
           cursor.classList.add("is-visible");
+
           cursor.style.setProperty("--cursor-x", `${pointerX}px`);
+
           cursor.style.setProperty("--cursor-y", `${pointerY}px`);
 
           if (!frame) frame = window.requestAnimationFrame(animateRing);
@@ -312,8 +339,11 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
         const animateRing = () => {
           ringX += (pointerX - ringX) * 0.18;
+
           ringY += (pointerY - ringY) * 0.18;
+
           cursor.style.setProperty("--ring-x", `${ringX}px`);
+
           cursor.style.setProperty("--ring-y", `${ringY}px`);
 
           if (
@@ -328,30 +358,38 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
         const setTargetState = (event: PointerEvent) => {
           const target = event.target instanceof Element ? event.target : null;
+
           const interactive = target?.closest(
             'a, button, input, textarea, select, [role="button"], [tabindex]:not([tabindex="-1"])',
           );
+
           const textField = target?.closest(
             'input, textarea, [contenteditable="true"]',
           );
 
           cursor.classList.toggle("is-interactive", Boolean(interactive));
+
           cursor.classList.toggle("is-text-entry", Boolean(textField));
         };
 
         document.addEventListener("pointermove", move, { passive: true });
+
         document.addEventListener("pointerover", setTargetState, {
           passive: true,
         });
+
         document.addEventListener("pointerout", (event: PointerEvent) => {
           if (!event.relatedTarget) cursor.classList.remove("is-visible");
         });
+
         document.addEventListener("pointerdown", () =>
           cursor.classList.add("is-pressed"),
         );
+
         document.addEventListener("pointerup", () =>
           cursor.classList.remove("is-pressed"),
         );
+
         window.addEventListener("blur", () =>
           cursor.classList.remove("is-visible"),
         );
@@ -362,25 +400,35 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
 <script>
   // Show the opening once for each article in the current browser tab.
+
   const articleIntro = document.querySelector<HTMLElement>(
     "#article-intro-curtain",
   );
+
   const articleIntroSkip = document.querySelector<HTMLButtonElement>(
     "#article-intro-skip",
   );
+
   const articleIntroReducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)",
   ).matches;
+
   const articleIntroKey = `marginalia-article-intro-${articleIntro?.dataset.articleId ?? "unknown"}`;
+
   let articleIntroDismissed = false;
 
   const dismissArticleIntro = () => {
     if (!articleIntro || articleIntroDismissed) return;
+
     articleIntroDismissed = true;
+
     articleIntro.classList.add("article-intro-leaving");
+
     document.documentElement.classList.remove("article-intro-active");
+
     window.setTimeout(
       () => articleIntro.remove(),
+
       articleIntroReducedMotion ? 0 : 850,
     );
   };
@@ -390,6 +438,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     try {
       alreadySeen = sessionStorage.getItem(articleIntroKey) === "1";
+
       sessionStorage.setItem(articleIntroKey, "1");
     } catch {
       alreadySeen = false;
@@ -399,9 +448,13 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
       articleIntro.remove();
     } else {
       document.documentElement.classList.add("article-intro-active");
+
       articleIntro.classList.add("article-intro-ready");
+
       window.setTimeout(dismissArticleIntro, 2500);
+
       articleIntroSkip?.addEventListener("click", dismissArticleIntro);
+
       articleIntro.addEventListener("click", (event) => {
         if (event.target === articleIntro) dismissArticleIntro();
       });
@@ -520,7 +573,288 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   }
 </script>
 
-\n<style>
+<script>
+  // Build the section index and article-specific interactive marginalia.
+  const marginaliaBody = document.querySelector<HTMLElement>("#article-body");
+  const sectionIndex = document.querySelector<HTMLElement>(
+    "#section-index-list",
+  );
+  const marginaliaSidebar = document.querySelector<HTMLElement>(
+    "#marginalia-sidebar",
+  );
+  const marginaliaNotes =
+    document.querySelector<HTMLElement>("#marginalia-notes");
+
+  const readingLayout = document.querySelector<HTMLElement>(".reading-layout");
+
+  if (marginaliaBody && sectionIndex) {
+    type EditorialSection = { title: string; anchor: string };
+
+    const editorialSections: EditorialSection[] = sectionIndex.dataset.sections
+      ? JSON.parse(sectionIndex.dataset.sections)
+      : [];
+
+    const targets: HTMLElement[] = [];
+
+    const makeSectionLink = (title: string, target: HTMLElement, nested = false) => {
+      const link = document.createElement("a");
+      link.href = `#${target.id}`;
+      link.textContent = title;
+      link.className = nested
+        ? "section-index-link is-nested"
+        : "section-index-link";
+
+      const item = document.createElement("div");
+      item.className = "section-index-item";
+      item.appendChild(link);
+      sectionIndex.appendChild(item);
+      targets.push(target);
+    };
+
+    // Editorial anchors are matched against existing rendered paragraphs.
+    // This creates IDs in the page DOM only; no Markdown or post content is changed.
+    if (editorialSections.length) {
+      const blocks = Array.from(
+        marginaliaBody.querySelectorAll<HTMLElement>("p, li, blockquote"),
+      );
+
+      editorialSections.forEach((section, index) => {
+        const target = blocks.find((block) =>
+          (block.textContent ?? "")
+            .replace(/\s+/g, " ")
+            .toLocaleLowerCase()
+            .includes(section.anchor.replace(/\s+/g, " ").toLocaleLowerCase()),
+        );
+
+        if (!target) return;
+
+        if (!target.id) target.id = `essay-section-${index + 1}`;
+        makeSectionLink(section.title, target);
+      });
+    } else {
+      // Other posts can continue to use their own Markdown headings.
+      const headings = Array.from(
+        marginaliaBody.querySelectorAll<HTMLElement>("h2, h3"),
+      );
+
+      headings.forEach((heading, index) => {
+        if (!heading.id) {
+          heading.id =
+            heading.textContent
+              ?.trim()
+              .toLowerCase()
+              .replace(/[^\p{L}\p{N}]+/gu, "-")
+              .replace(/^-|-$/g, "") || `section-${index + 1}`;
+        }
+        makeSectionLink(
+          heading.textContent?.trim() || `Section ${index + 1}`,
+          heading,
+          heading.tagName === "H3",
+        );
+      });
+    }
+
+    readingLayout?.classList.toggle("has-index", targets.length > 0);
+    sectionIndex
+      .closest(".section-index-toc")
+      ?.classList.toggle("is-empty", targets.length === 0);
+
+    if (targets.length && "IntersectionObserver" in window) {
+      const links = Array.from(
+        sectionIndex.querySelectorAll<HTMLAnchorElement>("a"),
+      );
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            links.forEach((link) => {
+              const active = link.hash === `#${entry.target.id}`;
+              link.classList.toggle("is-active", active);
+              if (active) link.setAttribute("aria-current", "location");
+              else link.removeAttribute("aria-current");
+            });
+          });
+        },
+        { rootMargin: "-18% 0px -68% 0px" },
+      );
+      targets.forEach((target) => observer.observe(target));
+    }
+  }
+
+  type Annotation = {
+    anchor: string;
+    kind: string;
+    title: string;
+    body: string;
+    url?: string;
+  };
+  const annotations: Annotation[] = marginaliaSidebar?.dataset.annotations
+    ? JSON.parse(marginaliaSidebar.dataset.annotations)
+    : [];
+
+  if (
+    marginaliaBody &&
+    marginaliaSidebar &&
+    marginaliaNotes &&
+    annotations.length
+  ) {
+    marginaliaSidebar.classList.remove("is-empty");
+    marginaliaNotes.replaceChildren();
+
+    const noteElements: HTMLElement[] = [];
+    const activate = (index: number) => {
+      noteElements.forEach((note, i) =>
+        note.classList.toggle("is-active", i === index),
+      );
+      marginaliaBody
+        .querySelectorAll<HTMLButtonElement>(".marginalia-marker")
+        .forEach((marker) =>
+          marker.classList.toggle(
+            "is-active",
+            Number(marker.dataset.noteIndex) === index,
+          ),
+        );
+    };
+
+    const makeMarker = (index: number, note: Annotation) => {
+      const marker = document.createElement("button");
+      marker.type = "button";
+      marker.className = "marginalia-marker";
+      marker.textContent = String(index + 1);
+      marker.dataset.noteIndex = String(index);
+      marker.setAttribute(
+        "aria-label",
+        `Open marginal note ${index + 1}: ${note.title}`,
+      );
+      marker.setAttribute("aria-controls", `marginalia-note-${index + 1}`);
+      marker.addEventListener("mouseenter", () => activate(index));
+      marker.addEventListener("focus", () => activate(index));
+      marker.addEventListener("mouseleave", () => activate(-1));
+      marker.addEventListener("blur", () => activate(-1));
+      marker.addEventListener("click", () => {
+        activate(index);
+        noteElements[index]?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
+      });
+      return marker;
+    };
+
+    const insertMarkerAfterPhrase = (phrase: string, marker: HTMLElement) => {
+      const blocks = Array.from(
+        marginaliaBody.querySelectorAll<HTMLElement>("p, li, blockquote"),
+      );
+      for (const block of blocks) {
+        if (
+          block.closest(".footnotes") ||
+          block.querySelector(".marginalia-marker")
+        )
+          continue;
+        const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT);
+        const nodes: Text[] = [];
+        let fullText = "";
+        let node: Node | null;
+        while ((node = walker.nextNode())) {
+          const textNode = node as Text;
+          nodes.push(textNode);
+          fullText += textNode.data;
+        }
+        const foundAt = fullText
+          .toLocaleLowerCase()
+          .indexOf(phrase.toLocaleLowerCase());
+        if (foundAt < 0) continue;
+
+        const endOffset = foundAt + phrase.length;
+        let cursor = 0;
+        let startNode: Text | null = null,
+          endNode: Text | null = null;
+        let startNodeOffset = 0,
+          endNodeOffset = 0;
+        for (const textNode of nodes) {
+          const next = cursor + textNode.data.length;
+          if (!startNode && foundAt >= cursor && foundAt <= next) {
+            startNode = textNode;
+            startNodeOffset = foundAt - cursor;
+          }
+          if (endOffset >= cursor && endOffset <= next) {
+            endNode = textNode;
+            endNodeOffset = endOffset - cursor;
+            break;
+          }
+          cursor = next;
+        }
+        if (!startNode || !endNode) continue;
+        const range = document.createRange();
+        range.setStart(startNode, startNodeOffset);
+        range.setEnd(endNode, endNodeOffset);
+        range.collapse(false);
+        range.insertNode(marker);
+        return true;
+      }
+      return false;
+    };
+
+    annotations.forEach((note, index) => {
+      const card = document.createElement("article");
+      card.className = "marginalia-note";
+      card.id = `marginalia-note-${index + 1}`;
+      card.tabIndex = -1;
+
+      const heading = document.createElement("h3");
+      heading.className = "marginalia-note__title";
+      heading.textContent = note.title;
+
+      const kind = document.createElement("span");
+      kind.className = "marginalia-note__kind";
+      kind.textContent = note.kind;
+
+      const body = document.createElement("p");
+      body.className = "marginalia-note__body";
+      body.textContent = note.body;
+
+      const number = document.createElement("span");
+      number.className = "marginalia-note__number";
+      number.textContent = String(noteElements.length + 1);
+
+      card.append(number, kind, heading, body);
+
+      if (note.url) {
+        const source = document.createElement("a");
+        source.className = "marginalia-note__source";
+        source.href = note.url;
+        source.target = "_blank";
+        source.rel = "noopener noreferrer";
+        source.textContent = "Further reading ↗";
+        card.append(source);
+      }
+
+      card.addEventListener("mouseenter", () => activate(index));
+      card.addEventListener("focusin", () => activate(index));
+      card.addEventListener("mouseleave", () => activate(-1));
+      const marker = makeMarker(index, note);
+      const inserted = insertMarkerAfterPhrase(note.anchor, marker);
+      if (inserted) {
+        noteElements.push(card);
+        marginaliaNotes.append(card);
+      } else {
+        marker.remove();
+      }
+    });
+
+    if (!marginaliaNotes.children.length)
+      marginaliaSidebar.classList.add("is-empty");
+  } else if (marginaliaSidebar) {
+    marginaliaSidebar.classList.add("is-empty");
+  }
+
+  readingLayout?.classList.toggle(
+    "has-notes",
+    Boolean(marginaliaNotes?.children.length),
+  );
+</script>
+
+<style>
   :global(*) {
     box-sizing: border-box;
   }
@@ -562,6 +896,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   }
 
   /* ARTICLE INTRO CURTAIN */
+
   :global(html.article-intro-active),
   :global(html.article-intro-active body) {
     overflow: hidden;
@@ -569,17 +904,29 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .article-intro-curtain {
     position: fixed;
+
     inset: 0;
+
     z-index: 1100;
+
     display: grid;
+
     place-items: center;
+
     overflow: hidden;
+
     padding: 28px;
+
     background: #211f1c;
+
     color: #f2eee5;
+
     opacity: 0;
+
     visibility: hidden;
+
     pointer-events: none;
+
     transition:
       opacity 850ms cubic-bezier(0.76, 0, 0.24, 1),
       visibility 850ms;
@@ -588,13 +935,21 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   .article-intro-curtain::before,
   .article-intro-curtain::after {
     position: absolute;
+
     width: 70vmax;
+
     height: 70vmax;
+
     border: 1px solid rgba(196, 122, 96, 0.18);
+
     border-radius: 50%;
+
     content: "";
+
     transform: scale(0.3);
+
     opacity: 0;
+
     pointer-events: none;
   }
 
@@ -605,35 +960,51 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .article-intro-curtain::after {
     width: 48vmax;
+
     height: 48vmax;
+
     animation: article-intro-ring 2.2s 0.18s cubic-bezier(0.2, 0.7, 0.2, 1)
       forwards;
   }
 
   .article-intro-curtain.article-intro-ready {
     opacity: 1;
+
     visibility: visible;
+
     pointer-events: auto;
   }
 
   .article-intro-inner {
     position: relative;
+
     z-index: 1;
+
     display: flex;
+
     width: min(100%, 1100px);
+
     flex-direction: column;
+
     align-items: center;
+
     text-align: center;
   }
 
   .article-intro-overline,
   .article-intro-enter {
     color: #bdb3a5;
+
     font-family: "DM Sans", sans-serif;
+
     font-size: 9px;
+
     letter-spacing: 2.7px;
+
     line-height: 1.8;
+
     text-transform: uppercase;
+
     opacity: 0;
   }
 
@@ -643,50 +1014,78 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .article-intro-title {
     max-width: 100%;
+
     margin: 27px 0 25px;
+
     color: #f2eee5;
+
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-size: clamp(38px, 8.3vw, 108px);
+
     font-weight: 400;
+
     letter-spacing: -0.075em;
+
     line-height: 1.14;
+
     text-wrap: balance;
+
     overflow-wrap: anywhere;
+
     clip-path: inset(0 50% 0 50%);
+
     animation: article-intro-unmask 1.05s 0.35s cubic-bezier(0.76, 0, 0.24, 1)
       forwards;
   }
 
   .article-intro-rule {
     width: 0;
+
     height: 1px;
+
     background: #a96a53;
+
     animation: article-intro-rule 850ms 1s ease forwards;
   }
 
   .article-intro-enter {
     margin-top: 18px;
+
     animation: article-intro-rise 700ms 1.25s ease forwards;
   }
 
   .article-intro-skip {
     position: absolute;
+
     right: 34px;
+
     bottom: 30px;
+
     z-index: 2;
+
     padding: 10px 0 10px 15px;
+
     border: 0;
+
     background: transparent;
+
     color: #c6bfb2;
+
     cursor: pointer;
+
     font-family: "DM Sans", sans-serif;
+
     font-size: 9px;
+
     letter-spacing: 1.5px;
+
     text-transform: uppercase;
   }
 
   .article-intro-skip span {
     padding-left: 8px;
+
     color: #c47a60;
   }
 
@@ -696,13 +1095,17 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   .article-intro-curtain.article-intro-leaving {
     opacity: 0;
+
     visibility: hidden;
+
     pointer-events: none;
   }
 
   .article-intro-curtain.article-intro-leaving .article-intro-inner {
     transform: translateY(-35px) scale(0.96);
+
     opacity: 0;
+
     transition:
       transform 700ms cubic-bezier(0.76, 0, 0.24, 1),
       opacity 550ms;
@@ -711,13 +1114,17 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   @keyframes article-intro-ring {
     0% {
       transform: scale(0.3);
+
       opacity: 0;
     }
+
     35% {
       opacity: 1;
     }
+
     100% {
       transform: scale(1);
+
       opacity: 0.55;
     }
   }
@@ -725,10 +1132,13 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   @keyframes article-intro-unmask {
     from {
       clip-path: inset(0 50% 0 50%);
+
       letter-spacing: -0.12em;
     }
+
     to {
       clip-path: inset(0 0 0 0);
+
       letter-spacing: -0.075em;
     }
   }
@@ -736,10 +1146,13 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   @keyframes article-intro-rise {
     from {
       opacity: 0;
+
       transform: translateY(12px);
     }
+
     to {
       opacity: 1;
+
       transform: translateY(0);
     }
   }
@@ -753,17 +1166,20 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   @media (max-width: 600px) {
     .article-intro-title {
       font-size: clamp(36px, 10vw, 64px);
+
       letter-spacing: -0.065em;
     }
 
     .article-intro-overline,
     .article-intro-enter {
       font-size: 8px;
+
       letter-spacing: 2px;
     }
 
     .article-intro-skip {
       right: 22px;
+
       bottom: 20px;
     }
   }
@@ -778,6 +1194,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     .article-intro-enter,
     .article-intro-rule {
       animation: none !important;
+
       transition: none !important;
     }
   }
@@ -917,6 +1334,315 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     padding: 37px 0 80px;
   }
 
+  /* THREE-COLUMN EDITORIAL READING EXPERIENCE */
+  .reading-layout {
+    display: grid;
+    grid-template-columns: minmax(145px, 190px) minmax(0, 1fr) minmax(
+        210px,
+        260px
+      );
+    align-items: start;
+    column-gap: clamp(26px, 3.4vw, 54px);
+    margin-top: 54px;
+  }
+
+  /* Collapse unused rails instead of leaving their grid tracks behind. */
+  .reading-layout:not(.has-index):not(.has-notes) {
+    grid-template-columns: minmax(0, 760px);
+    justify-content: center;
+  }
+
+  .reading-layout:not(.has-index).has-notes {
+    grid-template-columns: minmax(0, 760px) minmax(300px, 340px);
+    column-gap: clamp(42px, 4.2vw, 64px);
+    justify-content: center;
+  }
+
+  .reading-layout.has-index:not(.has-notes) {
+    grid-template-columns: minmax(145px, 190px) minmax(0, 760px);
+    justify-content: center;
+  }
+
+  .reading-layout > article {
+    width: 100%;
+    max-width: 760px;
+    min-width: 0;
+    margin: 0 auto;
+  }
+
+  .section-index,
+  .marginalia-sidebar {
+    position: sticky;
+    top: 42px;
+    min-width: 0;
+    padding-top: 14px;
+  }
+
+  .rail-eyebrow {
+    display: block;
+    margin-bottom: 25px;
+    color: #625b51;
+    font-family: "DM Sans", sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.2px;
+    text-transform: uppercase;
+  }
+
+  .section-index {
+    padding-right: 22px;
+    border-right: 1px solid #dcd6ca;
+  }
+
+  .section-index-toc.is-empty {
+    display: none;
+  }
+
+  /*
+   * The section links are generated by JavaScript after Astro renders.
+   * They therefore need global selectors: Astro's scoped selectors do not
+   * attach their scope attribute to dynamically-created elements.
+   */
+  :global(.section-index-item) {
+    margin: 0 0 13px;
+  }
+
+  :global(.section-index-link) {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    color: #71695e;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.85;
+    text-decoration: none;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    overflow-wrap: normal;
+    transition:
+      color 180ms ease,
+      text-decoration-color 180ms ease;
+  }
+
+  :global(.section-index-link.is-nested) {
+    padding-left: 12px;
+    font-size: 11px;
+  }
+
+  :global(.section-index-link:hover),
+  :global(.section-index-link:focus-visible),
+  :global(.section-index-link.is-active) {
+    color: #a64d36;
+    text-decoration: none;
+  }
+
+  :global(.section-index-link:focus-visible) {
+    outline: 1px solid rgba(166, 77, 54, 0.45);
+    outline-offset: 4px;
+  }
+
+  :global(.section-index-link.is-active::before) {
+    content: "·";
+    display: inline-block;
+    width: 12px;
+    margin-left: -12px;
+    color: #a64d36;
+  }
+
+  .marginalia-sidebar {
+    min-height: 180px;
+    padding-left: 24px;
+    border-left: 1px solid #dcd6ca;
+  }
+
+  .marginalia-notes {
+    display: grid;
+    gap: 25px;
+    color: #4c463e;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 12px;
+    line-height: 1.9;
+  }
+
+  /* These elements are created by the annotation script, so their styles
+     must be global rather than Astro-scoped. */
+  :global(.marginalia-note) {
+    position: relative;
+    padding: 0;
+    transition:
+      color 220ms ease,
+      opacity 220ms ease;
+    scroll-margin-top: 55px;
+  }
+
+  :global(.marginalia-note__number) {
+    display: inline-block;
+    margin: 0 9px 8px 0;
+    color: #a64d36;
+    font-family: "DM Sans", sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  :global(.marginalia-note__kind) {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: #a64d36;
+    font-family: "DM Sans", sans-serif;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+
+  :global(.marginalia-note__title) {
+    margin: 0 0 7px;
+    color: #24221f;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.65;
+  }
+
+  :global(.marginalia-note__body) {
+    margin: 0;
+    color: #625b51;
+    font: inherit;
+    line-height: 1.85;
+  }
+
+  :global(.marginalia-note__source) {
+    display: inline-block;
+    margin-top: 9px;
+    color: #a64d36;
+    font-family: "DM Sans", sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.3px;
+    text-decoration: none;
+  }
+
+  :global(.marginalia-note__source:hover) {
+    color: #713622;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  :global(.marginalia-note.is-active) {
+    color: #24221f;
+  }
+
+  :global(.marginalia-marker) {
+    appearance: none;
+    -webkit-appearance: none;
+    display: inline;
+    position: relative;
+    top: -0.35em;
+    margin: 0 0.08em 0 0.12em;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+    color: #a64d36;
+    cursor: pointer;
+    font:
+      600 0.66em/1 "DM Sans",
+      sans-serif;
+    vertical-align: baseline;
+    transition:
+      color 180ms ease,
+      text-decoration-color 180ms ease;
+  }
+
+  :global(.marginalia-marker:hover),
+  :global(.marginalia-marker:focus-visible),
+  :global(.marginalia-marker.is-active) {
+    color: #713622;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  :global(.marginalia-marker:focus-visible) {
+    outline: 1px solid #a64d36;
+    outline-offset: 3px;
+  }
+
+  .marginalia-sidebar.is-empty {
+    display: none;
+  }
+
+  @media (min-width: 1200px) {
+    .page {
+      max-width: 1500px;
+    }
+  }
+
+  @media (max-width: 1050px) {
+    .reading-layout {
+      grid-template-columns: minmax(0, 1fr) minmax(240px, 290px);
+      column-gap: 30px;
+    }
+    .reading-layout:not(.has-notes) {
+      grid-template-columns: minmax(125px, 165px) minmax(0, 700px);
+      justify-content: center;
+    }
+    .reading-layout > article {
+      max-width: 700px;
+    }
+    .reading-layout.has-notes {
+      grid-template-columns: minmax(125px, 165px) minmax(0, 1fr) minmax(210px, 250px);
+      column-gap: 22px;
+    }
+    .section-index {
+      display: block;
+      padding-right: 14px;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .reading-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 42px;
+      margin-top: 42px;
+    }
+    .section-index {
+      position: static;
+      order: -1;
+      width: 100%;
+      padding: 0 0 22px;
+      border-right: 0;
+      border-bottom: 1px solid #dcd6ca;
+    }
+    .section-index-toc {
+      margin-top: 22px;
+    }
+    .section-index-toc.is-empty {
+      display: none;
+    }
+    .reading-layout > article {
+      order: 0;
+    }
+    .marginalia-sidebar {
+      position: static;
+      order: 1;
+      width: 100%;
+      min-height: 0;
+      padding: 24px 0 0;
+      border-top: 1px solid #dcd6ca;
+      border-left: 0;
+    }
+    .marginalia-sidebar .rail-eyebrow {
+      margin-bottom: 18px;
+    }
+    .marginalia-notes .footnotes li {
+      margin-bottom: 20px;
+    }
+  }
+
   .article-navigation-top {
     display: flex;
 
@@ -968,9 +1694,26 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   }
 
   .article-header {
+    width: min(100%, 980px);
+    margin: 48px auto 0;
     padding-bottom: 28px;
-
     border-bottom: 1px solid #dcd6ca;
+  }
+
+  .article-header h1 {
+    max-width: 780px;
+    margin: 21px 0 20px;
+    color: #24221f;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(37px, 5vw, 59px);
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: -2.5px;
+    overflow-wrap: anywhere;
+  }
+
+  .article-header .description {
+    max-width: 760px;
   }
 
   .category {
@@ -2116,8 +2859,8 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   }
 
   @media (min-width: 1100px) {
-    article {
-      max-width: 700px;
+    .reading-layout > article {
+      max-width: 760px;
     }
 
     .article-body {
@@ -2145,7 +2888,11 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   /* Suppress Markdown thematic breaks inside essays.
 
+
+
      The global selector is intentional: it avoids Astro scoped-style
+
+
 
      specificity issues with content rendered through the slot. */
 
@@ -2168,15 +2915,24 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   }
 
   /* THE MARGINALIA — CUSTOM EDITORIAL CURSOR */
+
   :global(.marginalia-cursor) {
     position: fixed;
+
     inset: 0 auto auto 0;
+
     z-index: 99999;
+
     width: 0;
+
     height: 0;
+
     pointer-events: none;
+
     opacity: 0;
+
     transition: opacity 180ms ease;
+
     mix-blend-mode: normal;
   }
 
@@ -2186,13 +2942,21 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   :global(.marginalia-cursor__dot) {
     position: absolute;
+
     left: var(--cursor-x, -100px);
+
     top: var(--cursor-y, -100px);
+
     width: 6px;
+
     height: 6px;
+
     border-radius: 50%;
+
     background: #a64d36;
+
     transform: translate(-50%, -50%);
+
     transition:
       transform 180ms ease,
       opacity 180ms ease;
@@ -2200,13 +2964,21 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   :global(.marginalia-cursor__ring) {
     position: absolute;
+
     left: var(--ring-x, -100px);
+
     top: var(--ring-y, -100px);
+
     width: 31px;
+
     height: 31px;
+
     border: 1px solid rgba(166, 77, 54, 0.72);
+
     border-radius: 50%;
+
     transform: translate(-50%, -50%);
+
     transition:
       width 220ms cubic-bezier(0.2, 0.7, 0.2, 1),
       height 220ms cubic-bezier(0.2, 0.7, 0.2, 1),
@@ -2217,8 +2989,11 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   :global(.marginalia-cursor.is-interactive .marginalia-cursor__ring) {
     width: 48px;
+
     height: 48px;
+
     border-color: #a64d36;
+
     background: rgba(166, 77, 54, 0.07);
   }
 
@@ -2228,7 +3003,9 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   :global(.marginalia-cursor.is-pressed .marginalia-cursor__ring) {
     width: 25px;
+
     height: 25px;
+
     background: rgba(166, 77, 54, 0.14);
   }
 

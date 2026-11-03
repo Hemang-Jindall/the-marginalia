@@ -4,6 +4,50 @@ description: "A summary of the life and philosophy of Anaximenes, the third pre-
 pubDate: 2025-07-15
 category: "Philosophy"
 draft: false
+sections:
+  - title: "I. The Milesian Inheritance"
+    anchor: "Anaximenes was the pupil"
+  - title: "II. The Search for the Arche"
+    anchor: "Where Thales held the elusive “principle” to be water"
+  - title: "III. Air, Fire, and the Heavens"
+    anchor: "Another interesting aspect of air"
+  - title: "IV. Explaining the Natural World"
+    anchor: "Much like Anaximander, Anaximenes"
+  - title: "V. The Productive Disagreement"
+    anchor: "That was the philosophy of Anaximenes"
+annotations:
+  [
+    {
+      "anchor": "this one small village (compared to contemporary cities) produced some of the earliest philosophy",
+      "kind": "Historical context",
+      "title": "Why Miletus?",
+      "body": "Miletus was a prosperous Ionian port with extensive commercial and cultural connections. Its position within the ancient Mediterranean world made it an important setting for the emergence of early Greek natural philosophy.",
+    },
+    {
+      "anchor": "Thales shows up somehow and thus tutors the next generation",
+      "kind": "Historical context",
+      "title": "The Milesian succession",
+      "body": "Thales, Anaximander and Anaximenes are traditionally presented as successive thinkers from Miletus. Their intellectual relationship is not entirely certain, but they share an interest in identifying the underlying principle of nature.",
+    },
+    {
+      "anchor": "Where Thales held the elusive “principle” to be water",
+      "kind": "Philosophical connection",
+      "title": "The search for the arche",
+      "body": "Arche refers to an originating principle or fundamental source. Early Greek philosophers attempted to explain the diversity of the world by identifying something common beneath its apparent differences.",
+    },
+    {
+      "anchor": "Anaximenes chooses air",
+      "kind": "Philosophical connection",
+      "title": "Condensation and rarefaction",
+      "body": "Anaximenes proposed that air transforms into other substances through changes in density. Rarefied air becomes fire, while increasingly condensed air produces wind, clouds, water and earth.",
+    },
+    {
+      "anchor": "They learn from their gurus, and then completely spit in their philosophies",
+      "kind": "Philosophical connection",
+      "title": "The productive disagreement",
+      "body": "Philosophical traditions advance not only through agreement but through criticism. Each generation inherits questions from its predecessors while challenging the answers it receives.",
+    },
+  ]
 ---
 
 Anaximenes was the pupil of the second pre-Socratic Greek philosopher, Anaximander. And just like the two before him, belonged to Miletus. I wonder what it about this port city was. Maybe it was happen-chance, Thales shows up somehow and thus tutors the next generation and so on. But still, it’s so interesting to note how this one small village (compared to contemporary cities) produced some of the earliest philosophy.

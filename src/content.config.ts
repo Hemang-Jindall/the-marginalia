@@ -2,6 +2,19 @@ import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
+const annotation = z.object({
+  anchor: z.string(),
+  kind: z.string(),
+  title: z.string(),
+  body: z.string(),
+  url: z.string().url().optional(),
+});
+
+const section = z.object({
+  title: z.string(),
+  anchor: z.string(),
+});
+
 const posts = defineCollection({
   loader: glob({
     pattern: "**/*.md",
@@ -14,6 +27,8 @@ const posts = defineCollection({
     category: z.enum(["Philosophy", "Fiction", "Reflections"]),
     pinned: z.boolean().default(false),
     draft: z.boolean().default(false),
+    sections: z.array(section).default([]),
+    annotations: z.array(annotation).default([]),
   }),
 });
 

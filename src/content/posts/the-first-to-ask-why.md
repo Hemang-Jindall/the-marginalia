@@ -4,6 +4,55 @@ description: "Thales of Miletus, the legendary early Greek thinker often regarde
 pubDate: 2025-07-08
 category: "Philosophy"
 draft: false
+sections:
+  - title: "I. The Man Behind the Legend"
+    anchor: "I am a man not of prudence, but principle"
+  - title: "II. The Seven Sages"
+    anchor: "Thales of Miletus was born around 625 BC"
+  - title: "III. The Death of Thales"
+    anchor: "In 548 BC, the man was watching a gymnastic contest"
+  - title: "IV. From Mythos to Logos"
+    anchor: "Back when the only known thing about life was death"
+annotations:
+  [
+    {
+      "anchor": "The only thing we probably are sure about, in his story, is that he existed",
+      "kind": "Historical context",
+      "title": "The historical Thales",
+      "body": "Almost nothing written by Thales survives. Our knowledge comes from much later authors, meaning that his biography is a mixture of historical testimony, philosophical interpretation and legend.",
+      "url": "https://plato.stanford.edu/entries/presocratics/",
+    },
+    {
+      "anchor": "the first of the seven sages",
+      "kind": "Historical context",
+      "title": "The Seven Sages of Greece",
+      "body": "A traditional group of wise men celebrated for their practical wisdom and memorable sayings. The membership varies across ancient accounts, but Thales is consistently among the most prominent figures.",
+    },
+    {
+      "anchor": "This nature, he came to believe, was water",
+      "kind": "Philosophical connection",
+      "title": "The arche of water",
+      "body": "Thales is traditionally credited with identifying water as the fundamental principle underlying existence. Aristotle later suggested that this may have been inspired by the importance of moisture in sustaining life.",
+    },
+    {
+      "anchor": "Predicted the eclipse of May 28, 585 BC",
+      "kind": "Historical context",
+      "title": "The eclipse of 585 BCE",
+      "body": "An eclipse reportedly occurred during a battle between the Medes and Lydians. Herodotus attributes its prediction to Thales, although whether he could have predicted its exact timing remains disputed.",
+    },
+    {
+      "anchor": "Introduced logos in a populace fraught with myth",
+      "kind": "Philosophical connection",
+      "title": "Mythos and logos",
+      "body": "These terms are often used to distinguish mythic storytelling from reasoned discourse. The transition was gradual rather than absolute: early philosophers still inherited many assumptions and images from their mythological culture.",
+    },
+    {
+      "anchor": "Diogenes Laertius was a renowned biographer",
+      "kind": "Historical context",
+      "title": "Diogenes Laertius",
+      "body": "A biographer of ancient philosophers who lived many centuries after Thales. His Lives of Eminent Philosophers preserves stories, anecdotes and quotations that might otherwise have disappeared, though not all are historically reliable.",
+    },
+  ]
 ---
 
 I am a man not of prudence, but principle, which is why I decided to dig deep into Thales of Miletus. As it turns out, he is an interesting character. The only thing we probably are sure about, in his story, is that he existed. Most other things, probable-improbable, it all is a bit iffy.

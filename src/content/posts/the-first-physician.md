@@ -4,6 +4,55 @@ description: "Alcmaeon, a pupil of Pythagoras, was among the earliest Greek phil
 pubDate: 2025-08-19
 category: "Philosophy"
 draft: false
+sections:
+  - title: "I. A Philosopher-Physician"
+    anchor: "Pythagoras, the most celebrated pre-Socratic"
+  - title: "II. The Immortal Soul"
+    anchor: "He considered souls to be immortal"
+  - title: "III. The Brain and the Senses"
+    anchor: "Alcmaeon put forth the brain as the administrator"
+  - title: "IV. Perception and Health"
+    anchor: "He also stated that man perceives and understands"
+annotations:
+  [
+    {
+      "anchor": "Alcmaeon, who became the first of a distinguished line of Greek philosopher-physicians",
+      "kind": "Historical context",
+      "title": "Croton and its intellectual tradition",
+      "body": "Croton, a Greek colony in southern Italy, was an important centre of Pythagorean activity. Alcmaeon's association with this intellectual environment places him within a wider movement that sought natural explanations for human life.",
+      "url": "https://plato.stanford.edu/entries/alcmaeon/",
+    },
+    {
+      "anchor": "He considered souls to be immortal",
+      "kind": "Philosophical connection",
+      "title": "The immortality of the soul",
+      "body": "The question of whether the soul survives bodily death became one of the enduring problems of Greek philosophy. Later thinkers, particularly Plato, would develop elaborate accounts of the soul's relationship with the body.",
+    },
+    {
+      "anchor": "Alcmaeon put forth the brain as the administrator",
+      "kind": "Historical context",
+      "title": "A revolutionary change of perspective",
+      "body": "Alcmaeon is credited with identifying the brain as central to thought and understanding, challenging views that gave the heart or other organs primacy. This was an important early step towards understanding the nervous system.",
+    },
+    {
+      "anchor": "all the senses were connected to the brain",
+      "kind": "Historical context",
+      "title": "The sensory pathways",
+      "body": "Alcmaeon proposed that sensory organs communicated with the brain through channels. His explanations were rudimentary, but the underlying intuition that perception involves communication with the brain was remarkably significant.",
+    },
+    {
+      "anchor": "man perceives and understands, whereas animals merely perceive",
+      "kind": "Philosophical connection",
+      "title": "Perception versus understanding",
+      "body": "This distinction anticipates a recurring philosophical question: what separates experiencing the world from comprehending it? Is human intelligence simply more elaborate perception, or something fundamentally different?",
+    },
+    {
+      "anchor": "equality of opposites maintaining good health",
+      "kind": "Philosophical connection",
+      "title": "The balance of opposites",
+      "body": "Alcmaeon's account of health describes the body as a system whose opposing qualities must remain balanced. His use of the term isonomia suggests equality or equilibrium, while domination by one quality produces disease.",
+    },
+  ]
 ---
 
 Pythagoras, the most celebrated pre-Socratic, had a pupil by the name of Alcmaeon, who became the first of a distinguished line of Greek philosopher-physicians.

@@ -5,6 +5,67 @@ pubDate: 2025-08-05
 category: "Philosophy"
 pinned: true
 draft: false
+sections:
+  - title: "I. The Measure of Things"
+    anchor: "Pythagoras is the only Pre-Socratic philosopher"
+  - title: "II. The Brotherhood"
+    anchor: "Pythagoras was a man of immense prudence."
+  - title: "III. Numbers, Souls, and Legends"
+    anchor: "Moving on, let us tackle the most well known aspects of this man."
+  - title: "IV. What Remains"
+    anchor: "Such was the life and death of Pythagoras."
+annotations:
+  [
+    {
+      "anchor": "Pythagoras wrote down not a word of his philosophy.",
+      "kind": "Historical context",
+      "title": "The silent philosopher",
+      "body": "No surviving work can confidently be attributed to Pythagoras himself. Much of what we know comes from later writers, often centuries removed from his lifetime. Separating the historical thinker from the legend is one of the central problems in studying him.",
+      "url": "https://plato.stanford.edu/entries/pythagoras/",
+    },
+    {
+      "anchor": "Samos, a small island off the coast of modern-day Turkey.",
+      "kind": "Historical context",
+      "title": "The Ionian world",
+      "body": "Ionia was a region of Greek settlements along the western coast of Anatolia and nearby islands. Its trading networks brought Greek communities into contact with Egyptian, Babylonian and other traditions of mathematics, astronomy and cosmology.",
+    },
+    {
+      "anchor": "travelled a thousand kilometers to Croton in south Italy",
+      "kind": "Historical context",
+      "title": "Magna Graecia",
+      "body": "The Greek colonies of southern Italy and Sicily were collectively known as Magna Graecia, or Greater Greece. They became important centres of philosophy, mathematics and political experimentation.",
+    },
+    {
+      "anchor": "Pythagoras was a slave owner.",
+      "kind": "Philosophical connection",
+      "title": "The moral blind spots of antiquity",
+      "body": "Intellectual achievement and moral progress do not necessarily develop together. Ancient Greek societies depended heavily on slavery, and even celebrated thinkers participated in or benefited from deeply unequal social systems.",
+    },
+    {
+      "anchor": "The Pythagorean Theorem, irrational numbers, figurate numbers",
+      "kind": "Historical context",
+      "title": "The mathematical Pythagorean tradition",
+      "body": "The Pythagorean school became associated with the belief that numerical relationships reveal the structure of reality. The mathematical achievements attributed to Pythagoras personally are harder to establish than the later school's contributions.",
+    },
+    {
+      "anchor": "metempsychosis (transmigration of soul after death)",
+      "kind": "Philosophical connection",
+      "title": "Metempsychosis",
+      "body": "The doctrine that a soul passes from one living body to another after death. It appears in several ancient religious and philosophical traditions. Pythagoras became particularly associated with it, although the precise details of his beliefs remain uncertain.",
+    },
+    {
+      "anchor": "was a pious vegetarian",
+      "kind": "Philosophical connection",
+      "title": "The kinship of living beings",
+      "body": "If a human soul might inhabit an animal after death, killing and eating animals acquires a different moral significance. This connection between reincarnation and dietary restraint became an important feature of later Pythagorean traditions.",
+    },
+    {
+      "anchor": "his last few years in Metapontum are shrouded in ambiguity",
+      "kind": "Historical context",
+      "title": "History and the limits of evidence",
+      "body": "The further we travel from an event in time, the more dependent we become on surviving testimony. Pythagoras is an especially striking example: an enormously influential figure whose biography remains frustratingly incomplete.",
+    },
+  ]
 ---
 
 Pythagoras is the only Pre-Socratic philosopher that is spoken of more than the entire collective sum. But in a curious turn of events, Pythagoras wrote down not a word of his philosophy. How odd exactly is that? A man of such renown, and no mood for writing?

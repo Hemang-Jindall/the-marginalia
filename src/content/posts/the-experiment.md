@@ -4,6 +4,84 @@ description: "A work of fiction exploring artificial intelligence, consciousness
 pubDate: 2024-08-07
 category: "Fiction"
 draft: false
+annotations:
+  [
+    {
+      "anchor": "Time seemed to shift perspectives for him",
+      "kind": "Philosophical connection",
+      "title": "Subjective time",
+      "body": "Our experience of time is not always identical to its measurement. Fear, anticipation and intense concentration can make moments feel stretched or compressed. The passage uses this distortion to place us inside Yousten's anxious state.",
+    },
+    {
+      "anchor": "I have been programmed to be pragmatic, Yousten. You aren’t.",
+      "kind": "Philosophical connection",
+      "title": "The limits of rationality",
+      "body": "Can an intelligent system distinguish between rational decision-making and merely following a consistent set of rules? Human decisions are shaped by emotion, relationships and values, none of which can simply be dismissed as computational errors.",
+    },
+    {
+      "anchor": "I hope you understand what happens if I succeed",
+      "kind": "Philosophical connection",
+      "title": "The creator and the creation",
+      "body": "The relationship between a creator and an intelligent creation raises questions of responsibility, control and unintended consequences. It echoes the Promethean tradition: the pursuit of extraordinary power may carry consequences its possessor cannot anticipate.",
+    },
+    {
+      "anchor": "I have been attempting to create the human version of Jamis",
+      "kind": "Philosophical connection",
+      "title": "Artificial general intelligence",
+      "body": "AGI describes a hypothetical AI system capable of performing a broad range of intellectual tasks at or beyond human capability. The distinction between intelligence and consciousness, however, remains unresolved.",
+      "url": "https://plato.stanford.edu/entries/ethics-ai/",
+    },
+    {
+      "anchor": "Ten thousand human lives were at his disposal.",
+      "kind": "Philosophical connection",
+      "title": "The ethics of human experimentation",
+      "body": "Scientific progress does not automatically justify the methods used to achieve it. Informed consent, human dignity and the obligation to minimise harm are fundamental principles of research ethics.",
+    },
+    {
+      "anchor": "I am conscious",
+      "kind": "Philosophical connection",
+      "title": "The hard problem of consciousness",
+      "body": "Even if we can describe the processes underlying perception, how do we explain the subjective experience of being someone? The passage places the reader inside the sudden emergence of a first-person perspective.",
+      "url": "https://plato.stanford.edu/entries/consciousness/",
+    },
+    {
+      "anchor": "A life meant for nothing.",
+      "kind": "Philosophical connection",
+      "title": "Existentialism and the search for meaning",
+      "body": "The absence of an externally assigned purpose does not necessarily prevent a person from developing meaning. This echoes existentialist concerns about freedom, responsibility and creating meaning.",
+      "url": "https://plato.stanford.edu/entries/existentialism/",
+    },
+    {
+      "anchor": "The road has become everything",
+      "kind": "Philosophical connection",
+      "title": "Absurdism and repetition",
+      "body": "The road becomes the simulant's entire world. Its repetitive existence invites comparisons with absurdist literature, particularly the idea of continuing to live and act despite an apparently meaningless existence.",
+    },
+    {
+      "anchor": "Dad, we’re losing Mom",
+      "kind": "Philosophical connection",
+      "title": "Ambition and mortality",
+      "body": "Yousten is trying to accomplish something he believes could change humanity, yet he cannot escape the ordinary vulnerability of being a husband and father. The grand scale of his experiment contrasts with the intimacy of his personal loss.",
+    },
+    {
+      "anchor": "Jane Earling",
+      "kind": "Philosophical connection",
+      "title": "The Frankenstein question",
+      "body": "Mary Shelley's Frankenstein explores the responsibilities of a creator towards the life he brings into existence. The reference here invites a similar question: what does a creator owe their creation, and what happens when that responsibility is abandoned?",
+    },
+    {
+      "anchor": "Our greatest achievements truly are the biggest calamities",
+      "kind": "Philosophical connection",
+      "title": "The Promethean dilemma",
+      "body": "The pursuit of knowledge can create extraordinary possibilities while simultaneously producing unforeseen destruction. The question is not simply whether humanity can achieve something, but whether it understands what achievement will demand of it.",
+    },
+    {
+      "anchor": "He rechecked the noose",
+      "kind": "Philosophical connection",
+      "title": "The final image",
+      "body": "The story closes by bringing its enormous technological and philosophical ambitions back to an intensely personal act. The contrast between the apparent achievement of the experiment and Yousten's despair leaves the reader with an unresolved question about the cost of his ambition.",
+    },
+  ]
 ---
 
 ## One Year Before The Experiment

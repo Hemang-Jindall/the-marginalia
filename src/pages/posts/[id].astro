@@ -22,6 +22,8 @@ const { Content } = await render(post);
   description={post.data.description}
   pubDate={post.data.pubDate}
   category={post.data.category}
+  sections={post.data.sections ?? []}
+  annotations={post.data.annotations ?? []}
 >
   <Content />
 </PostLayout>
