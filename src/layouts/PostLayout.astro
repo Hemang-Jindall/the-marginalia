@@ -167,12 +167,16 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
           </div>
         </header>
 
-
         <div class="reading-layout">
           <aside class="section-index" aria-label="About this essay">
             <div class="section-index-toc">
               <span class="rail-eyebrow">IN THIS ESSAY</span>
-              <nav id="section-index-list" aria-label="Sections" data-sections={JSON.stringify(sections)}></nav>
+              <nav
+                id="section-index-list"
+                aria-label="Sections"
+                data-sections={JSON.stringify(sections)}
+              >
+              </nav>
             </div>
           </aside>
 
@@ -597,7 +601,11 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     const targets: HTMLElement[] = [];
 
-    const makeSectionLink = (title: string, target: HTMLElement, nested = false) => {
+    const makeSectionLink = (
+      title: string,
+      target: HTMLElement,
+      nested = false,
+    ) => {
       const link = document.createElement("a");
       link.href = `#${target.id}`;
       link.textContent = title;
@@ -732,8 +740,67 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
       marker.addEventListener("focus", () => activate(index));
       marker.addEventListener("mouseleave", () => activate(-1));
       marker.addEventListener("blur", () => activate(-1));
+      marker.setAttribute("aria-expanded", "false");
       marker.addEventListener("click", () => {
         activate(index);
+
+        // On phones, reveal the note directly beneath the paragraph it
+        // annotates instead of sending the reader to a long notes list.
+        if (window.matchMedia("(max-width: 760px)").matches) {
+          const noteId = `marginalia-inline-note-${index + 1}`;
+          const existing = marginaliaBody.querySelector<HTMLElement>(
+            `#${noteId}`,
+          );
+
+          marginaliaBody
+            .querySelectorAll<HTMLElement>(".marginalia-inline-note")
+            .forEach((item) => item.remove());
+
+          if (existing) {
+            marker.setAttribute("aria-expanded", "false");
+            return;
+          }
+
+          const inlineNote = document.createElement("aside");
+          inlineNote.className = "marginalia-inline-note";
+          inlineNote.id = noteId;
+          inlineNote.setAttribute("aria-label", `Marginal note ${index + 1}`);
+
+          const inlineNumber = document.createElement("span");
+          inlineNumber.className = "marginalia-inline-note__number";
+          inlineNumber.textContent = String(index + 1);
+
+          const inlineKind = document.createElement("span");
+          inlineKind.className = "marginalia-inline-note__kind";
+          inlineKind.textContent = note.kind;
+
+          const inlineTitle = document.createElement("h3");
+          inlineTitle.className = "marginalia-inline-note__title";
+          inlineTitle.textContent = note.title;
+
+          const inlineBody = document.createElement("p");
+          inlineBody.className = "marginalia-inline-note__body";
+          inlineBody.textContent = note.body;
+
+          inlineNote.append(inlineNumber, inlineKind, inlineTitle, inlineBody);
+
+          if (note.url) {
+            const inlineSource = document.createElement("a");
+            inlineSource.className = "marginalia-inline-note__source";
+            inlineSource.href = note.url;
+            inlineSource.target = "_blank";
+            inlineSource.rel = "noopener noreferrer";
+            inlineSource.textContent = "Further reading ↗";
+            inlineNote.append(inlineSource);
+          }
+
+          const paragraph = marker.closest<HTMLElement>("p, li, blockquote");
+          paragraph?.insertAdjacentElement("afterend", inlineNote);
+          marker.setAttribute("aria-expanded", "true");
+          inlineNote.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          return;
+        }
+
         noteElements[index]?.scrollIntoView({
           behavior: "smooth",
           block: "nearest",
@@ -872,9 +939,21 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     /* Clearly visible warm paper stock: mottling, fibres and fine printed-paper grain. */
     background-color: #f1e6d4;
     background-image:
-      radial-gradient(ellipse at 12% 16%, rgba(132, 91, 52, 0.13), transparent 43%),
-      radial-gradient(ellipse at 86% 74%, rgba(157, 94, 57, 0.10), transparent 46%),
-      radial-gradient(ellipse at 50% 48%, rgba(255, 250, 239, 0.30), transparent 72%),
+      radial-gradient(
+        ellipse at 12% 16%,
+        rgba(132, 91, 52, 0.13),
+        transparent 43%
+      ),
+      radial-gradient(
+        ellipse at 86% 74%,
+        rgba(157, 94, 57, 0.1),
+        transparent 46%
+      ),
+      radial-gradient(
+        ellipse at 50% 48%,
+        rgba(255, 250, 239, 0.3),
+        transparent 72%
+      ),
       repeating-linear-gradient(
         2deg,
         rgba(112, 83, 54, 0.035) 0,
@@ -884,7 +963,12 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
       ),
       url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMjAiIGhlaWdodD0iMzIwIj4KPGZpbHRlciBpZD0icGFwZXIiPgogIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuNzIiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjEzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIiByZXN1bHQ9Im4iLz4KICA8ZmVDb2xvck1hdHJpeCBpbj0ibiIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IgogICAgLjU1IC4zNSAuMTAgMCAuMDgKICAgIC40NSAuNDUgLjEwIDAgLjAyCiAgICAuMzUgLjQwIC4yNSAwIC0uMDQKICAgIDAgMCAwIDAgLjQyIi8+CjwvZmlsdGVyPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjcGFwZXIpIi8+Cjwvc3ZnPg==");
     background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
-    background-size: auto, auto, auto, 100% 100%, 320px 320px;
+    background-size:
+      auto,
+      auto,
+      auto,
+      100% 100%,
+      320px 320px;
     background-attachment: fixed;
     background-blend-mode: multiply, multiply, screen, multiply, multiply;
   }
@@ -1348,7 +1432,6 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   /* THREE-COLUMN EDITORIAL READING EXPERIENCE */
 
-
   .reading-layout {
     display: grid;
     grid-template-columns: minmax(145px, 190px) minmax(0, 1fr) minmax(
@@ -1607,12 +1690,80 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
       max-width: 700px;
     }
     .reading-layout.has-notes {
-      grid-template-columns: minmax(125px, 165px) minmax(0, 1fr) minmax(210px, 250px);
+      grid-template-columns: minmax(125px, 165px) minmax(0, 1fr) minmax(
+          210px,
+          250px
+        );
       column-gap: 22px;
     }
     .section-index {
       display: block;
       padding-right: 14px;
+    }
+  }
+
+  :global(.marginalia-inline-note) {
+    position: relative;
+    margin: 20px 0 28px;
+    padding: 17px 18px 18px;
+    border-left: 2px solid #a64d36;
+    background: rgba(166, 77, 54, 0.055);
+    color: #4c463e;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 13px;
+    line-height: 1.8;
+    animation: marginalia-note-in 220ms ease-out both;
+  }
+
+  :global(.marginalia-inline-note__number) {
+    margin-right: 8px;
+    color: #a64d36;
+    font-family: "DM Sans", sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  :global(.marginalia-inline-note__kind) {
+    color: #a64d36;
+    font-family: "DM Sans", sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+
+  :global(.marginalia-inline-note__title) {
+    margin: 8px 0 6px;
+    color: #24221f;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  :global(.marginalia-inline-note__body) {
+    margin: 0;
+    color: #625b51;
+    font: inherit;
+    line-height: 1.8;
+  }
+
+  :global(.marginalia-inline-note__source) {
+    display: inline-block;
+    margin-top: 10px;
+    color: #a64d36;
+    font-family: "DM Sans", sans-serif;
+    font-size: 10px;
+    text-decoration: none;
+  }
+
+  @keyframes marginalia-note-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
@@ -1641,13 +1792,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
       order: 0;
     }
     .marginalia-sidebar {
-      position: static;
-      order: 1;
-      width: 100%;
-      min-height: 0;
-      padding: 24px 0 0;
-      border-top: 1px solid #dcd6ca;
-      border-left: 0;
+      display: none;
     }
     .marginalia-sidebar .rail-eyebrow {
       margin-bottom: 18px;

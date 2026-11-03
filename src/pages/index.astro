@@ -1675,11 +1675,16 @@ const getPreviewExcerpt = (content: string) =>
     outline: 0;
     background: transparent;
     color: #24221f;
+    font-family: "Libre Baskerville", Georgia, serif;
     font-size: 12px;
+    letter-spacing: 0.05px;
   }
 
   .search-box input::placeholder {
     color: #8b8276;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-style: italic;
+    opacity: 0.95;
   }
 
   .search-box input:focus-visible {
@@ -3171,10 +3176,12 @@ const getPreviewExcerpt = (content: string) =>
     }
     .opening-art {
       position: absolute;
-      right: -15px;
+      left: 50%;
+      right: auto;
       bottom: 10px;
       width: 145px;
       opacity: 0.22;
+      transform: translateX(-50%) !important;
     }
     .orbit-note,
     .orbit-cross {
@@ -5026,5 +5033,24 @@ const getPreviewExcerpt = (content: string) =>
   .opening-stage {
     position: sticky;
     z-index: 1;
+  }
+
+  /* Mobile refinements: keep the animated monogram centred in the viewport. */
+  @media (max-width: 600px) {
+    .opening-composition {
+      position: relative;
+    }
+
+    .opening-art.reading-compass {
+      left: 50%;
+      right: auto;
+      bottom: 10px;
+      transform: translateX(-50%) !important;
+    }
+
+    .search-box input {
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 11px;
+    }
   }
 </style>
