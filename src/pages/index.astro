@@ -3576,4 +3576,74 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
       padding-right: 0;
     }
   }
+
+  /* MOBILE REFINEMENT
+     Keep the opening compact on phones: the sticky scene previously extended
+     45vh beyond the screen and vertically centred the masthead too low. */
+  @media (max-width: 600px) {
+    .opening-scene {
+      min-height: 112svh;
+    }
+
+    .opening-stage {
+      justify-content: flex-start;
+      min-height: 100svh;
+      padding-top: clamp(105px, 13svh, 155px);
+    }
+
+    .opening-topline {
+      padding-bottom: 13px;
+    }
+
+    .opening-composition {
+      padding-top: clamp(32px, 5svh, 48px);
+      padding-bottom: 24px;
+    }
+
+    .opening-copy h1 {
+      font-size: clamp(54px, 14vw, 76px);
+      line-height: 1.08;
+    }
+
+    .opening-bottomline {
+      margin-top: 24px;
+      gap: 19px;
+    }
+
+    .reading-compass {
+      min-height: 175px;
+    }
+
+    .reading-compass .compass-brand {
+      width: 132px;
+    }
+
+    .featured-section {
+      padding-top: 36px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .opening-stage {
+      padding-top: 92px;
+    }
+
+    .opening-publication-name {
+      font-size: 22px;
+    }
+
+    .opening-imprint {
+      padding-left: 9px;
+      font-size: 5.5px;
+    }
+
+    .opening-copy h1 {
+      font-size: clamp(49px, 13.5vw, 58px);
+    }
+
+    .opening-art {
+      right: -8px;
+      width: 125px;
+    }
+  }
 </style>
