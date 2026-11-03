@@ -540,7 +540,11 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
   const openingCopy = document.querySelector<HTMLElement>(".opening-copy");
   const openingArt = document.querySelector<HTMLElement>(".opening-art");
 
-  if (openingScene && !reduceMotion) {
+  if (
+    openingScene &&
+    !reduceMotion &&
+    window.matchMedia("(min-width: 601px)").matches
+  ) {
     let ticking = false;
 
     const updateOpeningProgress = () => {
@@ -3977,6 +3981,37 @@ const featuredReadingTime = featured ? getReadingTime(featured.body ?? "") : 0;
 
     .archive-footnote {
       margin-top: 16px;
+    }
+  }
+
+  /* MOBILE HERO FIX
+     Let the opening end when its actual content ends. The old 112svh scene
+     plus a full-height sticky stage left a large, empty dark tail on phones. */
+  @media (max-width: 600px) {
+    .opening-scene {
+      min-height: 0;
+      padding-bottom: 0;
+    }
+
+    .opening-stage {
+      position: relative;
+      top: auto;
+      min-height: 0;
+      justify-content: flex-start;
+      padding-top: clamp(68px, 8svh, 100px);
+      padding-bottom: 34px;
+      transform: none;
+    }
+
+    .opening-composition {
+      min-height: 0;
+      padding-top: clamp(32px, 5svh, 44px);
+      padding-bottom: 0;
+    }
+
+    .reading-compass {
+      min-height: clamp(125px, 30vw, 160px);
+      margin-top: 8px;
     }
   }
 </style>
