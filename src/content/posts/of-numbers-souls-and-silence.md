@@ -91,7 +91,3 @@ And so the great Aethalides died of old age, his soul forming a new being by the
 Such was the life and death of Pythagoras. In Croton, his school, The Pythagorean Brotherhood rose to such fame, fervor and power that it began pulling political strings all over the city. The tensions boiled to a climax, and the local leaders ended up killing a lot of the school’s members, with Pythagoras only nearly escaping. At least, that’s what most of the sources purport, for it isn’t entirely out of the question that they managed to murder him as well. If he did indeed survive, his last few years in Metapontum are shrouded in ambiguity. If Thales’s mystery was the size of a molecule, Pythagoras in Metapontum is a quark inside one of its atoms. How he lived, what he did, and where he lived, are unknown. Most reliable sources in history coin two things in the same sentence for this: escaped to Metapontum, died there.
 
 Just goes to show; however eloquent you are for the masses, your fate lies in the hands of a simple few.
-
-```
-
-```

@@ -508,6 +508,23 @@ const getPreviewExcerpt = (content: string) =>
             questions that deserve a second look. Not answers handed down, but
             thoughts worked through in public.
           </p>
+
+          <figure class="about-engraving" aria-hidden="true">
+            <span class="about-orbit about-orbit-one"></span>
+            <span class="about-orbit about-orbit-two"></span>
+            <span class="about-orbit about-orbit-three"></span>
+            <span class="about-celestial-dot about-dot-one"></span>
+            <span class="about-celestial-dot about-dot-two"></span>
+            <span class="about-celestial-dot about-dot-three"></span>
+            <span class="about-celestial-dot about-dot-four"></span>
+            <img
+              src={`${base}images/marginalia-about-engraving.png`}
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="about-engraving-caption">A study in perspective</span>
+          </figure>
         </section>
       </main>
 
@@ -3950,7 +3967,7 @@ const getPreviewExcerpt = (content: string) =>
   :global(body) {
     overflow-x: clip;
   }
-  \n
+
   /* Cursor-revealed contour artwork — deliberately limited to the About section. */
   .about-section {
     position: relative;
@@ -3993,6 +4010,7 @@ const getPreviewExcerpt = (content: string) =>
     width: 100%;
     height: 100%;
     overflow: visible;
+    animation: about-contour-drift 34s ease-in-out infinite alternate;
   }
 
   .about-reveal-art .contour-lines {
@@ -5025,7 +5043,33 @@ const getPreviewExcerpt = (content: string) =>
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    background: #211f1c;
+    background-color: #211f1c;
+    background-image:
+      radial-gradient(
+        ellipse at 18% 22%,
+        rgba(166, 77, 54, 0.13),
+        transparent 43%
+      ),
+      radial-gradient(
+        ellipse at 82% 76%,
+        rgba(196, 122, 96, 0.075),
+        transparent 48%
+      ),
+      repeating-linear-gradient(
+        112deg,
+        rgba(242, 230, 212, 0.018) 0,
+        rgba(242, 230, 212, 0.018) 1px,
+        transparent 1px,
+        transparent 6px
+      ),
+      url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iMjgwIj4KPGZpbHRlciBpZD0ibiI+CiAgPGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9Ii43OCIgbnVtT2N0YXZlcz0iMyIgc2VlZD0iMTciIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz4KICA8ZmVDb2xvck1hdHJpeCB0eXBlPSJzYXR1cmF0ZSIgdmFsdWVzPSIwIi8+CjwvZmlsdGVyPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjbikiIG9wYWNpdHk9Ii4zNCIvPgo8L3N2Zz4=);
+    background-size:
+      auto,
+      auto,
+      100% 100%,
+      280px 280px;
+    background-attachment: fixed, fixed, fixed, fixed;
+    background-blend-mode: screen, screen, soft-light, soft-light;
     opacity: var(--opening-darkness, 1);
     will-change: opacity;
   }
@@ -5051,6 +5095,487 @@ const getPreviewExcerpt = (content: string) =>
     .search-box input {
       font-family: "Libre Baskerville", Georgia, serif;
       font-size: 11px;
+    }
+  }
+
+  /* ABOUT — an illustrated editorial spread, keeping the original copy. */
+  .about-section {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
+    grid-template-areas:
+      "heading art"
+      "copy art";
+    align-items: center;
+    column-gap: clamp(24px, 5vw, 76px);
+    row-gap: 26px;
+    min-height: 650px;
+    padding: 92px 0 100px;
+    border-top: 1px solid rgba(128, 99, 69, 0.35);
+    border-bottom: 1px solid rgba(128, 99, 69, 0.35);
+    overflow: hidden;
+  }
+
+  .about-heading {
+    grid-area: heading;
+    position: relative;
+    z-index: 2;
+    align-self: end;
+    max-width: 660px;
+  }
+
+  .about-heading .section-eyebrow {
+    margin-bottom: 22px;
+  }
+
+  .about-heading h2 {
+    max-width: 660px;
+    margin: 0;
+    font-size: clamp(48px, 6.6vw, 88px);
+    line-height: 0.99;
+    letter-spacing: -0.065em;
+    text-wrap: balance;
+  }
+
+  .about-heading h2 em {
+    color: #a64d36;
+    font-style: italic;
+  }
+
+  .about-copy {
+    grid-area: copy;
+    position: relative;
+    z-index: 2;
+    align-self: start;
+    max-width: 430px;
+    margin: 0;
+    padding-left: 20px;
+    border-left: 1px solid rgba(166, 77, 54, 0.45);
+    color: #51483e;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 13px;
+    line-height: 2.05;
+  }
+
+  .about-engraving {
+    grid-area: art;
+    position: relative;
+    z-index: 1;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 500px;
+    margin: -58px -12% -48px -16%;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  .about-engraving::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    width: 88%;
+    aspect-ratio: 1;
+    top: 4%;
+    left: 6%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(166, 77, 54, 0.1) 0 34%,
+      rgba(166, 77, 54, 0.045) 48%,
+      rgba(166, 77, 54, 0.012) 66%,
+      transparent 76%
+    );
+    filter: blur(8px);
+    transform-origin: 50% 50%;
+    animation: about-sun-breathe 16s ease-in-out infinite;
+  }
+
+  /* Fine celestial paths sit over the engraving like moving ink lines. */
+  .about-orbit {
+    position: absolute;
+    z-index: 0;
+    left: 50%;
+    top: 48%;
+    display: block;
+    width: 91%;
+    height: 58%;
+    border: 1px solid rgba(126, 91, 65, 0.2);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%) rotate(-24deg);
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  /* The moving point makes the orbit's motion legible without feeling busy. */
+  .about-orbit::after {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #a64d36;
+    box-shadow: 0 0 0 3px rgba(166, 77, 54, 0.09);
+    transform: translateX(-50%);
+  }
+
+  .about-orbit-one {
+    animation: about-orbit-turn-one 48s linear infinite;
+  }
+
+  .about-orbit-two {
+    width: 76%;
+    height: 82%;
+    border-color: rgba(166, 77, 54, 0.2);
+    transform: translate(-50%, -50%) rotate(34deg);
+    animation: about-orbit-turn-two 62s linear infinite;
+  }
+
+  .about-orbit-three {
+    width: 104%;
+    height: 42%;
+    border-style: dashed;
+    border-color: rgba(126, 91, 65, 0.13);
+    transform: translate(-50%, -50%) rotate(57deg);
+    animation: about-orbit-turn-three 72s linear infinite;
+  }
+
+  .about-orbit-two::after {
+    width: 4px;
+    height: 4px;
+    background: #92765b;
+  }
+
+  .about-orbit-three::after {
+    width: 3px;
+    height: 3px;
+    background: #6f6252;
+    opacity: 0.8;
+  }
+
+  .about-celestial-dot {
+    position: absolute;
+    z-index: 3;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #a64d36;
+    box-shadow: 0 0 0 3px rgba(166, 77, 54, 0.08);
+    pointer-events: none;
+    animation: about-star-pulse 5.5s ease-in-out infinite;
+  }
+
+  .about-dot-one {
+    left: 19%;
+    top: 27%;
+    animation-delay: -1.2s;
+  }
+  .about-dot-two {
+    right: 17%;
+    top: 18%;
+    width: 4px;
+    height: 4px;
+    animation-delay: -3.1s;
+  }
+  .about-dot-three {
+    right: 13%;
+    bottom: 25%;
+    width: 5px;
+    height: 5px;
+    animation-delay: -2.2s;
+  }
+  .about-dot-four {
+    left: 29%;
+    bottom: 17%;
+    width: 3px;
+    height: 3px;
+    background: #92765b;
+    animation-delay: -4.2s;
+  }
+
+  .about-engraving img {
+    display: block;
+    position: relative;
+    z-index: 1;
+    width: 132%;
+    height: 132%;
+    max-height: 760px;
+    object-fit: contain;
+    object-position: center;
+    mix-blend-mode: multiply;
+    opacity: 0.97;
+    filter: contrast(1.035) saturate(0.94);
+    -webkit-mask-image: radial-gradient(
+      ellipse 82% 88% at 52% 49%,
+      #000 57%,
+      rgba(0, 0, 0, 0.9) 73%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 82% 88% at 52% 49%,
+      #000 57%,
+      rgba(0, 0, 0, 0.9) 73%,
+      transparent 100%
+    );
+    animation: about-engraving-drift 12s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .about-engraving-caption {
+    position: absolute;
+    z-index: 2;
+    right: 7%;
+    bottom: 8%;
+    color: #8d7864;
+    font-size: 8px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+  }
+
+  @keyframes about-engraving-drift {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-9px) scale(1.012);
+    }
+  }
+
+  @keyframes about-contour-drift {
+    from {
+      transform: translate3d(-0.35%, 0, 0) scale(1);
+    }
+    to {
+      transform: translate3d(0.35%, -0.6%, 0) scale(1.012);
+    }
+  }
+
+  @keyframes about-sun-breathe {
+    0%,
+    100% {
+      opacity: 0.82;
+      transform: scale(0.97);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.045);
+    }
+  }
+
+  @keyframes about-orbit-turn-one {
+    from {
+      transform: translate(-50%, -50%) rotate(-24deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(336deg);
+    }
+  }
+
+  @keyframes about-orbit-turn-two {
+    from {
+      transform: translate(-50%, -50%) rotate(34deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(-326deg);
+    }
+  }
+
+  @keyframes about-orbit-turn-three {
+    from {
+      transform: translate(-50%, -50%) rotate(57deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(417deg);
+    }
+  }
+
+  @keyframes about-star-pulse {
+    0%,
+    100% {
+      opacity: 0.35;
+      transform: scale(0.75);
+    }
+    50% {
+      opacity: 0.95;
+      transform: scale(1.35);
+    }
+  }
+
+  @media (max-width: 800px) {
+    .about-section {
+      min-height: 560px;
+      grid-template-columns: minmax(0, 1fr) minmax(230px, 0.8fr);
+      column-gap: 24px;
+      padding: 72px 0 76px;
+    }
+
+    .about-heading h2 {
+      font-size: clamp(42px, 6.5vw, 62px);
+    }
+
+    .about-engraving {
+      min-height: 420px;
+      margin-right: -15%;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .about-section {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "heading"
+        "art"
+        "copy";
+      gap: 8px;
+      min-height: 0;
+      padding: 64px 0 62px;
+    }
+
+    .about-heading {
+      max-width: 100%;
+    }
+
+    .about-heading .section-eyebrow {
+      margin-bottom: 17px;
+    }
+
+    .about-heading h2 {
+      max-width: 520px;
+      font-size: clamp(42px, 12vw, 58px);
+      line-height: 1.02;
+    }
+
+    .about-engraving {
+      width: 100%;
+      min-height: 340px;
+      height: 340px;
+      margin: -12px -4% -2px;
+    }
+
+    .about-engraving img {
+      width: 118%;
+      height: 118%;
+      max-height: none;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    .about-orbit {
+      width: 88%;
+      height: 55%;
+      opacity: 0.68;
+    }
+
+    .about-orbit-two {
+      width: 74%;
+      height: 78%;
+    }
+
+    .about-orbit-three {
+      opacity: 0.45;
+    }
+
+    .about-celestial-dot {
+      width: 4px;
+      height: 4px;
+    }
+
+    .about-engraving-caption {
+      right: 7%;
+      bottom: 4%;
+      font-size: 7px;
+    }
+
+    .about-copy {
+      max-width: 100%;
+      margin-top: 5px;
+      font-size: 12px;
+      line-height: 1.95;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .about-engraving img,
+    .about-engraving::before,
+    .about-orbit,
+    .about-celestial-dot,
+    .about-reveal-art svg {
+      animation: none !important;
+    }
+  }
+
+  /*
+   * A persistent print-grain layer. It is fixed to the viewport rather than
+   * attached to the opening section, so the paper texture remains present
+   * throughout the existing scroll transition.
+   */
+  .page::after {
+    content: "";
+    position: fixed;
+    inset: -8%;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.105;
+    mix-blend-mode: soft-light;
+    background-image:
+      radial-gradient(
+        ellipse at 22% 28%,
+        rgba(196, 122, 96, 0.16),
+        transparent 48%
+      ),
+      radial-gradient(
+        ellipse at 78% 72%,
+        rgba(166, 77, 54, 0.1),
+        transparent 50%
+      ),
+      url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iMjgwIj4KPGZpbHRlciBpZD0ibiI+CiAgPGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9Ii43OCIgbnVtT2N0YXZlcz0iMyIgc2VlZD0iMTciIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz4KICA8ZmVDb2xvck1hdHJpeCB0eXBlPSJzYXR1cmF0ZSIgdmFsdWVzPSIwIi8+CjwvZmlsdGVyPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjbikiIG9wYWNpdHk9Ii4zNCIvPgo8L3N2Zz4=);
+    background-size:
+      145% 145%,
+      155% 155%,
+      280px 280px;
+    background-position:
+      0% 0%,
+      100% 100%,
+      0 0;
+    animation: marginalia-print-drift 58s ease-in-out infinite alternate;
+    will-change: background-position, opacity;
+  }
+
+  @keyframes marginalia-print-drift {
+    0% {
+      background-position:
+        0% 0%,
+        100% 100%,
+        0 0;
+      opacity: 0.085;
+    }
+    50% {
+      background-position:
+        34% 24%,
+        66% 78%,
+        24px -18px;
+      opacity: 0.12;
+    }
+    100% {
+      background-position:
+        100% 100%,
+        0% 0%,
+        -22px 26px;
+      opacity: 0.095;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page::after {
+      animation: none !important;
+      opacity: 0.09;
     }
   }
 </style>

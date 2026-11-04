@@ -8,23 +8,34 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <meta
       name="description"
       content="Meet Hemang Jindal, the editor behind The Marginalia, an independent journal of philosophy, fiction, and reflections."
     />
+
     <meta name="theme-color" content="#f8f5ed" />
+
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+
     <link rel="icon" href={`${base}favicon.ico`} sizes="any" />
+
     <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
+
     <title>About the Editor — The Marginalia</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
       rel="stylesheet"
     />
   </head>
+
   <body>
     <div
       class="intro-curtain"
@@ -33,20 +44,28 @@ const base = import.meta.env.BASE_URL.endsWith("/")
     >
       <div class="intro-curtain-inner">
         <span class="intro-overline">An independent literary journal</span>
+
         <div class="intro-wordmark">The <em>Marginalia.</em></div>
+
         <span class="intro-rule"></span>
+
         <span class="intro-enter">Ideas begin in the margins</span>
       </div>
+
       <button class="intro-skip" id="intro-skip" type="button">
         Skip intro <span aria-hidden="true">↗</span>
       </button>
     </div>
+
     <div class="page-shell">
       <header class="site-header">
         <a class="wordmark" href={base}>The <em>Marginalia.</em></a>
+
         <nav aria-label="Main navigation">
           <a href={`${base}#archive`}>Writing</a>
+
           <a href={`${base}fiction/`}>Fiction</a>
+
           <a href={`${base}about/`} aria-current="page">About</a>
         </nav>
       </header>
@@ -55,110 +74,89 @@ const base = import.meta.env.BASE_URL.endsWith("/")
         <section class="editor-intro" aria-labelledby="page-title">
           <div class="intro-copy">
             <p class="eyebrow"><span></span> The person behind the pages</p>
+
             <h1 id="page-title">About the <em>editor.</em></h1>
+
             <p class="standfirst">
               A journal is, in some ways, a record of what one cannot stop
               thinking about. This is a little about the person doing the
               thinking.
             </p>
           </div>
+
           <div class="editor-mark" aria-label="The Marginalia monogram">
             <svg viewBox="0 0 220 220" role="img" aria-label="M monogram">
               <circle class="mark-circle" cx="110" cy="110" r="101"></circle>
+
               <text x="110" y="151" text-anchor="middle">M</text>
+
               <circle class="mark-dot" cx="164" cy="148" r="7"></circle>
             </svg>
+
             <span>Editor · The Marginalia</span>
           </div>
         </section>
 
         <div class="page-rule"></div>
 
-        <section class="editor-story">
-          <div class="section-label">01 / A brief introduction</div>
-          <div class="story-copy">
-            <h2>I'm <em>Hemang Jindal.</em></h2>
-            <p>
-              I'm the editor and the person behind The Marginalia. I started
-              this journal as a place to give ideas room to breathe: to follow a
-              question beyond its first answer, sit with an uncertainty, and
-              work through a thought in writing.
-            </p>
-            <p>
-              My interests tend to gather around philosophy, literature, ethics,
-              and the ordinary details of being human. I enjoy the questions
-              that don't resolve neatly, the arguments that make you reconsider
-              what you thought you knew, and stories that leave something
-              unsettled after the last page.
-            </p>
-            <p>
-              I don't approach this as an authority handing down conclusions.
-              I'm here as a reader and a writer, learning in public and trying
-              to make the process of thinking a little more visible.
-            </p>
-          </div>
-        </section>
+        <section class="editor-story" aria-label="The editor and the journal">
+          <div class="section-label">01 / The editor &amp; the journal</div>
 
-        <section class="editor-purpose">
-          <canvas class="purpose-shader" id="purpose-shader" aria-hidden="true"
-          ></canvas>
-          <div class="purpose-shader-wash" aria-hidden="true"></div>
-          <div class="purpose-heading">
-            <p class="eyebrow"><span></span> 02 / Why this exists</p>
-            <h2>A place for the questions that <em>stay with us.</em></h2>
-          </div>
-          <div class="purpose-copy">
-            <p>
-              The Marginalia is an independent journal collecting essays,
-              fiction, and reflections on philosophy, ethics, and everyday life.
-              It is built around a simple conviction: not every worthwhile
-              thought needs to arrive as a finished answer.
-            </p>
-            <p>
-              Some pieces begin with a book, some with a passing observation,
-              and others with a question that refuses to leave. The aim is to
-              give each one the attention it deserves—and to leave enough space
-              in the margins for readers to bring their own thoughts.
-            </p>
-          </div>
-          <div class="large-quote" aria-label="Journal motto">
-            Read slowly.<br />Question <em>everything.</em>
-          </div>
-        </section>
+          <div class="story-grid">
+            <div class="story-copy">
+              <h2>I'm <em>Hemang Jindal.</em></h2>
+              <p>
+                I'm the editor and the person behind The Marginalia. I started
+                this journal as a place to give ideas room to breathe: to follow
+                a question beyond its first answer, sit with an uncertainty, and
+                work through a thought in writing.
+              </p>
+              <p>
+                My interests tend to gather around philosophy, literature,
+                ethics, and the ordinary details of being human. I enjoy the
+                questions that don't resolve neatly, the arguments that make you
+                reconsider what you thought you knew, and stories that leave
+                something unsettled after the last page.
+              </p>
+              <p>
+                I don't approach this as an authority handing down conclusions.
+                I'm here as a reader and a writer, learning in public and trying
+                to make the process of thinking a little more visible.
+              </p>
+            </div>
 
-        <section class="what-youll-find">
-          <p class="eyebrow"><span></span> 03 / Around these pages</p>
-          <div class="topics-grid">
-            <article>
-              <span class="topic-number">01</span>
-              <h3>Philosophy</h3>
+            <div class="journal-copy">
+              <p class="eyebrow"><span></span> Why The Marginalia exists</p>
+              <h2>A place for the questions that <em>stay with us.</em></h2>
               <p>
-                Ideas, arguments, and old questions that still have a pulse.
+                The Marginalia is an independent journal collecting essays,
+                fiction, and reflections on philosophy, ethics, and everyday
+                life. It is built around a simple conviction: not every
+                worthwhile thought needs to arrive as a finished answer.
               </p>
-            </article>
-            <article>
-              <span class="topic-number">02</span>
-              <h3>Fiction</h3>
-              <p>Stories and imagined lives, with room for ambiguity.</p>
-            </article>
-            <article>
-              <span class="topic-number">03</span>
-              <h3>Reflections</h3>
               <p>
-                Notes on the everyday, the human condition, and everything
-                between.
+                Some pieces begin with a book, some with a passing observation,
+                and others with a question that refuses to leave. The aim is to
+                give each one the attention it deserves—and to leave enough
+                space in the margins for readers to bring their own thoughts.
               </p>
-            </article>
+              <p class="journal-motto">
+                Read slowly. <em>Question everything.</em>
+              </p>
+            </div>
           </div>
         </section>
 
         <section class="closing-note">
           <p class="eyebrow"><span></span> A final note</p>
+
           <h2>Thank you for <em>being here.</em></h2>
+
           <p>
             If something here makes you pause, disagree, remember, or look
             again, then the journal has done what I hoped it would.
           </p>
+
           <a class="return-link" href={`${base}#archive`}
             >Explore the writing <span>↗</span></a
           >
@@ -167,8 +165,11 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 
       <footer class="site-footer">
         <a class="footer-brand" href={base}>The <em>Marginalia.</em></a>
+
         <span>Written slowly, published occasionally.</span>
+
         <span>© {new Date().getFullYear()} Hemang Jindal</span>
+
         <a href={`${base}rss.xml`}>RSS ↗</a>
       </footer>
     </div>
@@ -177,26 +178,36 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 
 <script>
   // The same restrained cinematic introduction used across the journal.
+
   const introCurtain = document.querySelector<HTMLElement>("#intro-curtain");
+
   const introSkip = document.querySelector<HTMLButtonElement>("#intro-skip");
+
   const reduceMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)",
   ).matches;
+
   let introDismissed = false;
 
   const dismissIntro = () => {
     if (!introCurtain || introDismissed) return;
+
     introDismissed = true;
+
     introCurtain.classList.add("intro-leaving");
+
     document.documentElement.classList.remove("intro-active");
+
     window.setTimeout(() => introCurtain.remove(), reduceMotion ? 0 : 900);
   };
 
   if (introCurtain) {
     let alreadySeen = false;
+
     try {
       alreadySeen =
         sessionStorage.getItem("marginalia-about-intro-seen") === "1";
+
       sessionStorage.setItem("marginalia-about-intro-seen", "1");
     } catch {
       alreadySeen = false;
@@ -206,9 +217,13 @@ const base = import.meta.env.BASE_URL.endsWith("/")
       introCurtain.remove();
     } else {
       document.documentElement.classList.add("intro-active");
+
       introCurtain.classList.add("intro-ready");
+
       window.setTimeout(dismissIntro, 2450);
+
       introSkip?.addEventListener("click", dismissIntro);
+
       introCurtain.addEventListener("click", (event) => {
         if (event.target === introCurtain) dismissIntro();
       });
@@ -216,267 +231,72 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   }
 
   // Reveal editorial sections as they enter the viewport.
+
   if (!reduceMotion && "IntersectionObserver" in window) {
     const revealTargets = document.querySelectorAll<HTMLElement>(
-      ".editor-story, .editor-purpose, .what-youll-find, .closing-note",
+      ".editor-story, .closing-note",
     );
+
     revealTargets.forEach((element) => element.classList.add("will-reveal"));
+
     const revealObserver = new IntersectionObserver(
       (entries, observer) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-revealed");
+
             observer.unobserve(entry.target);
           }
         });
       },
+
       { threshold: 0.14, rootMargin: "0px 0px -45px 0px" },
     );
+
     revealTargets.forEach((element) => revealObserver.observe(element));
-
-    document
-      .querySelectorAll<HTMLElement>(".topics-grid article")
-      .forEach((item, index) => {
-        item.classList.add("will-reveal");
-        item.style.setProperty("--reveal-delay", `${index * 110}ms`);
-        revealObserver.observe(item);
-      });
   }
-
-  // A low-contrast, Shadertoy-inspired flowing-noise field for the purpose panel.
-  // It is rendered locally, so no third-party iframe or external runtime is needed.
-  (() => {
-    const canvas = document.querySelector<HTMLCanvasElement>("#purpose-shader");
-    const section = canvas?.closest<HTMLElement>(".editor-purpose");
-    if (!canvas || !section || reduceMotion) return;
-
-    const gl = canvas.getContext("webgl", {
-      alpha: false,
-      antialias: false,
-      powerPreference: "low-power",
-    });
-    if (!gl) {
-      section.classList.add("shader-fallback");
-      return;
-    }
-
-    const vertexSource = `
-      attribute vec2 a_position;
-      void main() { gl_Position = vec4(a_position, 0.0, 1.0); }
-    `;
-
-    const fragmentSource = `
-      precision mediump float;
-      uniform vec2 u_resolution;
-      uniform float u_time;
-      uniform vec2 u_pointer;
-
-      float hash(vec2 p) {
-        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
-      }
-      float noise(vec2 p) {
-        vec2 i = floor(p);
-        vec2 f = fract(p);
-        f = f * f * (3.0 - 2.0 * f);
-        return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
-                   mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
-      }
-      float fbm(vec2 p) {
-        float v = 0.0;
-        float a = 0.5;
-        for (int i = 0; i < 5; i++) {
-          v += a * noise(p);
-          p = mat2(1.6, -1.2, 1.2, 1.6) * p;
-          a *= 0.5;
-        }
-        return v;
-      }
-      void main() {
-        vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-        vec2 p = (uv - 0.5) * vec2(u_resolution.x / u_resolution.y, 1.0);
-        float t = u_time * 0.16;
-
-        // The pointer gently bends the field around the cursor instead of acting like a button.
-        vec2 mouse = (u_pointer - 0.5) * vec2(u_resolution.x / u_resolution.y, 1.0);
-        float influence = exp(-length(p - mouse) * 2.1) * 0.16;
-        p += normalize(p - mouse + vec2(0.0001)) * influence;
-
-        // Two moving layers of domain warping create continuous, fluid motion.
-        vec2 drift = vec2(t * 0.34, -t * 0.22);
-        float n1 = fbm(p * 2.25 + drift);
-        float n2 = fbm(p * 2.0 + vec2(-t * 0.27, t * 0.31) + n1 * 1.7);
-        vec2 warp = vec2(n1 - 0.5, n2 - 0.5);
-        vec2 q = p + warp * 0.72;
-        float swirl = fbm(q * 3.0 + vec2(t * 0.22, -t * 0.17));
-
-        float ribbonA = sin((q.y * 3.0 + q.x * 1.15 + swirl * 2.4) * 3.14159 - t * 1.25);
-        float ribbonB = sin((q.x * 2.1 - q.y * 2.4 + n1 * 2.0) * 3.14159 + t * 0.82);
-        float flow = smoothstep(0.18, 0.92, 0.5 + 0.28 * ribbonA + 0.22 * ribbonB + (swirl - 0.5) * 0.5);
-        float glow = pow(max(0.0, 1.0 - abs(ribbonA * 0.62 + ribbonB * 0.38)), 5.0);
-        float cloud = smoothstep(0.36, 0.78, swirl + n2 * 0.24);
-
-        vec3 base = vec3(0.105, 0.091, 0.079);
-        vec3 umber = vec3(0.25, 0.135, 0.095);
-        vec3 copper = vec3(0.48, 0.205, 0.135);
-        vec3 warmLight = vec3(0.66, 0.32, 0.21);
-        vec3 color = mix(base, umber, cloud * 0.78);
-        color = mix(color, copper, flow * 0.52);
-        color += warmLight * glow * 0.13;
-
-        // Keep the edges darker so the typography remains the focal point.
-        float vignette = smoothstep(1.28, 0.16, length(p * vec2(0.68, 1.05)));
-        color = mix(base * 0.92, color, vignette * 0.92);
-        gl_FragColor = vec4(color, 1.0);
-      }
-    `;
-
-    const compile = (type: number, source: string) => {
-      const shader = gl.createShader(type);
-      if (!shader) return null;
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        gl.deleteShader(shader);
-        return null;
-      }
-      return shader;
-    };
-
-    const vertex = compile(gl.VERTEX_SHADER, vertexSource);
-    const fragment = compile(gl.FRAGMENT_SHADER, fragmentSource);
-    if (!vertex || !fragment) {
-      section.classList.add("shader-fallback");
-      return;
-    }
-
-    const program = gl.createProgram();
-    if (!program) return;
-    gl.attachShader(program, vertex);
-    gl.attachShader(program, fragment);
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      section.classList.add("shader-fallback");
-      return;
-    }
-
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
-      gl.STATIC_DRAW,
-    );
-    gl.useProgram(program);
-
-    const position = gl.getAttribLocation(program, "a_position");
-    const resolution = gl.getUniformLocation(program, "u_resolution");
-    const time = gl.getUniformLocation(program, "u_time");
-    const pointer = gl.getUniformLocation(program, "u_pointer");
-    let pointerX = 0.5;
-    let pointerY = 0.5;
-    const trackPointer = (event: PointerEvent) => {
-      const rect = section.getBoundingClientRect();
-      pointerX = Math.max(
-        0,
-        Math.min(1, (event.clientX - rect.left) / rect.width),
-      );
-      pointerY =
-        1 - Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
-    };
-    section.addEventListener("pointermove", trackPointer, { passive: true });
-    section.addEventListener(
-      "pointerleave",
-      () => {
-        pointerX = 0.5;
-        pointerY = 0.5;
-      },
-      { passive: true },
-    );
-    gl.enableVertexAttribArray(position);
-    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-
-    let frame = 0;
-    let start = 0;
-    let visible = true;
-    const resize = () => {
-      const rect = section.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.35);
-      const width = Math.max(1, Math.floor(rect.width * dpr));
-      const height = Math.max(1, Math.floor(rect.height * dpr));
-      if (canvas.width !== width || canvas.height !== height) {
-        canvas.width = width;
-        canvas.height = height;
-        gl.viewport(0, 0, width, height);
-        gl.uniform2f(resolution, width, height);
-      }
-    };
-
-    const render = (now: number) => {
-      if (!visible) {
-        frame = 0;
-        return;
-      }
-      if (!start) start = now;
-      resize();
-      gl.uniform1f(time, (now - start) / 1000);
-      gl.uniform2f(pointer, pointerX, pointerY);
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-      frame = window.requestAnimationFrame(render);
-    };
-
-    const visibilityObserver = new IntersectionObserver(
-      ([entry]) => {
-        visible = entry.isIntersecting;
-        if (visible && !frame) frame = window.requestAnimationFrame(render);
-        if (!visible && frame) {
-          window.cancelAnimationFrame(frame);
-          frame = 0;
-        }
-      },
-      { rootMargin: "100px" },
-    );
-    visibilityObserver.observe(section);
-    window.addEventListener("resize", resize, { passive: true });
-    resize();
-    frame = window.requestAnimationFrame(render);
-
-    // Release the GPU work when the page is backgrounded.
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden && frame) {
-        window.cancelAnimationFrame(frame);
-        frame = 0;
-      } else if (!document.hidden && visible && !frame) {
-        frame = window.requestAnimationFrame(render);
-      }
-    });
-  })();
 </script>
 
 <script>
   (() => {
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
     if (!finePointer.matches || reducedMotion.matches) return;
 
     const cursor = document.createElement("div");
+
     cursor.className = "marginalia-cursor";
+
     cursor.setAttribute("aria-hidden", "true");
+
     cursor.innerHTML =
       '<span class="marginalia-cursor__dot"></span><span class="marginalia-cursor__ring"></span>';
+
     document.body.appendChild(cursor);
+
     document.documentElement.classList.add("has-marginalia-cursor");
 
     let x = window.innerWidth / 2;
+
     let y = window.innerHeight / 2;
+
     let ringX = x;
+
     let ringY = y;
+
     let frame = 0;
 
     const animateRing = () => {
       ringX += (x - ringX) * 0.18;
+
       ringY += (y - ringY) * 0.18;
+
       cursor.style.setProperty("--ring-x", `${ringX}px`);
+
       cursor.style.setProperty("--ring-y", `${ringY}px`);
+
       if (Math.abs(x - ringX) > 0.1 || Math.abs(y - ringY) > 0.1) {
         frame = window.requestAnimationFrame(animateRing);
       } else frame = 0;
@@ -484,42 +304,58 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 
     document.addEventListener(
       "pointermove",
+
       (event: PointerEvent) => {
         x = event.clientX;
+
         y = event.clientY;
+
         cursor.classList.add("is-visible");
+
         cursor.style.setProperty("--cursor-x", `${x}px`);
+
         cursor.style.setProperty("--cursor-y", `${y}px`);
+
         if (!frame) frame = window.requestAnimationFrame(animateRing);
       },
+
       { passive: true },
     );
 
     document.addEventListener(
       "pointerover",
+
       (event: PointerEvent) => {
         const target = event.target instanceof Element ? event.target : null;
+
         const interactive = target?.closest(
           "a, button, input, textarea, select, [role='button']",
         );
+
         const textEntry = target?.closest(
           "input, textarea, [contenteditable='true']",
         );
+
         cursor.classList.toggle("is-interactive", Boolean(interactive));
+
         cursor.classList.toggle("is-text-entry", Boolean(textEntry));
       },
+
       { passive: true },
     );
 
     document.addEventListener("pointerout", (event: PointerEvent) => {
       if (!event.relatedTarget) cursor.classList.remove("is-visible");
     });
+
     document.addEventListener("pointerdown", () =>
       cursor.classList.add("is-pressed"),
     );
+
     document.addEventListener("pointerup", () =>
       cursor.classList.remove("is-pressed"),
     );
+
     window.addEventListener("blur", () =>
       cursor.classList.remove("is-visible"),
     );
@@ -530,60 +366,118 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   :global(*) {
     box-sizing: border-box;
   }
+
   :global(html) {
     scroll-behavior: smooth;
   }
+
   :global(body) {
     margin: 0;
-    background: #f8f5ed;
     color: #24221f;
     font-family: "DM Sans", sans-serif;
     -webkit-font-smoothing: antialiased;
+    /* Clearly visible warm paper stock: mottling, fibres and fine printed-paper grain. */
+    background-color: #f1e6d4;
+    background-image:
+      radial-gradient(
+        ellipse at 12% 16%,
+        rgba(132, 91, 52, 0.13),
+        transparent 43%
+      ),
+      radial-gradient(
+        ellipse at 86% 74%,
+        rgba(157, 94, 57, 0.1),
+        transparent 46%
+      ),
+      radial-gradient(
+        ellipse at 50% 48%,
+        rgba(255, 250, 239, 0.3),
+        transparent 72%
+      ),
+      repeating-linear-gradient(
+        2deg,
+        rgba(112, 83, 54, 0.035) 0,
+        rgba(112, 83, 54, 0.035) 1px,
+        transparent 1px,
+        transparent 5px
+      ),
+      url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMjAiIGhlaWdodD0iMzIwIj4KPGZpbHRlciBpZD0icGFwZXIiPgogIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuNzIiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjEzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIiByZXN1bHQ9Im4iLz4KICA8ZmVDb2xvck1hdHJpeCBpbj0ibiIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IgogICAgLjU1IC4zNSAuMTAgMCAuMDgKICAgIC40NSAuNDUgLjEwIDAgLjAyCiAgICAuMzUgLjQwIC4yNSAwIC0uMDQKICAgIDAgMCAwIDAgLjQyIi8+CjwvZmlsdGVyPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjcGFwZXIpIi8+Cjwvc3ZnPg==");
+    background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+    background-size:
+      auto,
+      auto,
+      auto,
+      100% 100%,
+      320px 320px;
+    background-attachment: fixed;
+    background-blend-mode: multiply, multiply, screen, multiply, multiply;
   }
+
   :global(a) {
     color: inherit;
+
     text-decoration: none;
   }
+
   :global(a:focus-visible) {
     outline: 2px solid #a64d36;
+
     outline-offset: 4px;
   }
 
   .page-shell {
     max-width: 1440px;
+
     margin: 0 auto;
+
     padding: 0 6.2%;
   }
+
   .site-header {
     min-height: 100px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
+
     gap: 24px;
+
     border-bottom: 1px solid #ded8cc;
   }
+
   .wordmark,
   .footer-brand {
     font:
       400 21px "Libre Baskerville",
       Georgia,
       serif;
+
     letter-spacing: -1px;
   }
+
   .wordmark em,
   .footer-brand em {
     color: #a64d36;
   }
+
   .site-header nav {
     display: flex;
+
     gap: 30px;
+
     color: #756d62;
+
     font-size: 10px;
+
     letter-spacing: 1px;
   }
+
   .site-header nav a {
     transition: color 180ms ease;
   }
+
   .site-header nav a:hover,
   .site-header nav [aria-current="page"] {
     color: #a64d36;
@@ -591,271 +485,318 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 
   .editor-intro {
     min-height: 570px;
+
     display: grid;
+
     grid-template-columns: minmax(0, 1.3fr) minmax(240px, 0.7fr);
+
     align-items: center;
+
     gap: 8%;
+
     padding: 76px 0 90px;
   }
+
   .eyebrow,
   .section-label {
     margin: 0;
+
     color: #a64d36;
+
     font-size: 9px;
+
     font-weight: 600;
+
     letter-spacing: 2px;
+
     text-transform: uppercase;
   }
+
   .eyebrow {
     display: flex;
+
     align-items: center;
+
     gap: 11px;
   }
+
   .eyebrow span {
     width: 7px;
+
     height: 7px;
+
     border-radius: 50%;
+
     background: #a64d36;
   }
+
   h1,
   h2,
   h3,
   p {
     margin-top: 0;
   }
+
   h1,
   h2,
   h3 {
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-weight: 400;
   }
+
   .editor-intro h1 {
     max-width: 800px;
+
     margin: 30px 0 25px;
+
     font-size: clamp(58px, 8vw, 112px);
+
     line-height: 1.05;
+
     letter-spacing: -5px;
   }
+
   .editor-intro h1 em,
   .editor-story h2 em,
-  .purpose-heading h2 em,
-  .large-quote em,
   .closing-note h2 em {
     color: #a64d36;
+
     font-weight: 400;
   }
+
   .standfirst {
     max-width: 620px;
+
     margin: 0;
+
     color: #71695e;
+
     font:
       italic 17px/1.9 "Libre Baskerville",
       Georgia,
       serif;
   }
+
   .editor-mark {
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     gap: 17px;
+
     color: #968b7d;
+
     font-size: 8px;
+
     letter-spacing: 2px;
+
     text-transform: uppercase;
   }
+
   .editor-mark svg {
     width: min(100%, 270px);
+
     overflow: visible;
   }
+
   .mark-circle {
     fill: none;
+
     stroke: #c9c0b2;
+
     stroke-width: 1.2;
   }
+
   .editor-mark text {
     fill: #282521;
+
     font:
       150px "Libre Baskerville",
       Georgia,
       serif;
   }
+
   .mark-dot {
     fill: #a64d36;
   }
+
   .page-rule {
     height: 1px;
+
     background: #dcd5c8;
   }
 
   .editor-story {
-    display: grid;
-    grid-template-columns: 0.55fr 1.45fr;
-    gap: 8%;
-    padding: 115px 5% 125px;
+    padding: 112px 5% 124px;
   }
+
   .section-label {
-    padding-top: 13px;
-  }
-  .story-copy {
-    max-width: 720px;
-  }
-  .editor-story h2 {
-    margin: 0 0 32px;
-    font-size: clamp(38px, 5vw, 62px);
-    line-height: 1.2;
-    letter-spacing: -2px;
-  }
-  .story-copy p,
-  .purpose-copy p {
-    color: #5f594f;
-    font:
-      14px/2.15 "Libre Baskerville",
-      Georgia,
-      serif;
-  }
-  .story-copy p + p,
-  .purpose-copy p + p {
-    margin-top: 24px;
-  }
-
-  .editor-purpose {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8%;
-    padding: 100px 5%;
-    background: #24221f;
-    color: #f8f5ed;
-    overflow: hidden;
-  }
-  .purpose-heading,
-  .purpose-copy,
-  .large-quote {
-    position: relative;
-    z-index: 1;
-  }
-  .purpose-heading .eyebrow {
-    color: #c17a63;
-  }
-  .purpose-heading h2 {
-    max-width: 540px;
-    margin: 30px 0 0;
-    font-size: clamp(38px, 5vw, 65px);
-    line-height: 1.23;
-    letter-spacing: -2px;
-  }
-  .purpose-copy {
-    padding-top: 47px;
-  }
-  .purpose-copy p {
-    color: #c9c1b5;
-  }
-  .large-quote {
-    grid-column: 1 / -1;
-    margin-top: 65px;
-    padding-top: 35px;
-    border-top: 1px solid #514a42;
-    color: #f8f5ed;
-    font:
-      clamp(28px, 4.5vw, 58px)/1.35 "Libre Baskerville",
-      Georgia,
-      serif;
-    letter-spacing: -1.5px;
-  }
-  .large-quote em {
-    color: #c17a63;
-  }
-
-  .what-youll-find {
-    padding: 115px 5% 125px;
-  }
-  .topics-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
-    margin-top: 48px;
-  }
-  .topics-grid article {
-    padding: 25px 0 0;
-    border-top: 1px solid #d6cfc2;
-  }
-  .topic-number {
+    margin: 0 0 44px;
     color: #a64d36;
     font-size: 9px;
-    letter-spacing: 1px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
   }
-  .topics-grid h3 {
-    margin: 22px 0 12px;
-    font-size: 25px;
+
+  .story-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(38px, 6vw, 92px);
+    align-items: start;
   }
-  .topics-grid p {
-    max-width: 280px;
-    margin: 0;
+
+  .story-copy,
+  .journal-copy {
+    min-width: 0;
+    max-width: 720px;
+  }
+
+  .journal-copy {
+    padding-left: clamp(28px, 4vw, 58px);
+    border-left: 1px solid rgba(130, 105, 77, 0.28);
+  }
+
+  .editor-story h2 {
+    margin: 0 0 30px;
+    font-size: clamp(34px, 4.1vw, 55px);
+    line-height: 1.22;
+    letter-spacing: -2px;
+  }
+
+  .editor-story h2 em,
+  .journal-motto em {
+    color: #a64d36;
+    font-weight: 400;
+  }
+
+  .story-copy p,
+  .journal-copy > p:not(.eyebrow):not(.journal-motto) {
+    color: #5f594f;
+    font:
+      13px/2.1 "Libre Baskerville",
+      Georgia,
+      serif;
+  }
+
+  .story-copy p + p,
+  .journal-copy > p + p {
+    margin-top: 22px;
+  }
+
+  .journal-copy .eyebrow {
+    margin: 5px 0 25px;
+  }
+
+  .journal-copy h2 {
+    max-width: 520px;
+  }
+
+  .journal-motto {
+    margin: 34px 0 0;
+    padding-top: 22px;
+    border-top: 1px solid rgba(130, 105, 77, 0.28);
     color: #756d62;
     font:
-      12px/1.9 "Libre Baskerville",
+      italic 15px/1.8 "Libre Baskerville",
       Georgia,
       serif;
   }
 
   .closing-note {
     padding: 95px 5% 110px;
+
     border-top: 1px solid #dcd5c8;
+
     text-align: center;
   }
+
   .closing-note .eyebrow {
     justify-content: center;
   }
+
   .closing-note h2 {
     margin: 25px 0 15px;
+
     font-size: clamp(38px, 5vw, 62px);
+
     letter-spacing: -2px;
   }
+
   .closing-note > p:not(.eyebrow) {
     max-width: 560px;
+
     margin: 0 auto;
+
     color: #756d62;
+
     font:
       italic 13px/2 "Libre Baskerville",
       Georgia,
       serif;
   }
+
   .return-link {
     display: inline-flex;
+
     gap: 18px;
+
     align-items: center;
+
     margin-top: 32px;
+
     padding-bottom: 9px;
+
     border-bottom: 1px solid #a64d36;
+
     color: #a64d36;
+
     font-size: 10px;
+
     letter-spacing: 1.2px;
+
     text-transform: uppercase;
   }
+
   .return-link span {
     font-size: 15px;
+
     transition: transform 180ms ease;
   }
+
   .return-link:hover span {
     transform: translate(3px, -3px);
   }
 
   .site-footer {
     min-height: 95px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
+
     gap: 20px;
+
     border-top: 1px solid #dcd5c8;
+
     color: #857c70;
+
     font-size: 9px;
   }
+
   .footer-brand {
     color: #24221f;
+
     font-size: 16px;
   }
 
   /* CINEMATIC INTRO — matched to the homepage and essay pages */
+
   :global(html.intro-active),
   :global(html.intro-active body) {
     overflow: hidden;
@@ -863,280 +804,355 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 
   .intro-curtain {
     position: fixed;
+
     inset: 0;
+
     z-index: 100000;
+
     display: grid;
+
     place-items: center;
+
     overflow: hidden;
+
     background: #211f1c;
+
     color: #f2eee5;
+
     opacity: 0;
+
     visibility: hidden;
+
     pointer-events: none;
+
     transition:
       opacity 850ms cubic-bezier(0.76, 0, 0.24, 1),
       visibility 850ms;
   }
+
   .intro-curtain.intro-ready {
     opacity: 1;
+
     visibility: visible;
+
     pointer-events: auto;
   }
+
   .intro-curtain::before,
   .intro-curtain::after {
     position: absolute;
+
     width: 70vmax;
+
     height: 70vmax;
+
     border: 1px solid rgba(196, 122, 96, 0.18);
+
     border-radius: 50%;
+
     content: "";
+
     transform: scale(0.3);
+
     opacity: 0;
   }
+
   .intro-curtain::before {
     animation: intro-ring 2.1s 0.05s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
   }
+
   .intro-curtain::after {
     width: 48vmax;
+
     height: 48vmax;
+
     animation: intro-ring 2.1s 0.18s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
   }
+
   .intro-curtain-inner {
     position: relative;
+
     z-index: 1;
+
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     padding: 30px;
+
     text-align: center;
   }
+
   .intro-overline,
   .intro-enter {
     color: #bdb3a5;
+
     font-size: 9px;
+
     letter-spacing: 3px;
+
     text-transform: uppercase;
+
     opacity: 0;
   }
+
   .intro-overline {
     animation: intro-rise 0.7s 0.15s ease forwards;
   }
+
   .intro-wordmark {
     margin: 24px 0 20px;
+
     font-family: "Libre Baskerville", Georgia, serif;
+
     font-size: clamp(45px, 9vw, 112px);
+
     letter-spacing: -0.075em;
+
     line-height: 1.15;
+
     clip-path: inset(0 50% 0 50%);
+
     animation: intro-unmask 1.05s 0.35s cubic-bezier(0.76, 0, 0.24, 1) forwards;
   }
+
   .intro-wordmark em {
     color: #c47a60;
+
     font-weight: 400;
   }
+
   .intro-rule {
     width: 0;
+
     height: 1px;
+
     background: #a96a53;
+
     animation: intro-rule 850ms 1s ease forwards;
   }
+
   .intro-enter {
     margin-top: 18px;
+
     animation: intro-rise 0.7s 1.25s ease forwards;
   }
+
   .intro-skip {
     position: absolute;
+
     right: 34px;
+
     bottom: 30px;
+
     z-index: 2;
+
     padding: 10px 0 10px 15px;
+
     border: 0;
+
     background: transparent;
+
     color: #c6bfb2;
+
     cursor: pointer;
+
     font-size: 9px;
+
     letter-spacing: 1.5px;
+
     text-transform: uppercase;
   }
+
   .intro-skip span {
     padding-left: 8px;
+
     color: #c47a60;
   }
+
   .intro-skip:hover {
     color: #fff;
   }
+
   .intro-curtain.intro-leaving {
     opacity: 0;
+
     visibility: hidden;
+
     pointer-events: none;
   }
+
   .intro-curtain.intro-leaving .intro-curtain-inner {
     transform: translateY(-35px) scale(0.96);
+
     opacity: 0;
+
     transition:
       transform 700ms cubic-bezier(0.76, 0, 0.24, 1),
       opacity 550ms;
   }
+
   @keyframes intro-ring {
     0% {
       transform: scale(0.3);
+
       opacity: 0;
     }
+
     35% {
       opacity: 1;
     }
+
     100% {
       transform: scale(1);
+
       opacity: 0;
     }
   }
+
   @keyframes intro-rise {
     from {
       opacity: 0;
+
       transform: translateY(12px);
     }
+
     to {
       opacity: 1;
+
       transform: translateY(0);
     }
   }
+
   @keyframes intro-unmask {
     to {
       clip-path: inset(0 0 0 0);
     }
   }
+
   @keyframes intro-rule {
     to {
       width: min(260px, 55vw);
     }
   }
 
-  /* Living, pointer-responsive fluid shader in the purpose panel. */
-  .editor-purpose {
-    isolation: isolate;
-  }
-  .purpose-shader,
-  .purpose-shader-wash {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-  }
-  .purpose-shader {
-    z-index: -2;
-    display: block;
-  }
-  .purpose-shader-wash {
-    z-index: -1;
-    background: linear-gradient(
-      105deg,
-      rgba(24, 21, 19, 0.3),
-      rgba(24, 21, 19, 0.04) 52%,
-      rgba(24, 21, 19, 0.24)
-    );
-  }
-  .editor-purpose.shader-fallback {
-    background:
-      radial-gradient(
-        ellipse at 78% 18%,
-        rgba(166, 77, 54, 0.24),
-        transparent 42%
-      ),
-      radial-gradient(
-        ellipse at 18% 85%,
-        rgba(112, 65, 47, 0.22),
-        transparent 50%
-      ),
-      #24221f;
-  }
-  .editor-purpose.shader-fallback .purpose-shader {
-    display: none;
-  }
-
   /* Quiet editorial movement: reveal, stagger, and a little monogram response. */
+
   .will-reveal {
     opacity: 0;
+
     transform: translateY(28px);
+
     transition:
       opacity 850ms cubic-bezier(0.2, 0.7, 0.2, 1),
       transform 850ms cubic-bezier(0.2, 0.7, 0.2, 1);
+
     transition-delay: var(--reveal-delay, 0ms);
   }
+
   .will-reveal.is-revealed {
     opacity: 1;
+
     transform: translateY(0);
   }
+
   .editor-mark svg {
     transition: transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
   }
+
   .editor-mark:hover svg {
     transform: rotate(8deg) scale(1.035);
   }
-  .topics-grid article {
-    transition:
-      border-color 300ms ease,
-      transform 450ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-  .topics-grid article:hover {
-    border-color: #a64d36;
-    transform: translateY(-5px);
-  }
+
   .return-link {
     transition:
       color 220ms ease,
       border-color 220ms ease;
   }
+
   .return-link:hover {
     color: #7f3828;
+
     border-color: #7f3828;
   }
 
   :global(.marginalia-cursor) {
     position: fixed;
+
     inset: 0 auto auto 0;
+
     z-index: 99999;
+
     width: 0;
+
     height: 0;
+
     pointer-events: none;
+
     opacity: 0;
+
     transition: opacity 180ms ease;
   }
+
   :global(.marginalia-cursor.is-visible) {
     opacity: 1;
   }
+
   :global(.marginalia-cursor__dot) {
     position: absolute;
+
     left: var(--cursor-x, -100px);
+
     top: var(--cursor-y, -100px);
+
     width: 6px;
+
     height: 6px;
+
     border-radius: 50%;
+
     background: #a64d36;
+
     transform: translate(-50%, -50%);
   }
+
   :global(.marginalia-cursor__ring) {
     position: absolute;
+
     left: var(--ring-x, -100px);
+
     top: var(--ring-y, -100px);
+
     width: 31px;
+
     height: 31px;
+
     border: 1px solid rgba(166, 77, 54, 0.72);
+
     border-radius: 50%;
+
     transform: translate(-50%, -50%);
+
     transition:
       width 220ms ease,
       height 220ms ease,
-      background 220ms ease;
+      * background * 220ms ease;
   }
+
   :global(.marginalia-cursor.is-interactive .marginalia-cursor__ring) {
     width: 48px;
+
     height: 48px;
+
     background: rgba(166, 77, 54, 0.07);
   }
+
   :global(.marginalia-cursor.is-text-entry .marginalia-cursor__ring) {
     opacity: 0;
   }
+
   :global(.has-marginalia-cursor),
   :global(.has-marginalia-cursor body),
   :global(.has-marginalia-cursor a) {
@@ -1146,16 +1162,16 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   @media (prefers-reduced-motion: reduce) {
     .will-reveal {
       opacity: 1;
+
       transform: none;
+
       transition: none;
     }
-    .editor-mark svg,
-    .topics-grid article {
+
+    .editor-mark svg {
       transition: none;
     }
-    .purpose-shader {
-      display: none;
-    }
+
     .intro-curtain {
       display: none;
     }
@@ -1165,126 +1181,145 @@ const base = import.meta.env.BASE_URL.endsWith("/")
     .page-shell {
       padding: 0 22px;
     }
+
     .site-header {
       min-height: 76px;
+
       align-items: center;
     }
+
     .wordmark {
       font-size: 17px;
     }
+
     .site-header nav {
       gap: 15px;
+
       font-size: 9px;
     }
+
     .editor-intro {
       min-height: auto;
+
       grid-template-columns: 1fr;
+
       gap: 45px;
+
       padding: 85px 0 70px;
     }
+
     .editor-intro h1 {
       margin: 24px 0 18px;
+
       font-size: clamp(49px, 13vw, 76px);
+
       letter-spacing: -3px;
     }
+
     .standfirst {
       font-size: 14px;
     }
+
     .editor-mark {
       justify-self: end;
+
       width: 145px;
     }
+
     .editor-mark svg {
       width: 145px;
     }
+
     .editor-mark span {
       font-size: 7px;
     }
+
     .editor-story {
-      grid-template-columns: 1fr;
-      gap: 30px;
       padding: 75px 0 85px;
     }
+
+    .section-label {
+      margin-bottom: 32px;
+    }
+
+    .story-grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+
+    .journal-copy {
+      padding: 36px 0 0;
+      border-left: 0;
+      border-top: 1px solid rgba(130, 105, 77, 0.28);
+    }
+
     .editor-story h2 {
       font-size: 39px;
     }
+
     .story-copy p,
-    .purpose-copy p {
+    .journal-copy > p:not(.eyebrow):not(.journal-motto) {
       font-size: 12px;
       line-height: 2;
     }
-    .editor-purpose {
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin: 0 -22px;
-      padding: 75px 22px;
-    }
-    .purpose-heading h2 {
-      font-size: 43px;
-    }
-    .purpose-copy {
-      padding-top: 15px;
-    }
-    .large-quote {
-      margin-top: 30px;
-      font-size: 34px;
-    }
-    .what-youll-find {
-      padding: 80px 0;
-    }
-    .topics-grid {
-      grid-template-columns: 1fr;
-      gap: 25px;
-      margin-top: 35px;
-    }
-    .topics-grid article {
-      padding-top: 18px;
-    }
-    .topics-grid h3 {
-      margin-top: 14px;
-    }
+
     .closing-note {
       padding: 75px 0 85px;
     }
+
     .closing-note h2 {
       font-size: 39px;
     }
+
     .site-footer {
       min-height: auto;
+
       flex-wrap: wrap;
+
       justify-content: space-between;
+
       padding: 25px 0;
     }
+
     .site-footer > span:nth-of-type(1) {
       order: 3;
+
       width: 100%;
     }
   }
+
   @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
     :global(.marginalia-cursor) {
       display: none !important;
     }
+
     :global(.has-marginalia-cursor),
     :global(.has-marginalia-cursor body),
     :global(.has-marginalia-cursor a) {
       cursor: auto !important;
     }
   }
+
   @media (prefers-reduced-motion: no-preference) {
     .editor-intro .intro-copy,
     .editor-mark {
       animation: editor-arrive 850ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
     }
+
     .editor-mark {
       animation-delay: 120ms;
     }
+
     @keyframes editor-arrive {
       from {
         opacity: 0;
+
         transform: translateY(18px);
       }
+
       to {
         opacity: 1;
+
         transform: translateY(0);
       }
     }
