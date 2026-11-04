@@ -105,12 +105,14 @@ const base = import.meta.env.BASE_URL.endsWith("/")
           <div class="story-grid">
             <div class="story-copy">
               <h2>I'm <em>Hemang Jindal.</em></h2>
+
               <p>
                 I'm the editor and the person behind The Marginalia. I started
                 this journal as a place to give ideas room to breathe: to follow
                 a question beyond its first answer, sit with an uncertainty, and
                 work through a thought in writing.
               </p>
+
               <p>
                 My interests tend to gather around philosophy, literature,
                 ethics, and the ordinary details of being human. I enjoy the
@@ -118,6 +120,7 @@ const base = import.meta.env.BASE_URL.endsWith("/")
                 reconsider what you thought you knew, and stories that leave
                 something unsettled after the last page.
               </p>
+
               <p>
                 I don't approach this as an authority handing down conclusions.
                 I'm here as a reader and a writer, learning in public and trying
@@ -127,19 +130,23 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 
             <div class="journal-copy">
               <p class="eyebrow"><span></span> Why The Marginalia exists</p>
+
               <h2>A place for the questions that <em>stay with us.</em></h2>
+
               <p>
                 The Marginalia is an independent journal collecting essays,
                 fiction, and reflections on philosophy, ethics, and everyday
                 life. It is built around a simple conviction: not every
                 worthwhile thought needs to arrive as a finished answer.
               </p>
+
               <p>
                 Some pieces begin with a book, some with a passing observation,
                 and others with a question that refuses to leave. The aim is to
                 give each one the attention it deserves—and to leave enough
                 space in the margins for readers to bring their own thoughts.
               </p>
+
               <p class="journal-motto">
                 Read slowly. <em>Question everything.</em>
               </p>
@@ -175,6 +182,29 @@ const base = import.meta.env.BASE_URL.endsWith("/")
     </div>
   </body>
 </html>
+
+<script>
+  import Lenis from "lenis";
+
+  // Keep the same restrained scroll feel across the journal.
+  // Touch devices and reduced-motion users retain native scrolling.
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  const hasFinePointer = window.matchMedia(
+    "(hover: hover) and (pointer: fine)",
+  ).matches;
+
+  if (!prefersReducedMotion && hasFinePointer) {
+    new Lenis({
+      autoRaf: true,
+      smoothWheel: true,
+      lerp: 0.085,
+      wheelMultiplier: 0.9,
+      anchors: true,
+    });
+  }
+</script>
 
 <script>
   // The same restrained cinematic introduction used across the journal.
@@ -368,48 +398,64 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   }
 
   :global(html) {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
   }
 
   :global(body) {
     margin: 0;
+
     color: #24221f;
+
     font-family: "DM Sans", sans-serif;
+
     -webkit-font-smoothing: antialiased;
+
     /* Clearly visible warm paper stock: mottling, fibres and fine printed-paper grain. */
+
     background-color: #f1e6d4;
+
     background-image:
       radial-gradient(
         ellipse at 12% 16%,
+
         rgba(132, 91, 52, 0.13),
         transparent 43%
       ),
       radial-gradient(
         ellipse at 86% 74%,
+
         rgba(157, 94, 57, 0.1),
         transparent 46%
       ),
       radial-gradient(
         ellipse at 50% 48%,
+
         rgba(255, 250, 239, 0.3),
         transparent 72%
       ),
       repeating-linear-gradient(
         2deg,
         rgba(112, 83, 54, 0.035) 0,
+
         rgba(112, 83, 54, 0.035) 1px,
+
         transparent 1px,
+
         transparent 5px
       ),
       url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMjAiIGhlaWdodD0iMzIwIj4KPGZpbHRlciBpZD0icGFwZXIiPgogIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuNzIiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjEzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIiByZXN1bHQ9Im4iLz4KICA8ZmVDb2xvck1hdHJpeCBpbj0ibiIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IgogICAgLjU1IC4zNSAuMTAgMCAuMDgKICAgIC40NSAuNDUgLjEwIDAgLjAyCiAgICAuMzUgLjQwIC4yNSAwIC0uMDQKICAgIDAgMCAwIDAgLjQyIi8+CjwvZmlsdGVyPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjcGFwZXIpIi8+Cjwvc3ZnPg==");
+
     background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+
     background-size:
       auto,
       auto,
       auto,
       100% 100%,
       320px 320px;
+
     background-attachment: fixed;
+
     background-blend-mode: multiply, multiply, screen, multiply, multiply;
   }
 
@@ -635,47 +681,62 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 
   .section-label {
     margin: 0 0 44px;
+
     color: #a64d36;
+
     font-size: 9px;
+
     font-weight: 600;
+
     letter-spacing: 2px;
+
     text-transform: uppercase;
   }
 
   .story-grid {
     display: grid;
+
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+
     gap: clamp(38px, 6vw, 92px);
+
     align-items: start;
   }
 
   .story-copy,
   .journal-copy {
     min-width: 0;
+
     max-width: 720px;
   }
 
   .journal-copy {
     padding-left: clamp(28px, 4vw, 58px);
+
     border-left: 1px solid rgba(130, 105, 77, 0.28);
   }
 
   .editor-story h2 {
     margin: 0 0 30px;
+
     font-size: clamp(34px, 4.1vw, 55px);
+
     line-height: 1.22;
+
     letter-spacing: -2px;
   }
 
   .editor-story h2 em,
   .journal-motto em {
     color: #a64d36;
+
     font-weight: 400;
   }
 
   .story-copy p,
   .journal-copy > p:not(.eyebrow):not(.journal-motto) {
     color: #5f594f;
+
     font:
       13px/2.1 "Libre Baskerville",
       Georgia,
@@ -697,9 +758,13 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 
   .journal-motto {
     margin: 34px 0 0;
+
     padding-top: 22px;
+
     border-top: 1px solid rgba(130, 105, 77, 0.28);
+
     color: #756d62;
+
     font:
       italic 15px/1.8 "Libre Baskerville",
       Georgia,
@@ -1138,7 +1203,7 @@ const base = import.meta.env.BASE_URL.endsWith("/")
     transition:
       width 220ms ease,
       height 220ms ease,
-      * background * 220ms ease;
+      * * background * * 220ms ease;
   }
 
   :global(.marginalia-cursor.is-interactive .marginalia-cursor__ring) {
@@ -1244,12 +1309,15 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 
     .story-grid {
       grid-template-columns: 1fr;
+
       gap: 48px;
     }
 
     .journal-copy {
       padding: 36px 0 0;
+
       border-left: 0;
+
       border-top: 1px solid rgba(130, 105, 77, 0.28);
     }
 
@@ -1260,6 +1328,7 @@ const base = import.meta.env.BASE_URL.endsWith("/")
     .story-copy p,
     .journal-copy > p:not(.eyebrow):not(.journal-motto) {
       font-size: 12px;
+
       line-height: 2;
     }
 
