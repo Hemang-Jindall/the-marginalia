@@ -256,7 +256,9 @@ const getPreviewExcerpt = (content: string) =>
                 <aside class="featured-aside" aria-label="Journal statistics">
                   <div class="aside-eyebrow">Ideas in the margins</div>
 
-                  <div class="piece-count">{essays.length}</div>
+                  <div class="piece-count" data-count={essays.length}>
+                    {essays.length}
+                  </div>
 
                   <div class="aside-divider" />
 
@@ -407,6 +409,9 @@ const getPreviewExcerpt = (content: string) =>
                         </time>
 
                         <div class="entry-preview" aria-hidden="true">
+                          <span class="entry-preview-imprint">
+                            The Marginalia · A journal of ideas
+                          </span>
                           <div class="entry-preview-topline">
                             <span>{essay.data.category}</span>
                             <span>
@@ -419,9 +424,17 @@ const getPreviewExcerpt = (content: string) =>
                               essay.body ?? essay.data.description,
                             )}
                           </p>
-                          <span class="entry-preview-link">
-                            Read essay <span>↗</span>
-                          </span>
+                          <div class="entry-preview-bottom">
+                            <span class="entry-preview-link">
+                              Open this essay <span>↗</span>
+                            </span>
+                            <span class="entry-preview-folio">
+                              Vol. I ·{" "}
+                              {String(
+                                groupedEssays[year].indexOf(essay) + 1,
+                              ).padStart(2, "0")}
+                            </span>
+                          </div>
                         </div>
                       </article>
                     ))}
@@ -842,6 +855,82 @@ const getPreviewExcerpt = (content: string) =>
       openingArt.addEventListener("pointerleave", () => {
         openingArt.style.setProperty("--pointer-x", "0px");
         openingArt.style.setProperty("--pointer-y", "0px");
+      });
+    }
+
+    // The ink responds only when the pointer is actually over the numeral.
+    // A restrained second impression trails the light, like imperfect letterpress.
+    const pieceCount = document.querySelector<HTMLElement>(
+      ".featured-aside .piece-count",
+    );
+    const countMotionAllowed = window.matchMedia(
+      "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)",
+    );
+
+    if (pieceCount && countMotionAllowed.matches) {
+      let targetX = 0;
+      let targetY = 0;
+      let ghostX = 0;
+      let ghostY = 0;
+      let countFrame = 0;
+
+      const paintCount = () => {
+        ghostX += (targetX - ghostX) * 0.075;
+        ghostY += (targetY - ghostY) * 0.075;
+        pieceCount.style.setProperty("--count-ghost-x", `${ghostX * 5}px`);
+        pieceCount.style.setProperty("--count-ghost-y", `${ghostY * 3}px`);
+
+        if (
+          Math.abs(targetX - ghostX) > 0.002 ||
+          Math.abs(targetY - ghostY) > 0.002
+        ) {
+          countFrame = window.requestAnimationFrame(paintCount);
+        } else {
+          countFrame = 0;
+        }
+      };
+
+      pieceCount.addEventListener(
+        "pointermove",
+        (event) => {
+          const bounds = pieceCount.getBoundingClientRect();
+          const x = Math.max(
+            -1,
+            Math.min(
+              1,
+              ((event.clientX - bounds.left) / bounds.width - 0.5) * 2,
+            ),
+          );
+          const y = Math.max(
+            -1,
+            Math.min(
+              1,
+              ((event.clientY - bounds.top) / bounds.height - 0.5) * 2,
+            ),
+          );
+
+          targetX = x;
+          targetY = y;
+          pieceCount.style.setProperty("--count-light-x", `${50 + x * 34}%`);
+          pieceCount.style.setProperty("--count-light-y", `${50 + y * 34}%`);
+          pieceCount.style.setProperty("--count-ghost-opacity", "0.38");
+
+          if (!countFrame) {
+            countFrame = window.requestAnimationFrame(paintCount);
+          }
+        },
+        { passive: true },
+      );
+
+      pieceCount.addEventListener("pointerleave", () => {
+        targetX = 0;
+        targetY = 0;
+        pieceCount.style.setProperty("--count-light-x", "50%");
+        pieceCount.style.setProperty("--count-light-y", "45%");
+        pieceCount.style.setProperty("--count-ghost-opacity", "0");
+        if (!countFrame) {
+          countFrame = window.requestAnimationFrame(paintCount);
+        }
       });
     }
   </script>
@@ -1470,13 +1559,53 @@ const getPreviewExcerpt = (content: string) =>
     }
 
     .piece-count {
+      position: relative;
+      isolation: isolate;
       margin: 8px 0 4px;
       color: #a64d36;
+      background: radial-gradient(
+        ellipse 62% 58% at var(--count-light-x, 50%) var(--count-light-y, 45%),
+        #d88769 0%,
+        #b45b40 38%,
+        #8d3e2b 76%,
+        #a64d36 100%
+      );
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       font-family: "DM Sans", sans-serif;
       font-size: clamp(100px, 12vw, 165px);
       font-weight: 500;
       line-height: 0.95;
       letter-spacing: -8px;
+      transform: translateZ(0);
+      will-change: background-position;
+    }
+
+    .piece-count::before {
+      content: attr(data-count);
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      color: transparent;
+      -webkit-text-stroke: 0.8px rgba(166, 77, 54, 0.28);
+      transform: translate3d(
+        var(--count-ghost-x, 0px),
+        var(--count-ghost-y, 0px),
+        0
+      );
+      opacity: var(--count-ghost-opacity, 0);
+      transition:
+        opacity 220ms ease,
+        transform 80ms linear;
+      pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .piece-count::before {
+        transform: none;
+        transition: none;
+      }
     }
 
     .aside-divider {
@@ -4561,71 +4690,135 @@ const getPreviewExcerpt = (content: string) =>
       z-index: 8;
       top: 50%;
       right: 22px;
-      width: min(330px, 38%);
-      padding: 21px 23px 19px;
-      border: 1px solid #d8cfc0;
-      background: #f8f5ed;
-      box-shadow: 0 18px 45px rgba(36, 34, 31, 0.12);
+      width: min(350px, 40%);
+      padding: 22px 24px 19px 30px;
+      border: 1px solid rgba(117, 91, 64, 0.34);
+      border-left: 0;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(83, 54, 36, 0.16) 0,
+          rgba(83, 54, 36, 0.06) 13px,
+          transparent 30px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          rgba(118, 91, 63, 0.025) 0,
+          rgba(118, 91, 63, 0.025) 1px,
+          transparent 1px,
+          transparent 4px
+        ),
+        #f3ead9;
+      box-shadow:
+        2px 2px 0 #d9cbb6,
+        4px 4px 0 #eee4d2,
+        7px 9px 0 rgba(91, 68, 46, 0.08),
+        0 20px 42px rgba(36, 34, 31, 0.18);
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
-      transform: translate(12px, -44%);
+      transform: translate(16px, -46%) rotate(1.4deg);
+      transform-origin: 50% 80%;
       transition:
         opacity 220ms ease,
         visibility 220ms ease,
-        transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
+        transform 380ms cubic-bezier(0.2, 0.7, 0.2, 1),
+        box-shadow 380ms ease;
     }
 
     .entry-preview::before {
       content: "";
       position: absolute;
       top: 0;
-      left: 22px;
-      width: 35px;
-      height: 2px;
-      background: #a64d36;
+      bottom: 0;
+      left: 0;
+      width: 7px;
+      background: linear-gradient(90deg, #68412f, #a66b4c 48%, #d1b89a);
+      box-shadow: 1px 0 2px rgba(54, 37, 26, 0.18);
+    }
+
+    .entry-preview::after {
+      content: "M";
+      position: absolute;
+      right: 19px;
+      bottom: 12px;
+      color: rgba(166, 77, 54, 0.12);
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 54px;
+      font-style: italic;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .entry-preview-imprint {
+      display: block;
+      margin-bottom: 17px;
+      color: #a64d36;
+      font-size: 7px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
     .entry-preview-topline {
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      color: #948879;
-      font-size: 8px;
-      letter-spacing: 1.25px;
+      padding-bottom: 9px;
+      border-bottom: 1px solid rgba(117, 91, 64, 0.24);
+      color: #8c7d6b;
+      font-size: 7px;
+      letter-spacing: 1.35px;
       text-transform: uppercase;
     }
 
     .entry-preview h5 {
-      margin: 17px 0 9px;
-      color: #24221f;
+      position: relative;
+      z-index: 1;
+      margin: 17px 0 10px;
+      color: #28231f;
       font-family: "Libre Baskerville", Georgia, serif;
-      font-size: 18px;
+      font-size: 19px;
       font-weight: 400;
-      line-height: 1.45;
+      line-height: 1.42;
+      letter-spacing: -0.45px;
     }
 
     .entry-preview p {
+      position: relative;
+      z-index: 1;
       display: -webkit-box;
       overflow: hidden;
       margin: 0;
-      color: #71695e;
+      color: #716455;
       font-family: "Libre Baskerville", Georgia, serif;
       font-size: 10px;
       font-style: italic;
-      line-height: 1.85;
+      line-height: 1.9;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;
+    }
+
+    .entry-preview-bottom {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 17px;
+      padding-top: 11px;
+      border-top: 1px solid rgba(117, 91, 64, 0.24);
     }
 
     .entry-preview-link {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin-top: 16px;
       color: #a64d36;
-      font-size: 8px;
-      letter-spacing: 1.4px;
+      font-size: 7px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
     }
 
@@ -4634,11 +4827,27 @@ const getPreviewExcerpt = (content: string) =>
       transition: transform 180ms ease;
     }
 
+    .entry-preview-folio {
+      color: #998b79;
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 8px;
+      font-style: italic;
+    }
+
     .archive-entry:hover .entry-preview,
     .archive-entry:focus-within .entry-preview {
       opacity: 1;
       visibility: visible;
-      transform: translate(0, -44%);
+      transform: translate(0, -46%) rotate(0deg);
+      box-shadow:
+        2px 2px 0 #d9cbb6,
+        4px 4px 0 #eee4d2,
+        10px 13px 0 rgba(91, 68, 46, 0.08),
+        0 24px 48px rgba(36, 34, 31, 0.2);
+    }
+
+    .archive-entry:hover .entry-preview-link span {
+      transform: translate(3px, -2px);
     }
 
     .archive-entry:hover .entry-date,
@@ -5549,6 +5758,24 @@ const getPreviewExcerpt = (content: string) =>
 
       .opening-art {
         transform: translateX(-50%) !important;
+      }
+    }
+
+    /* Keep the oversized journal count fully inside its own paint area.
+       The italic glyph's left swash was reaching beyond its narrow grid cell. */
+    @media (min-width: 601px) {
+      .featured-aside {
+        min-width: 0;
+        overflow: visible;
+      }
+
+      .featured-aside .piece-count {
+        display: inline-block;
+        max-width: none;
+        padding: 0 0.12em 0 0.18em;
+        margin-left: 0.06em;
+        overflow: visible;
+        box-sizing: content-box;
       }
     }
   </style>

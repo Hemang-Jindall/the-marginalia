@@ -9,8 +9,11 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f8f5ed" />
-    <meta name="description" content="This page could not be found. Return to The Marginalia." />
+    <meta name="theme-color" content="#f1e6d4" />
+    <meta
+      name="description"
+      content="This page could not be found. Return to The Marginalia."
+    />
 
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
     <link rel="icon" href={`${base}favicon.ico`} sizes="any" />
@@ -28,26 +31,47 @@ const base = import.meta.env.BASE_URL.endsWith("/")
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
       rel="stylesheet"
     />
-
     <title>Page Not Found — The Marginalia</title>
   </head>
 
   <body>
     <main class="page">
       <div class="topline">
-        <span>A personal literary journal</span>
-        <span class="topline-center">Essays · Fiction · Reflections</span>
-        <span>Established 2025</span>
+        <a class="publication" href={base}>The <em>Marginalia.</em></a>
+        <span class="topline-center">A journal of ideas and imagination</span>
+        <span class="volume">An independent journal <b>·</b> Vol. I</span>
       </div>
 
-      <header>
-        <a class="wordmark" href={base}>The <em>Marginalia</em><span>.</span></a>
-        <p class="tagline">Notes on philosophy, life, and the things in between.</p>
+      <header class="masthead">
+        <p class="masthead-note">
+          Notes on philosophy, life, and the things in between.
+        </p>
+        <span class="masthead-rule" aria-hidden="true"></span>
+        <a class="home-nav" href={base}
+          >Return to the journal <span aria-hidden="true">↗</span></a
+        >
       </header>
 
       <section class="not-found" aria-labelledby="error-title">
-        <p class="eyebrow">A small detour</p>
-        <div class="error-number" aria-hidden="true">404<span>.</span></div>
+        <div class="eyebrow"><span></span> A small detour <span></span></div>
+
+        <div class="error-composition" aria-label="404, page not found">
+          <span class="orbit orbit-one" aria-hidden="true"><i></i></span>
+          <span class="orbit orbit-two" aria-hidden="true"><i></i></span>
+          <span class="orbit orbit-three" aria-hidden="true"><i></i></span>
+          <span class="margin-note margin-note-left" aria-hidden="true"
+            >the missing page</span
+          >
+          <div class="error-number" aria-hidden="true">404<span>.</span></div>
+          <span class="margin-note margin-note-right" aria-hidden="true"
+            >not in this volume</span
+          >
+        </div>
+
+        <p class="entry-label">
+          <span class="entry-line"></span> Entry not found <span
+            class="entry-line"></span>
+        </p>
         <h1 id="error-title">This page seems to have wandered off.</h1>
         <p class="message">
           The page you're looking for may have moved, been renamed, or never
@@ -59,9 +83,11 @@ const base = import.meta.env.BASE_URL.endsWith("/")
       </section>
 
       <footer>
-        <a href={base}>The <em>Marginalia.</em></a>
-        <span>Written slowly, published occasionally.</span>
-        <span>© {new Date().getFullYear()} Hemang Jindal</span>
+        <a class="footer-brand" href={base}>The <em>Marginalia.</em></a>
+        <span class="footer-note">Written slowly, published occasionally.</span>
+        <span class="copyright">© {new Date().getFullYear()} Hemang Jindal</span
+        >
+        <span class="footer-imprint">Essays · Fiction · Reflections</span>
       </footer>
     </main>
   </body>
@@ -72,11 +98,50 @@ const base = import.meta.env.BASE_URL.endsWith("/")
     box-sizing: border-box;
   }
 
+  :global(html) {
+    min-height: 100%;
+    background: #f1e6d4;
+  }
+
   :global(body) {
-    margin: 0;
     min-height: 100vh;
-    background: #f8f5ed;
-    color: #24221f;
+    margin: 0;
+    color: #211f1c;
+    /* Clearly visible warm paper stock: mottling, fibres and fine printed-paper grain. */
+    background-color: #f1e6d4;
+    background-image:
+      radial-gradient(
+        ellipse at 12% 16%,
+        rgba(132, 91, 52, 0.13),
+        transparent 43%
+      ),
+      radial-gradient(
+        ellipse at 86% 74%,
+        rgba(157, 94, 57, 0.1),
+        transparent 46%
+      ),
+      radial-gradient(
+        ellipse at 50% 48%,
+        rgba(255, 250, 239, 0.3),
+        transparent 72%
+      ),
+      repeating-linear-gradient(
+        2deg,
+        rgba(112, 83, 54, 0.035) 0,
+        rgba(112, 83, 54, 0.035) 1px,
+        transparent 1px,
+        transparent 5px
+      ),
+      url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMjAiIGhlaWdodD0iMzIwIj4KPGZpbHRlciBpZD0icGFwZXIiPgogIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuNzIiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjEzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIiByZXN1bHQ9Im4iLz4KICA8ZmVDb2xvck1hdHJpeCBpbj0ibiIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IgogICAgLjU1IC4zNSAuMTAgMCAuMDgKICAgIC40NSAuNDUgLjEwIDAgLjAyCiAgICAuMzUgLjQwIC4yNSAwIC0uMDQKICAgIDAgMCAwIDAgLjQyIi8+CjwvZmlsdGVyPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjcGFwZXIpIi8+Cjwvc3ZnPg==");
+    background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+    background-size:
+      auto,
+      auto,
+      auto,
+      100% 100%,
+      320px 320px;
+    background-attachment: fixed;
+    background-blend-mode: multiply, multiply, screen, multiply, multiply;
     font-family: "DM Sans", sans-serif;
     -webkit-font-smoothing: antialiased;
   }
@@ -85,69 +150,102 @@ const base = import.meta.env.BASE_URL.endsWith("/")
     color: inherit;
     text-decoration: none;
   }
-
   a:focus-visible {
     outline: 2px solid #a64d36;
     outline-offset: 5px;
   }
 
   .page {
-    width: min(100% - 84px, 1120px);
-    min-height: 100vh;
+    width: min(100% - 84px, 1260px);
+    min-height: 100svh;
     display: flex;
     flex-direction: column;
     margin: 0 auto;
   }
 
   .topline {
-    min-height: 34px;
+    min-height: 67px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
-    border-bottom: 1px dashed #bdb7aa;
-    color: #81786c;
-    font-size: 8px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
+    gap: 20px;
+    border-bottom: 1px solid rgba(77, 71, 62, 0.55);
   }
 
-  .topline-center {
-    color: #a64d36;
+  .publication,
+  .footer-brand {
+    width: fit-content;
     font-family: "Libre Baskerville", Georgia, serif;
-    font-size: 10px;
-    font-style: italic;
-    letter-spacing: 0;
-    text-align: center;
-    text-transform: none;
+    font-size: 17px;
+    letter-spacing: -0.7px;
   }
 
-  .topline > :last-child {
-    text-align: right;
-  }
-
-  header {
-    padding: 30px 0 27px;
-    border-bottom: 1px dashed #bdb7aa;
-  }
-
-  .wordmark {
-    font-family: "Libre Baskerville", Georgia, serif;
-    font-size: clamp(35px, 5vw, 53px);
-    letter-spacing: -2.7px;
-  }
-
-  .wordmark em,
-  .wordmark span {
+  .publication em,
+  .footer-brand em {
     color: #a64d36;
     font-weight: 400;
   }
 
-  .tagline {
-    margin: 7px 0 0;
-    color: #71695e;
+  .topline-center {
+    color: #766d60;
     font-family: "Libre Baskerville", Georgia, serif;
-    font-size: 11px;
+    font-size: 10px;
     font-style: italic;
+    text-align: center;
+  }
+
+  .volume {
+    color: #82796d;
+    font-size: 8px;
+    letter-spacing: 1.4px;
+    text-align: right;
+    text-transform: uppercase;
+  }
+  .volume b {
+    padding: 0 5px;
+    color: #a64d36;
+    font-weight: 400;
+  }
+
+  .masthead {
+    min-height: 57px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px dashed #c7bdad;
+  }
+
+  .masthead-note {
+    margin: 0;
+    color: #776e62;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 10px;
+    font-style: italic;
+  }
+
+  .masthead-rule {
+    width: 70px;
+    border-top: 1px solid #c9bfb0;
+  }
+
+  .home-nav {
+    color: #a64d36;
+    font-size: 9px;
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+    transition: color 180ms ease;
+  }
+  .home-nav span {
+    display: inline-block;
+    margin-left: 5px;
+    transition: transform 180ms ease;
+  }
+  .home-nav:hover {
+    color: #24221f;
+  }
+  .home-nav:hover span {
+    transform: translate(2px, -2px);
   }
 
   .not-found {
@@ -156,147 +254,404 @@ const base = import.meta.env.BASE_URL.endsWith("/")
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 85px 20px 110px;
+    padding: 55px 20px 65px;
     text-align: center;
   }
 
-  .eyebrow {
+  .eyebrow,
+  .entry-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
     margin: 0;
     color: #a64d36;
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
   }
-
-  .error-number {
-    margin: 17px 0 7px;
-    color: #a64d36;
-    font-family: "Libre Baskerville", Georgia, serif;
-    font-size: clamp(100px, 19vw, 190px);
-    font-style: italic;
-    line-height: 1;
-    letter-spacing: -12px;
+  .eyebrow span {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #a64d36;
   }
 
+  .error-composition {
+    position: relative;
+    width: min(100%, 530px);
+    aspect-ratio: 1.85;
+    display: grid;
+    place-items: center;
+    margin: 6px 0 -1px;
+    isolation: isolate;
+  }
+
+  .error-number {
+    position: relative;
+    z-index: 2;
+    color: #a64d36;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(112px, 19vw, 190px);
+    font-style: italic;
+    line-height: 1;
+    letter-spacing: -13px;
+    text-shadow: 0 12px 35px rgba(91, 57, 39, 0.07);
+    animation: number-arrive 900ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
   .error-number span {
     color: #24221f;
   }
 
-  h1 {
-    max-width: 600px;
-    margin: 18px 0 13px;
+  .orbit {
+    position: absolute;
+    z-index: 1;
+    width: 62%;
+    aspect-ratio: 1;
+    border: 1px solid rgba(166, 77, 54, 0.18);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .orbit-one {
+    width: 57%;
+    animation: orbit-turn 42s linear infinite;
+  }
+  .orbit-two {
+    width: 76%;
+    border-style: dashed;
+    border-color: rgba(105, 94, 78, 0.22);
+    animation: orbit-turn 65s linear infinite reverse;
+  }
+  .orbit-three {
+    width: 94%;
+    border-color: rgba(166, 77, 54, 0.11);
+  }
+  .orbit i {
+    position: absolute;
+    top: 12%;
+    left: 18%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #a64d36;
+    box-shadow: 0 0 0 5px rgba(166, 77, 54, 0.08);
+  }
+  .orbit-two i {
+    top: auto;
+    right: 15%;
+    bottom: 17%;
+    left: auto;
+    width: 4px;
+    height: 4px;
+    background: #82796d;
+  }
+  .orbit-three i {
+    top: 47%;
+    right: -2px;
+    left: auto;
+    width: 5px;
+    height: 5px;
+  }
+
+  .margin-note {
+    position: absolute;
+    z-index: 3;
+    color: #8d8375;
     font-family: "Libre Baskerville", Georgia, serif;
-    font-size: clamp(25px, 4vw, 38px);
+    font-size: 9px;
+    font-style: italic;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+  }
+  .margin-note-left {
+    top: 28%;
+    left: 0;
+    transform: rotate(-8deg);
+  }
+  .margin-note-right {
+    right: 0;
+    bottom: 25%;
+    transform: rotate(7deg);
+  }
+
+  .entry-label {
+    margin-top: 3px;
+    color: #81776a;
+    font-size: 7px;
+    letter-spacing: 1.8px;
+  }
+  .entry-line {
+    width: 24px;
+    border-top: 1px solid #c8bdae;
+  }
+
+  h1 {
+    max-width: 650px;
+    margin: 18px 0 12px;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(27px, 4vw, 39px);
     font-weight: 400;
-    line-height: 1.4;
-    letter-spacing: -1.2px;
+    line-height: 1.35;
+    letter-spacing: -1.5px;
+    animation: text-arrive 850ms 120ms ease both;
   }
 
   .message {
-    max-width: 440px;
+    max-width: 445px;
     margin: 0;
     color: #71695e;
     font-family: "Libre Baskerville", Georgia, serif;
-    font-size: 12px;
+    font-size: 11px;
     line-height: 2;
+    animation: text-arrive 850ms 220ms ease both;
   }
 
   .home-link {
+    min-height: 42px;
     display: inline-flex;
     align-items: center;
-    gap: 15px;
-    margin-top: 29px;
-    padding: 12px 18px;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 26px;
+    padding: 0 19px;
+    border: 1px solid #24221f;
     border-radius: 30px;
     background: #24221f;
     color: #fffdf7;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 600;
-    transition: background 180ms ease, transform 180ms ease;
+    letter-spacing: 0.3px;
+    transition:
+      background 180ms ease,
+      border-color 180ms ease,
+      transform 180ms ease;
   }
-
+  .home-link span {
+    font-size: 13px;
+    transition: transform 180ms ease;
+  }
   .home-link:hover {
     transform: translateY(-2px);
+    border-color: #a64d36;
     background: #a64d36;
+  }
+  .home-link:hover span {
+    transform: translate(2px, -2px);
   }
 
   footer {
-    min-height: 80px;
+    min-height: 75px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 18px;
-    border-top: 1px solid #dcd6ca;
+    border-top: 1px solid #c9c0b2;
     color: #81786c;
-    font-size: 9px;
+    font-size: 8px;
+    letter-spacing: 0.3px;
   }
-
-  footer a {
+  .footer-brand {
     color: #24221f;
+    font-size: 14px;
+  }
+  .footer-note {
     font-family: "Libre Baskerville", Georgia, serif;
-    font-size: 15px;
+    font-style: italic;
+  }
+  .copyright,
+  .footer-imprint {
+    font-size: 7px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
   }
 
-  footer em {
-    color: #a64d36;
-    font-weight: 400;
+  /* The same persistent print-grain veil used on the homepage. */
+  .page::after {
+    content: "";
+    position: fixed;
+    inset: -8%;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.105;
+    mix-blend-mode: soft-light;
+    background-image:
+      radial-gradient(
+        ellipse at 22% 28%,
+        rgba(196, 122, 96, 0.16),
+        transparent 48%
+      ),
+      radial-gradient(
+        ellipse at 78% 72%,
+        rgba(166, 77, 54, 0.1),
+        transparent 50%
+      ),
+      url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyODAiIGhlaWdodD0iMjgwIj4KPGZpbHRlciBpZD0ibiI+CiAgPGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9Ii43OCIgbnVtT2N0YXZlcz0iMyIgc2VlZD0iMTciIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz4KICA8ZmVDb2xvck1hdHJpeCB0eXBlPSJzYXR1cmF0ZSIgdmFsdWVzPSIwIi8+CjwvZmlsdGVyPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjbikiIG9wYWNpdHk9Ii4zNCIvPgo8L3N2Zz4=);
+    background-size:
+      145% 145%,
+      155% 155%,
+      280px 280px;
+    background-position:
+      0% 0%,
+      100% 100%,
+      0 0;
+    animation: marginalia-print-drift 58s ease-in-out infinite alternate;
+    will-change: background-position, opacity;
   }
 
-  @media (max-width: 600px) {
+  @keyframes marginalia-print-drift {
+    0% {
+      background-position:
+        0% 0%,
+        100% 100%,
+        0 0;
+      opacity: 0.085;
+    }
+    50% {
+      background-position:
+        34% 24%,
+        66% 78%,
+        24px -18px;
+      opacity: 0.12;
+    }
+    100% {
+      background-position:
+        100% 100%,
+        0% 0%,
+        -22px 26px;
+      opacity: 0.095;
+    }
+  }
+
+  @keyframes orbit-turn {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes number-arrive {
+    from {
+      opacity: 0;
+      transform: translateY(15px) scale(0.97);
+      filter: blur(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+  }
+  @keyframes text-arrive {
+    from {
+      opacity: 0;
+      transform: translateY(9px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 700px) {
     .page {
       width: calc(100% - 42px);
     }
-
     .topline {
-      min-height: 29px;
-      font-size: 6px;
-      letter-spacing: 0.7px;
+      min-height: 55px;
+      grid-template-columns: 1fr auto;
     }
-
     .topline-center {
+      display: none;
+    }
+    .publication {
+      font-size: 15px;
+    }
+    .volume {
       font-size: 7px;
     }
-
-    header {
-      padding: 25px 0 22px;
+    .masthead {
+      min-height: 52px;
     }
-
-    .tagline {
+    .masthead-note {
+      max-width: 65%;
       font-size: 9px;
+      line-height: 1.6;
     }
-
+    .masthead-rule {
+      display: none;
+    }
+    .home-nav {
+      font-size: 7px;
+      white-space: nowrap;
+    }
     .not-found {
-      padding: 75px 5px 90px;
+      padding: 65px 0 75px;
     }
-
+    .error-composition {
+      width: 100%;
+      aspect-ratio: 1.45;
+      margin: 14px 0 2px;
+    }
     .error-number {
-      letter-spacing: -7px;
+      font-size: clamp(105px, 29vw, 155px);
+      letter-spacing: -9px;
     }
-
+    .orbit-one {
+      width: 60%;
+    }
+    .orbit-two {
+      width: 79%;
+    }
+    .orbit-three {
+      width: 98%;
+    }
+    .margin-note {
+      font-size: 7px;
+    }
+    .margin-note-left {
+      top: 16%;
+      left: 1%;
+    }
+    .margin-note-right {
+      right: 0;
+      bottom: 14%;
+    }
     h1 {
-      font-size: 26px;
+      max-width: 420px;
+      margin-top: 16px;
+      font-size: 27px;
     }
-
     .message {
-      font-size: 11px;
+      max-width: 360px;
+      font-size: 10px;
     }
-
     footer {
-      min-height: 90px;
+      min-height: 92px;
       flex-wrap: wrap;
       justify-content: space-between;
-      gap: 10px;
-      padding: 18px 0;
+      gap: 9px 14px;
+      padding: 17px 0;
     }
-
-    footer span {
-      font-size: 8px;
-    }
-
-    footer span:nth-child(2) {
+    .footer-note {
       order: 3;
       width: 100%;
+    }
+    .footer-imprint {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+    .page::after {
+      animation: none !important;
+      opacity: 0.09;
     }
   }
 </style>
