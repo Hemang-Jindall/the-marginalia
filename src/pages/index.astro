@@ -958,6 +958,7 @@ const getPreviewExcerpt = (content: string) =>
         vy: number;
         size: number;
         color: string;
+        phase: number;
       };
 
       const particles: Particle[] = [];
@@ -1048,6 +1049,7 @@ const getPreviewExcerpt = (content: string) =>
                 vx: 0,
                 vy: 0,
                 size: 1.2 + Math.random() * 0.65,
+                phase: Math.random() * Math.PI * 2,
                 color:
                   pixels[index] > 170 && pixels[index + 1] < 190
                     ? "rgba(224,139,111,1)"
@@ -1061,6 +1063,7 @@ const getPreviewExcerpt = (content: string) =>
         // canvas has been populated, the particle version becomes the visual.
         root.classList.add("particle-ready");
         renderStatic();
+        start();
       };
 
       const drawParticles = () => {
@@ -1095,18 +1098,21 @@ const getPreviewExcerpt = (content: string) =>
             p.vy += (dy / distance) * force * dt;
           }
 
-          // A damped spring pulls displaced particles back into their glyphs.
-          p.vx += (p.ox - p.x) * 0.026 * dt;
-          p.vy += (p.oy - p.y) * 0.026 * dt;
+          // A tiny, asynchronous drift keeps the lettering gently alive.
+          // Each particle follows its own slow phase, so the words subtly breathe
+          // without losing their shape or legibility.
+          const driftX = Math.sin(now * 0.00055 + p.phase) * 0.55;
+          const driftY = Math.cos(now * 0.00042 + p.phase * 1.31) * 0.55;
+
+          // A damped spring returns displaced particles to their drifting glyph positions.
+          p.vx += (p.ox + driftX - p.x) * 0.026 * dt;
+          p.vy += (p.oy + driftY - p.y) * 0.026 * dt;
           p.vx *= Math.pow(0.88, dt);
           p.vy *= Math.pow(0.88, dt);
           p.x += p.vx * dt;
           p.y += p.vy * dt;
 
-          const displacement = Math.hypot(p.x - p.ox, p.y - p.oy);
-          if (displacement > 0.65 || Math.abs(p.vx) + Math.abs(p.vy) > 0.1) {
-            moving = true;
-          }
+          moving = true;
 
           ctx.globalAlpha = 1;
           ctx.fillStyle = p.color;
@@ -1150,7 +1156,7 @@ const getPreviewExcerpt = (content: string) =>
             raf = 0;
           } else if (visible) {
             renderStatic();
-            if (pointer.active) start();
+            start();
           }
         },
         { threshold: 0.01 },
