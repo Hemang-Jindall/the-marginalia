@@ -63,9 +63,6 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 
         <nav aria-label="Main navigation">
           <a href={`${base}#archive`}>Writing</a>
-
-          <a href={`${base}fiction/`}>Fiction</a>
-
           <a href={`${base}about/`} aria-current="page">About</a>
         </nav>
       </header>
@@ -84,16 +81,31 @@ const base = import.meta.env.BASE_URL.endsWith("/")
             </p>
           </div>
 
-          <div class="editor-mark" aria-label="The Marginalia monogram">
-            <svg viewBox="0 0 220 220" role="img" aria-label="M monogram">
-              <circle class="mark-circle" cx="110" cy="110" r="101"></circle>
-
-              <text x="110" y="151" text-anchor="middle">M</text>
-
-              <circle class="mark-dot" cx="164" cy="148" r="7"></circle>
-            </svg>
-
-            <span>Editor · The Marginalia</span>
+          <div
+            class="editor-mark"
+            aria-label="The Marginalia animated monogram"
+          >
+            <span class="orbit-ring orbit-ring-one" aria-hidden="true"
+              ><i></i></span
+            >
+            <span class="orbit-ring orbit-ring-two" aria-hidden="true"
+              ><i></i></span
+            >
+            <span class="orbit-ring orbit-ring-three" aria-hidden="true"
+              ><i></i></span
+            >
+            <span class="editor-mark-brand" aria-hidden="true">
+              <svg
+                class="marginalia-mark"
+                viewBox="0 0 150 150"
+                role="presentation"
+              >
+                <circle cx="75" cy="75" r="67.5"></circle>
+                <text x="75" y="101" text-anchor="middle">M</text>
+                <circle class="mark-dot" cx="113" cy="101" r="5"></circle>
+              </svg>
+            </span>
+            <span class="editor-mark-caption">Editor · The Marginalia</span>
           </div>
         </section>
 
@@ -152,21 +164,6 @@ const base = import.meta.env.BASE_URL.endsWith("/")
               </p>
             </div>
           </div>
-        </section>
-
-        <section class="closing-note">
-          <p class="eyebrow"><span></span> A final note</p>
-
-          <h2>Thank you for <em>being here.</em></h2>
-
-          <p>
-            If something here makes you pause, disagree, remember, or look
-            again, then the journal has done what I hoped it would.
-          </p>
-
-          <a class="return-link" href={`${base}#archive`}
-            >Explore the writing <span>↗</span></a
-          >
         </section>
       </main>
 
@@ -263,9 +260,8 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   // Reveal editorial sections as they enter the viewport.
 
   if (!reduceMotion && "IntersectionObserver" in window) {
-    const revealTargets = document.querySelectorAll<HTMLElement>(
-      ".editor-story, .closing-note",
-    );
+    const revealTargets =
+      document.querySelectorAll<HTMLElement>(".editor-story");
 
     revealTargets.forEach((element) => element.classList.add("will-reveal"));
 
@@ -499,7 +495,6 @@ const base = import.meta.env.BASE_URL.endsWith("/")
       400 21px "Libre Baskerville",
       Georgia,
       serif;
-
     letter-spacing: -1px;
   }
 
@@ -508,24 +503,27 @@ const base = import.meta.env.BASE_URL.endsWith("/")
     color: #a64d36;
   }
 
+  /* Keep the navbar links separated and aligned on the right. */
   .site-header nav {
     display: flex;
-
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: flex-end;
     gap: 30px;
-
+    margin-left: auto;
     color: #756d62;
-
     font-size: 10px;
-
     letter-spacing: 1px;
   }
 
   .site-header nav a {
+    display: inline-block;
+    white-space: nowrap;
     transition: color 180ms ease;
   }
 
   .site-header nav a:hover,
-  .site-header nav [aria-current="page"] {
+  .site-header nav a[aria-current="page"] {
     color: #a64d36;
   }
 
@@ -604,8 +602,7 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   }
 
   .editor-intro h1 em,
-  .editor-story h2 em,
-  .closing-note h2 em {
+  .editor-story h2 em {
     color: #a64d36;
 
     font-weight: 400;
@@ -625,48 +622,149 @@ const base = import.meta.env.BASE_URL.endsWith("/")
   }
 
   .editor-mark {
+    position: relative;
     display: flex;
-
     flex-direction: column;
-
     align-items: center;
-
-    gap: 17px;
-
-    color: #968b7d;
-
-    font-size: 8px;
-
-    letter-spacing: 2px;
-
-    text-transform: uppercase;
+    justify-content: center;
+    width: min(100%, 340px);
+    aspect-ratio: 1;
+    justify-self: center;
+    isolation: isolate;
   }
 
-  .editor-mark svg {
-    width: min(100%, 270px);
+  .editor-mark-brand {
+    position: relative;
+    z-index: 2;
+    display: block;
+    width: clamp(180px, 25vw, 270px);
+    aspect-ratio: 1;
+    pointer-events: none;
+  }
 
+  .marginalia-mark {
+    display: block;
+    width: 100%;
+    height: 100%;
     overflow: visible;
   }
 
-  .mark-circle {
+  .marginalia-mark > circle:first-child {
     fill: none;
-
     stroke: #c9c0b2;
-
     stroke-width: 1.2;
   }
 
-  .editor-mark text {
+  .marginalia-mark text {
     fill: #282521;
-
     font:
-      150px "Libre Baskerville",
+      81px "Libre Baskerville",
       Georgia,
       serif;
   }
 
-  .mark-dot {
+  .marginalia-mark .mark-dot {
     fill: #a64d36;
+  }
+
+  .editor-mark-caption {
+    position: absolute;
+    z-index: 3;
+    bottom: 2%;
+    color: #968b7d;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .editor-mark .orbit-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    width: 82%;
+    height: 34%;
+    border: 1px solid rgba(196, 122, 96, 0.44);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%) rotate(-28deg);
+    z-index: 1;
+  }
+
+  .editor-mark .orbit-ring-one {
+    animation: marginalia-orbit-one 22s linear infinite;
+  }
+
+  .editor-mark .orbit-ring-two {
+    width: 91%;
+    height: 47%;
+    border-color: rgba(117, 109, 98, 0.3);
+    border-style: dashed;
+    transform: translate(-50%, -50%) rotate(54deg);
+    animation: marginalia-orbit-two 34s linear infinite;
+  }
+
+  .editor-mark .orbit-ring-three {
+    width: 72%;
+    height: 25%;
+    border-color: rgba(196, 122, 96, 0.24);
+    transform: translate(-50%, -50%) rotate(78deg);
+    animation: marginalia-orbit-three 28s linear infinite reverse;
+  }
+
+  .editor-mark .orbit-ring i {
+    position: absolute;
+    top: 50%;
+    right: -4px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #c47a60;
+    box-shadow: 0 0 12px rgba(196, 122, 96, 0.38);
+    transform: translateY(-50%);
+  }
+
+  .editor-mark .orbit-ring-two i {
+    right: auto;
+    left: -3px;
+    width: 5px;
+    height: 5px;
+    background: #756d62;
+    box-shadow: 0 0 10px rgba(117, 109, 98, 0.25);
+  }
+
+  .editor-mark .orbit-ring-three i {
+    width: 4px;
+    height: 4px;
+    background: #a64d36;
+  }
+
+  @keyframes marginalia-orbit-one {
+    from {
+      transform: translate(-50%, -50%) rotate(-28deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(332deg);
+    }
+  }
+
+  @keyframes marginalia-orbit-two {
+    from {
+      transform: translate(-50%, -50%) rotate(54deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(414deg);
+    }
+  }
+
+  @keyframes marginalia-orbit-three {
+    from {
+      transform: translate(-50%, -50%) rotate(78deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(438deg);
+    }
   }
 
   .page-rule {
@@ -769,71 +867,6 @@ const base = import.meta.env.BASE_URL.endsWith("/")
       italic 15px/1.8 "Libre Baskerville",
       Georgia,
       serif;
-  }
-
-  .closing-note {
-    padding: 95px 5% 110px;
-
-    border-top: 1px solid #dcd5c8;
-
-    text-align: center;
-  }
-
-  .closing-note .eyebrow {
-    justify-content: center;
-  }
-
-  .closing-note h2 {
-    margin: 25px 0 15px;
-
-    font-size: clamp(38px, 5vw, 62px);
-
-    letter-spacing: -2px;
-  }
-
-  .closing-note > p:not(.eyebrow) {
-    max-width: 560px;
-
-    margin: 0 auto;
-
-    color: #756d62;
-
-    font:
-      italic 13px/2 "Libre Baskerville",
-      Georgia,
-      serif;
-  }
-
-  .return-link {
-    display: inline-flex;
-
-    gap: 18px;
-
-    align-items: center;
-
-    margin-top: 32px;
-
-    padding-bottom: 9px;
-
-    border-bottom: 1px solid #a64d36;
-
-    color: #a64d36;
-
-    font-size: 10px;
-
-    letter-spacing: 1.2px;
-
-    text-transform: uppercase;
-  }
-
-  .return-link span {
-    font-size: 15px;
-
-    transition: transform 180ms ease;
-  }
-
-  .return-link:hover span {
-    transform: translate(3px, -3px);
   }
 
   .site-footer {
@@ -1123,26 +1156,6 @@ const base = import.meta.env.BASE_URL.endsWith("/")
     transform: translateY(0);
   }
 
-  .editor-mark svg {
-    transition: transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-
-  .editor-mark:hover svg {
-    transform: rotate(8deg) scale(1.035);
-  }
-
-  .return-link {
-    transition:
-      color 220ms ease,
-      border-color 220ms ease;
-  }
-
-  .return-link:hover {
-    color: #7f3828;
-
-    border-color: #7f3828;
-  }
-
   :global(.marginalia-cursor) {
     position: fixed;
 
@@ -1233,8 +1246,8 @@ const base = import.meta.env.BASE_URL.endsWith("/")
       transition: none;
     }
 
-    .editor-mark svg {
-      transition: none;
+    .editor-mark .orbit-ring {
+      animation: none !important;
     }
 
     .intro-curtain {
@@ -1251,10 +1264,6 @@ const base = import.meta.env.BASE_URL.endsWith("/")
       min-height: 76px;
 
       align-items: center;
-    }
-
-    .wordmark {
-      font-size: 17px;
     }
 
     .site-header nav {
@@ -1286,16 +1295,15 @@ const base = import.meta.env.BASE_URL.endsWith("/")
     }
 
     .editor-mark {
-      justify-self: end;
-
-      width: 145px;
+      justify-self: center;
+      width: min(100%, 250px);
     }
 
-    .editor-mark svg {
-      width: 145px;
+    .editor-mark-brand {
+      width: 155px;
     }
 
-    .editor-mark span {
+    .editor-mark-caption {
       font-size: 7px;
     }
 
@@ -1330,14 +1338,6 @@ const base = import.meta.env.BASE_URL.endsWith("/")
       font-size: 12px;
 
       line-height: 2;
-    }
-
-    .closing-note {
-      padding: 75px 0 85px;
-    }
-
-    .closing-note h2 {
-      font-size: 39px;
     }
 
     .site-footer {

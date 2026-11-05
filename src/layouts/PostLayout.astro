@@ -212,27 +212,6 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   </head>
 
   <body>
-    <div
-      class="article-intro-curtain"
-      id="article-intro-curtain"
-      data-article-id={currentId}
-      aria-label={`Introducing ${title}`}
-    >
-      <div class="article-intro-inner">
-        <span class="article-intro-overline">{category} · {formattedDate}</span>
-
-        <h1 class="article-intro-title">{title}</h1>
-
-        <span class="article-intro-rule" aria-hidden="true"></span>
-
-        <span class="article-intro-enter">An essay from The Marginalia</span>
-      </div>
-
-      <button class="article-intro-skip" id="article-intro-skip" type="button">
-        Skip intro <span aria-hidden="true">↗</span>
-      </button>
-    </div>
-
     <div class="reading-progress" aria-hidden="true">
       <div class="reading-progress-fill" id="reading-progress-fill"></div>
     </div>
@@ -245,8 +224,6 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
         <nav aria-label="Main navigation">
           <a href={archiveUrl}>Writing</a>
-
-          <a href={`${base}fiction/`}>Fiction</a>
 
           <a href={`${base}about/`}>About</a>
         </nav>
@@ -522,70 +499,6 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
       wheelMultiplier: 0.9,
       anchors: true,
     });
-  }
-</script>
-
-<script>
-  // Show the opening once for each article in the current browser tab.
-
-  const articleIntro = document.querySelector<HTMLElement>(
-    "#article-intro-curtain",
-  );
-
-  const articleIntroSkip = document.querySelector<HTMLButtonElement>(
-    "#article-intro-skip",
-  );
-
-  const articleIntroReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
-
-  const articleIntroKey = `marginalia-article-intro-${articleIntro?.dataset.articleId ?? "unknown"}`;
-
-  let articleIntroDismissed = false;
-
-  const dismissArticleIntro = () => {
-    if (!articleIntro || articleIntroDismissed) return;
-
-    articleIntroDismissed = true;
-
-    articleIntro.classList.add("article-intro-leaving");
-
-    document.documentElement.classList.remove("article-intro-active");
-
-    window.setTimeout(
-      () => articleIntro.remove(),
-
-      articleIntroReducedMotion ? 0 : 850,
-    );
-  };
-
-  if (articleIntro) {
-    let alreadySeen = false;
-
-    try {
-      alreadySeen = sessionStorage.getItem(articleIntroKey) === "1";
-
-      sessionStorage.setItem(articleIntroKey, "1");
-    } catch {
-      alreadySeen = false;
-    }
-
-    if (alreadySeen || articleIntroReducedMotion) {
-      articleIntro.remove();
-    } else {
-      document.documentElement.classList.add("article-intro-active");
-
-      articleIntro.classList.add("article-intro-ready");
-
-      window.setTimeout(dismissArticleIntro, 2500);
-
-      articleIntroSkip?.addEventListener("click", dismissArticleIntro);
-
-      articleIntro.addEventListener("click", (event) => {
-        if (event.target === articleIntro) dismissArticleIntro();
-      });
-    }
   }
 </script>
 
@@ -1072,310 +985,6 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     text-decoration: none;
   }
 
-  /* ARTICLE INTRO CURTAIN */
-
-  :global(html.article-intro-active),
-  :global(html.article-intro-active body) {
-    overflow: hidden;
-  }
-
-  .article-intro-curtain {
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 1100;
-
-    display: grid;
-
-    place-items: center;
-
-    overflow: hidden;
-
-    padding: 28px;
-
-    background: #211f1c;
-
-    color: #f2eee5;
-
-    opacity: 0;
-
-    visibility: hidden;
-
-    pointer-events: none;
-
-    transition:
-      opacity 850ms cubic-bezier(0.76, 0, 0.24, 1),
-      visibility 850ms;
-  }
-
-  .article-intro-curtain::before,
-  .article-intro-curtain::after {
-    position: absolute;
-
-    width: 70vmax;
-
-    height: 70vmax;
-
-    border: 1px solid rgba(196, 122, 96, 0.18);
-
-    border-radius: 50%;
-
-    content: "";
-
-    transform: scale(0.3);
-
-    opacity: 0;
-
-    pointer-events: none;
-  }
-
-  .article-intro-curtain::before {
-    animation: article-intro-ring 2.2s 0.05s cubic-bezier(0.2, 0.7, 0.2, 1)
-      forwards;
-  }
-
-  .article-intro-curtain::after {
-    width: 48vmax;
-
-    height: 48vmax;
-
-    animation: article-intro-ring 2.2s 0.18s cubic-bezier(0.2, 0.7, 0.2, 1)
-      forwards;
-  }
-
-  .article-intro-curtain.article-intro-ready {
-    opacity: 1;
-
-    visibility: visible;
-
-    pointer-events: auto;
-  }
-
-  .article-intro-inner {
-    position: relative;
-
-    z-index: 1;
-
-    display: flex;
-
-    width: min(100%, 1100px);
-
-    flex-direction: column;
-
-    align-items: center;
-
-    text-align: center;
-  }
-
-  .article-intro-overline,
-  .article-intro-enter {
-    color: #bdb3a5;
-
-    font-family: "DM Sans", sans-serif;
-
-    font-size: 9px;
-
-    letter-spacing: 2.7px;
-
-    line-height: 1.8;
-
-    text-transform: uppercase;
-
-    opacity: 0;
-  }
-
-  .article-intro-overline {
-    animation: article-intro-rise 700ms 0.15s ease forwards;
-  }
-
-  .article-intro-title {
-    max-width: 100%;
-
-    margin: 27px 0 25px;
-
-    color: #f2eee5;
-
-    font-family: "Libre Baskerville", Georgia, serif;
-
-    font-size: clamp(38px, 8.3vw, 108px);
-
-    font-weight: 400;
-
-    letter-spacing: -0.075em;
-
-    line-height: 1.14;
-
-    text-wrap: balance;
-
-    overflow-wrap: anywhere;
-
-    clip-path: inset(0 50% 0 50%);
-
-    animation: article-intro-unmask 1.05s 0.35s cubic-bezier(0.76, 0, 0.24, 1)
-      forwards;
-  }
-
-  .article-intro-rule {
-    width: 0;
-
-    height: 1px;
-
-    background: #a96a53;
-
-    animation: article-intro-rule 850ms 1s ease forwards;
-  }
-
-  .article-intro-enter {
-    margin-top: 18px;
-
-    animation: article-intro-rise 700ms 1.25s ease forwards;
-  }
-
-  .article-intro-skip {
-    position: absolute;
-
-    right: 34px;
-
-    bottom: 30px;
-
-    z-index: 2;
-
-    padding: 10px 0 10px 15px;
-
-    border: 0;
-
-    background: transparent;
-
-    color: #c6bfb2;
-
-    cursor: pointer;
-
-    font-family: "DM Sans", sans-serif;
-
-    font-size: 9px;
-
-    letter-spacing: 1.5px;
-
-    text-transform: uppercase;
-  }
-
-  .article-intro-skip span {
-    padding-left: 8px;
-
-    color: #c47a60;
-  }
-
-  .article-intro-skip:hover {
-    color: #fff;
-  }
-
-  .article-intro-curtain.article-intro-leaving {
-    opacity: 0;
-
-    visibility: hidden;
-
-    pointer-events: none;
-  }
-
-  .article-intro-curtain.article-intro-leaving .article-intro-inner {
-    transform: translateY(-35px) scale(0.96);
-
-    opacity: 0;
-
-    transition:
-      transform 700ms cubic-bezier(0.76, 0, 0.24, 1),
-      opacity 550ms;
-  }
-
-  @keyframes article-intro-ring {
-    0% {
-      transform: scale(0.3);
-
-      opacity: 0;
-    }
-
-    35% {
-      opacity: 1;
-    }
-
-    100% {
-      transform: scale(1);
-
-      opacity: 0.55;
-    }
-  }
-
-  @keyframes article-intro-unmask {
-    from {
-      clip-path: inset(0 50% 0 50%);
-
-      letter-spacing: -0.12em;
-    }
-
-    to {
-      clip-path: inset(0 0 0 0);
-
-      letter-spacing: -0.075em;
-    }
-  }
-
-  @keyframes article-intro-rise {
-    from {
-      opacity: 0;
-
-      transform: translateY(12px);
-    }
-
-    to {
-      opacity: 1;
-
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes article-intro-rule {
-    to {
-      width: min(280px, 55vw);
-    }
-  }
-
-  @media (max-width: 600px) {
-    .article-intro-title {
-      font-size: clamp(36px, 10vw, 64px);
-
-      letter-spacing: -0.065em;
-    }
-
-    .article-intro-overline,
-    .article-intro-enter {
-      font-size: 8px;
-
-      letter-spacing: 2px;
-    }
-
-    .article-intro-skip {
-      right: 22px;
-
-      bottom: 20px;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .article-intro-curtain,
-    .article-intro-curtain::before,
-    .article-intro-curtain::after,
-    .article-intro-inner,
-    .article-intro-title,
-    .article-intro-overline,
-    .article-intro-enter,
-    .article-intro-rule {
-      animation: none !important;
-
-      transition: none !important;
-    }
-  }
-
   /* READING PROGRESS */
 
   .reading-progress {
@@ -1463,17 +1072,17 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     justify-content: space-between;
 
-    gap: 20px;
+    gap: 24px;
 
-    border-bottom: 1px dashed #bdb7aa;
+    border-bottom: 1px solid #ded8cc;
   }
 
   .brand {
     font-family: "Libre Baskerville", Georgia, serif;
 
-    font-size: 22px;
+    font-size: 21px;
 
-    letter-spacing: -1.1px;
+    letter-spacing: -1px;
 
     white-space: nowrap;
   }
@@ -1488,20 +1097,35 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   .page > header nav {
     display: flex;
 
+    flex: 0 0 auto;
+
     align-items: center;
 
-    gap: 26px;
+    justify-content: flex-end;
+
+    gap: 30px;
+
+    margin-left: auto;
+
+    color: #756d62;
 
     font-size: 10px;
+
+    letter-spacing: 1px;
   }
 
   .page > header nav a {
-    color: #625b51;
+    display: inline-block;
+
+    color: #756d62;
+
+    white-space: nowrap;
 
     transition: color 180ms ease;
   }
 
-  .page > header nav a:hover {
+  .page > header nav a:hover,
+  .page > header nav a[aria-current="page"] {
     color: #a64d36;
   }
 
@@ -3216,6 +2840,28 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     :global(.has-marginalia-cursor textarea),
     :global(.has-marginalia-cursor select) {
       cursor: auto !important;
+    }
+  }
+
+  /* Shared About-page navbar spacing on small screens. */
+  @media (max-width: 600px) {
+    .page {
+      padding-right: 22px;
+      padding-left: 22px;
+    }
+
+    .page > header {
+      min-height: 68px;
+      gap: 14px;
+    }
+
+    .brand {
+      font-size: 18px;
+    }
+
+    .page > header nav {
+      gap: 18px;
+      font-size: 9px;
     }
   }
 </style>
