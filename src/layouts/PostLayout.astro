@@ -777,6 +777,56 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
       marker.addEventListener("blur", () => activate(-1));
       marker.addEventListener("click", () => {
         activate(index);
+
+        /* On phones, show the note directly after the paragraph it annotates.
+           Desktop continues to use the right-hand marginalia rail. */
+        if (window.matchMedia("(max-width: 760px)").matches) {
+          const block = marker.closest<HTMLElement>("p, li, blockquote");
+          if (!block) return;
+
+          const existing = block.nextElementSibling;
+          if (
+            existing instanceof HTMLElement &&
+            existing.classList.contains("marginalia-inline-note")
+          ) {
+            existing.remove();
+            return;
+          }
+
+          block.parentElement
+            ?.querySelectorAll(":scope > .marginalia-inline-note")
+            .forEach((item) => item.remove());
+
+          const inlineNote = document.createElement("aside");
+          inlineNote.className = "marginalia-inline-note";
+          inlineNote.dataset.noteIndex = String(index);
+
+          const kind = document.createElement("span");
+          kind.className = "marginalia-inline-note__kind";
+          kind.textContent = note.kind;
+
+          const heading = document.createElement("strong");
+          heading.className = "marginalia-inline-note__title";
+          heading.textContent = note.title;
+
+          const body = document.createElement("p");
+          body.textContent = note.body;
+
+          inlineNote.append(kind, heading, body);
+
+          if (note.url) {
+            const source = document.createElement("a");
+            source.href = note.url;
+            source.target = "_blank";
+            source.rel = "noopener noreferrer";
+            source.textContent = "Further reading ↗";
+            inlineNote.append(source);
+          }
+
+          block.insertAdjacentElement("afterend", inlineNote);
+          return;
+        }
+
         noteElements[index]?.scrollIntoView({
           behavior: "smooth",
           block: "nearest",
@@ -1407,43 +1457,72 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   }
 
   @media (max-width: 760px) {
+    /* Mobile is a focused, single-column reading experience.
+       The desktop side rails must not become blocks above/below the essay. */
     .reading-layout {
-      display: flex;
-      flex-direction: column;
-      gap: 42px;
-      margin-top: 42px;
-    }
-    .section-index {
-      position: static;
-      order: -1;
-      width: 100%;
-      padding: 0 0 22px;
-      border-right: 0;
-      border-bottom: 1px solid #dcd6ca;
-    }
-    .section-index-toc {
+      display: block;
       margin-top: 22px;
     }
-    .section-index-toc.is-empty {
-      display: none;
-    }
-    .reading-layout > article {
-      order: 0;
-    }
+
+    .section-index,
     .marginalia-sidebar {
-      position: static;
-      order: 1;
+      display: none !important;
+    }
+
+    .reading-layout > article {
+      order: initial;
       width: 100%;
-      min-height: 0;
-      padding: 24px 0 0;
-      border-top: 1px solid #dcd6ca;
-      border-left: 0;
+      max-width: none;
+      margin: 0;
     }
-    .marginalia-sidebar .rail-eyebrow {
-      margin-bottom: 18px;
+
+    .article-body {
+      padding-top: 26px;
     }
-    .marginalia-notes .footnotes li {
-      margin-bottom: 20px;
+
+    :global(.marginalia-inline-note) {
+      display: block;
+      margin: 18px 0 26px;
+      padding: 17px 18px;
+      border-left: 2px solid #a64d36;
+      background: rgba(255, 252, 245, 0.58);
+      color: #4c463e;
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 12px;
+      line-height: 1.85;
+    }
+
+    :global(.marginalia-inline-note__kind) {
+      display: block;
+      margin-bottom: 7px;
+      color: #a64d36;
+      font-family: "DM Sans", sans-serif;
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    :global(.marginalia-inline-note__title) {
+      display: block;
+      margin-bottom: 6px;
+      color: #24221f;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    :global(.marginalia-inline-note p) {
+      margin: 0;
+      color: #625b51;
+      font: inherit;
+    }
+
+    :global(.marginalia-inline-note a) {
+      display: inline-block;
+      margin-top: 8px;
+      color: #a64d36;
+      font-family: "DM Sans", sans-serif;
+      font-size: 10px;
     }
   }
 
