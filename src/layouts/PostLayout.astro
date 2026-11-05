@@ -20,6 +20,8 @@ interface Props {
 
 const { title, description, pubDate, category, annotations = [] } = Astro.props;
 
+const isPoetry = category.trim().toLowerCase() === "poetry";
+
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
@@ -230,7 +232,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
       </header>
 
       <main>
-        <header class="article-header">
+        <header class={`article-header ${isPoetry ? "poetry-header" : ""}`}>
           <span class="category">{category}</span>
           <h1>{title}</h1>
           <p class="description">{description}</p>
@@ -243,7 +245,7 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
           </div>
         </header>
 
-        <div class="reading-layout">
+        <div class={`reading-layout ${isPoetry ? "poetry-layout" : ""}`}>
           <aside class="section-index" aria-label="About this essay">
             <div class="section-index-toc">
               <span class="rail-eyebrow">IN THIS ESSAY</span>
@@ -257,7 +259,10 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
           </aside>
 
           <article>
-            <div class="article-body" id="article-body">
+            <div
+              class={`article-body ${isPoetry ? "poetry-body" : ""}`}
+              id="article-body"
+            >
               <slot />
             </div>
 
@@ -777,56 +782,6 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
       marker.addEventListener("blur", () => activate(-1));
       marker.addEventListener("click", () => {
         activate(index);
-
-        /* On phones, show the note directly after the paragraph it annotates.
-           Desktop continues to use the right-hand marginalia rail. */
-        if (window.matchMedia("(max-width: 760px)").matches) {
-          const block = marker.closest<HTMLElement>("p, li, blockquote");
-          if (!block) return;
-
-          const existing = block.nextElementSibling;
-          if (
-            existing instanceof HTMLElement &&
-            existing.classList.contains("marginalia-inline-note")
-          ) {
-            existing.remove();
-            return;
-          }
-
-          block.parentElement
-            ?.querySelectorAll(":scope > .marginalia-inline-note")
-            .forEach((item) => item.remove());
-
-          const inlineNote = document.createElement("aside");
-          inlineNote.className = "marginalia-inline-note";
-          inlineNote.dataset.noteIndex = String(index);
-
-          const kind = document.createElement("span");
-          kind.className = "marginalia-inline-note__kind";
-          kind.textContent = note.kind;
-
-          const heading = document.createElement("strong");
-          heading.className = "marginalia-inline-note__title";
-          heading.textContent = note.title;
-
-          const body = document.createElement("p");
-          body.textContent = note.body;
-
-          inlineNote.append(kind, heading, body);
-
-          if (note.url) {
-            const source = document.createElement("a");
-            source.href = note.url;
-            source.target = "_blank";
-            source.rel = "noopener noreferrer";
-            source.textContent = "Further reading ↗";
-            inlineNote.append(source);
-          }
-
-          block.insertAdjacentElement("afterend", inlineNote);
-          return;
-        }
-
         noteElements[index]?.scrollIntoView({
           behavior: "smooth",
           block: "nearest",
@@ -1122,17 +1077,17 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     justify-content: space-between;
 
-    gap: 24px;
+    gap: 20px;
 
-    border-bottom: 1px solid #ded8cc;
+    border-bottom: 1px dashed #bdb7aa;
   }
 
   .brand {
     font-family: "Libre Baskerville", Georgia, serif;
 
-    font-size: 21px;
+    font-size: 22px;
 
-    letter-spacing: -1px;
+    letter-spacing: -1.1px;
 
     white-space: nowrap;
   }
@@ -1147,35 +1102,20 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   .page > header nav {
     display: flex;
 
-    flex: 0 0 auto;
-
     align-items: center;
 
-    justify-content: flex-end;
-
-    gap: 30px;
-
-    margin-left: auto;
-
-    color: #756d62;
+    gap: 26px;
 
     font-size: 10px;
-
-    letter-spacing: 1px;
   }
 
   .page > header nav a {
-    display: inline-block;
-
-    color: #756d62;
-
-    white-space: nowrap;
+    color: #625b51;
 
     transition: color 180ms ease;
   }
 
-  .page > header nav a:hover,
-  .page > header nav a[aria-current="page"] {
+  .page > header nav a:hover {
     color: #a64d36;
   }
 
@@ -1457,72 +1397,43 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   }
 
   @media (max-width: 760px) {
-    /* Mobile is a focused, single-column reading experience.
-       The desktop side rails must not become blocks above/below the essay. */
     .reading-layout {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      gap: 42px;
+      margin-top: 42px;
+    }
+    .section-index {
+      position: static;
+      order: -1;
+      width: 100%;
+      padding: 0 0 22px;
+      border-right: 0;
+      border-bottom: 1px solid #dcd6ca;
+    }
+    .section-index-toc {
       margin-top: 22px;
     }
-
-    .section-index,
-    .marginalia-sidebar {
-      display: none !important;
+    .section-index-toc.is-empty {
+      display: none;
     }
-
     .reading-layout > article {
-      order: initial;
+      order: 0;
+    }
+    .marginalia-sidebar {
+      position: static;
+      order: 1;
       width: 100%;
-      max-width: none;
-      margin: 0;
+      min-height: 0;
+      padding: 24px 0 0;
+      border-top: 1px solid #dcd6ca;
+      border-left: 0;
     }
-
-    .article-body {
-      padding-top: 26px;
+    .marginalia-sidebar .rail-eyebrow {
+      margin-bottom: 18px;
     }
-
-    :global(.marginalia-inline-note) {
-      display: block;
-      margin: 18px 0 26px;
-      padding: 17px 18px;
-      border-left: 2px solid #a64d36;
-      background: rgba(255, 252, 245, 0.58);
-      color: #4c463e;
-      font-family: "Libre Baskerville", Georgia, serif;
-      font-size: 12px;
-      line-height: 1.85;
-    }
-
-    :global(.marginalia-inline-note__kind) {
-      display: block;
-      margin-bottom: 7px;
-      color: #a64d36;
-      font-family: "DM Sans", sans-serif;
-      font-size: 8px;
-      font-weight: 600;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-    }
-
-    :global(.marginalia-inline-note__title) {
-      display: block;
-      margin-bottom: 6px;
-      color: #24221f;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    :global(.marginalia-inline-note p) {
-      margin: 0;
-      color: #625b51;
-      font: inherit;
-    }
-
-    :global(.marginalia-inline-note a) {
-      display: inline-block;
-      margin-top: 8px;
-      color: #a64d36;
-      font-family: "DM Sans", sans-serif;
-      font-size: 10px;
+    .marginalia-notes .footnotes li {
+      margin-bottom: 20px;
     }
   }
 
@@ -2922,25 +2833,100 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     }
   }
 
-  /* Shared About-page navbar spacing on small screens. */
-  @media (max-width: 600px) {
-    .page {
-      padding-right: 22px;
-      padding-left: 22px;
+  /* POETRY: centred title and verse, distinct from the left-aligned essay layout. */
+  .article-header.poetry-header {
+    text-align: center;
+  }
+
+  .article-header.poetry-header .category {
+    justify-content: center;
+  }
+
+  .article-header.poetry-header h1 {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .article-header.poetry-header .description {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .article-header.poetry-header .metadata {
+    justify-content: center;
+  }
+
+  /* POETRY: typeset verse as verse, not as essay paragraphs. */
+  .poetry-layout {
+    grid-template-columns: minmax(0, 680px) !important;
+    justify-content: center;
+    margin-top: 42px;
+  }
+
+  .poetry-layout .section-index,
+  .poetry-layout .marginalia-sidebar {
+    display: none !important;
+  }
+
+  .poetry-layout > article {
+    max-width: 680px;
+  }
+
+  .poetry-body {
+    width: min(100%, 590px);
+    margin: 0 auto;
+    padding-top: 48px;
+    font-size: 17px;
+    line-height: 1.85;
+    letter-spacing: 0.005em;
+    text-align: center;
+  }
+
+  /* No decorative drop cap on a poem's opening word. */
+  .poetry-body > :global(p:first-child)::first-letter {
+    float: none;
+    margin: 0;
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+  }
+
+  /* Compact line rhythm; blank Markdown paragraphs still create stanza breaks. */
+  .poetry-body :global(p) {
+    margin: 0 0 0.42em;
+    line-height: 1.85;
+    text-wrap: pretty;
+  }
+
+  .poetry-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .poetry-layout .endmark {
+    margin-top: 42px;
+    margin-bottom: 14px;
+  }
+
+  .poetry-layout .author-colophon {
+    margin-top: 25px;
+  }
+
+  @media (max-width: 700px) {
+    .poetry-layout {
+      margin-top: 30px;
     }
 
-    .page > header {
-      min-height: 68px;
-      gap: 14px;
+    .poetry-body {
+      width: 100%;
+      padding-top: 34px;
+      font-size: 16px;
+      line-height: 1.8;
     }
 
-    .brand {
-      font-size: 18px;
-    }
-
-    .page > header nav {
-      gap: 18px;
-      font-size: 9px;
+    .poetry-body :global(p) {
+      margin-bottom: 0.38em;
+      line-height: 1.8;
     }
   }
 </style>

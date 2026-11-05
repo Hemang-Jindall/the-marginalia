@@ -2,7 +2,17 @@
 import { getCollection } from "astro:content";
 
 const essays = (await getCollection("posts"))
-  .filter((post) => !post.data.draft)
+  .filter(
+    (post) =>
+      !post.data.draft && post.data.category?.trim().toLowerCase() !== "poetry",
+  )
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const poems = (await getCollection("posts"))
+  .filter(
+    (post) =>
+      !post.data.draft && post.data.category?.trim().toLowerCase() === "poetry",
+  )
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const pinnedEssays = essays.filter((essay) => essay.data.pinned);
@@ -15,6 +25,7 @@ if (pinnedEssays.length > 1) {
 
 const featured = pinnedEssays[0] ?? essays[0];
 const isPinned = pinnedEssays.length === 1;
+const allWritingCount = essays.length;
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
@@ -283,9 +294,9 @@ const getPreviewExcerpt = (content: string) =>
             </div>
 
             <div class="archive-total">
-              <span id="visible-count">{essays.length}</span>
+              <span id="visible-count">{allWritingCount}</span>
               <span id="count-label">
-                {essays.length === 1 ? "piece" : "pieces"}
+                {allWritingCount === 1 ? "piece" : "pieces"}
               </span>
               <span class="count-separator">·</span>
               <span>All writing</span>
@@ -333,7 +344,7 @@ const getPreviewExcerpt = (content: string) =>
                 aria-pressed="true"
               >
                 All writing
-                <span class="filter-count">{essays.length}</span>
+                <span class="filter-count">{allWritingCount}</span>
               </button>
 
               {
@@ -462,6 +473,108 @@ const getPreviewExcerpt = (content: string) =>
           <p class="archive-footnote">Every piece, in its own time.</p>
         </section>
 
+        <!-- POETRY CAROUSEL -->
+
+        {
+          poems.length > 0 && (
+            <section class="poetry-section" aria-labelledby="poetry-title">
+              <div class="poetry-heading">
+                <div>
+                  <div class="section-eyebrow">
+                    <span class="eyebrow-dot" />
+                    Between the lines
+                  </div>
+                  <h2 id="poetry-title">
+                    A little <em>poetry.</em>
+                  </h2>
+                  <p class="poetry-intro">
+                    Small worlds, gathered in a quieter corner of the journal.
+                  </p>
+                </div>
+
+                <div
+                  class="poetry-controls"
+                  aria-label="Poem carousel controls"
+                >
+                  <button
+                    class="poetry-arrow"
+                    type="button"
+                    data-poetry-direction="previous"
+                    aria-label="Previous poems"
+                  >
+                    ←
+                  </button>
+                  <button
+                    class="poetry-arrow"
+                    type="button"
+                    data-poetry-direction="next"
+                    aria-label="Next poems"
+                  >
+                    →
+                  </button>
+                </div>
+              </div>
+
+              <div
+                class="poetry-track"
+                id="poetry-track"
+                tabindex="0"
+                aria-label="Poems"
+              >
+                {poems.map((poem, index) => (
+                  <article class="poem-card">
+                    <a class="poem-card-link" href={postUrl(poem.id)}>
+                      <div class="poem-card-top">
+                        <span class="poem-number">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span class="poem-date">
+                          {poem.data.pubDate.toLocaleDateString("en-US", {
+                            month: "short",
+                            year: "numeric",
+                            timeZone: "UTC",
+                          })}
+                        </span>
+                      </div>
+                      <span class="poem-mark" aria-hidden="true">
+                        “
+                      </span>
+                      <h3>{poem.data.title}</h3>
+                      <p>{poem.data.description}</p>
+                      <span class="poem-read">
+                        Read poem <span aria-hidden="true">↗</span>
+                      </span>
+                    </a>
+                  </article>
+                ))}
+              </div>
+
+              <div class="poetry-navigation">
+                <div class="poetry-progress-group">
+                  <span class="poetry-progress-arrow" aria-hidden="true">
+                    ‹
+                  </span>
+                  <div class="poetry-progress" aria-hidden="true">
+                    <span
+                      class="poetry-progress-fill"
+                      id="poetry-progress-fill"
+                    />
+                  </div>
+                  <span class="poetry-progress-arrow" aria-hidden="true">
+                    ›
+                  </span>
+                </div>
+                <div class="poetry-footer">
+                  <span>{poems.length} poems in the collection</span>
+                  <span class="poetry-scroll-hint">
+                    Scroll to wander <span aria-hidden="true">→</span>
+                  </span>
+                </div>
+              </div>
+            </section>
+          )
+        }
+
         <!-- FOOTER -->
 
         <footer>
@@ -567,6 +680,102 @@ const getPreviewExcerpt = (content: string) =>
         })();
       </script>
     </div>
+
+    <script>
+      const poetryTrack = document.querySelector<HTMLElement>("#poetry-track");
+      const poetryProgress = document.querySelector<HTMLElement>(
+        "#poetry-progress-fill",
+      );
+      const poetryControls = Array.from(
+        document.querySelectorAll<HTMLButtonElement>("[data-poetry-direction]"),
+      );
+
+      const updatePoetryProgress = () => {
+        if (!poetryTrack || !poetryProgress) return;
+        const maxScroll = poetryTrack.scrollWidth - poetryTrack.clientWidth;
+        const progress = maxScroll > 0 ? poetryTrack.scrollLeft / maxScroll : 0;
+        const visibleRatio =
+          poetryTrack.scrollWidth > 0
+            ? poetryTrack.clientWidth / poetryTrack.scrollWidth
+            : 1;
+        poetryProgress.style.width = `${Math.max(visibleRatio * 100, 12)}%`;
+        poetryProgress.style.transform = `translateX(${progress * (100 - Math.max(visibleRatio * 100, 12))}%)`;
+      };
+
+      poetryControls.forEach((button) => {
+        button.addEventListener("click", () => {
+          if (!poetryTrack) return;
+          const firstCard =
+            poetryTrack.querySelector<HTMLElement>(".poem-card");
+          const gap = parseFloat(getComputedStyle(poetryTrack).columnGap) || 18;
+          const distance = firstCard
+            ? firstCard.getBoundingClientRect().width + gap
+            : poetryTrack.clientWidth * 0.8;
+          const direction = button.dataset.poetryDirection === "next" ? 1 : -1;
+          poetryTrack.scrollBy({
+            left: distance * direction,
+            behavior: "smooth",
+          });
+        });
+      });
+
+      poetryTrack?.addEventListener("scroll", updatePoetryProgress, {
+        passive: true,
+      });
+      window.addEventListener("resize", updatePoetryProgress);
+      updatePoetryProgress();
+    </script>
+
+    <script>
+      // Restrained editorial reveal for the poetry collection.
+      // It runs only when the section approaches the viewport and respects
+      // the visitor's reduced-motion preference.
+      (() => {
+        const section = document.querySelector<HTMLElement>(".poetry-section");
+        if (!section) return;
+
+        const reduceMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        if (reduceMotion || !("IntersectionObserver" in window)) return;
+
+        const heading = section.querySelector<HTMLElement>(".poetry-heading");
+        const controls = section.querySelector<HTMLElement>(".poetry-controls");
+        const cards = Array.from(
+          section.querySelectorAll<HTMLElement>(".poem-card"),
+        );
+
+        section.classList.add("poetry-motion-ready");
+
+        if (heading) heading.style.setProperty("--poetry-reveal-delay", "0ms");
+        if (controls)
+          controls.style.setProperty("--poetry-reveal-delay", "130ms");
+        cards.forEach((card, index) => {
+          card.style.setProperty(
+            "--poetry-reveal-delay",
+            `${180 + Math.min(index, 5) * 105}ms`,
+          );
+        });
+
+        const revealObserver = new IntersectionObserver(
+          (entries, observer) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add("is-poetry-visible");
+              observer.unobserve(entry.target);
+            });
+          },
+          {
+            threshold: 0.14,
+            rootMargin: "0px 0px -45px 0px",
+          },
+        );
+
+        [heading, controls, ...cards]
+          .filter((element): element is HTMLElement => Boolean(element))
+          .forEach((element) => revealObserver.observe(element));
+      })();
+    </script>
   </body>
 
   <script>
@@ -816,7 +1025,7 @@ const getPreviewExcerpt = (content: string) =>
 
   <script>
     const motionSections = document.querySelectorAll<HTMLElement>(
-      ".opening-scene, .featured-section, .archive-heading, .archive-entry, .archive-footnote, .about-section",
+      ".opening-scene, .featured-section, .archive-heading, .archive-entry, .archive-footnote, .poetry-section, .about-section",
     );
 
     if ("IntersectionObserver" in window) {
@@ -5904,6 +6113,737 @@ const getPreviewExcerpt = (content: string) =>
         margin-left: 0.06em;
         overflow: visible;
         box-sizing: content-box;
+      }
+    }
+
+    /* LEGIBILITY PASS: keep the parchment aesthetic, strengthen text contrast. */
+    .section-eyebrow,
+    .filter-label {
+      color: #76513f;
+      font-size: 9px;
+      letter-spacing: 1.6px;
+    }
+
+    .featured-meta,
+    .archive-total,
+    .year-count,
+    .entry-date {
+      color: #5f5347;
+    }
+
+    .featured-meta {
+      font-size: 10px;
+      letter-spacing: 1px;
+    }
+
+    .featured-description {
+      color: #40372f;
+      font-size: 15px;
+      line-height: 1.85;
+    }
+
+    .featured-label,
+    .aside-eyebrow,
+    .aside-caption {
+      color: #625345;
+    }
+
+    .aside-eyebrow,
+    .aside-caption {
+      font-size: 9px;
+    }
+
+    .archive-total {
+      font-size: 9px;
+    }
+
+    .search-box {
+      border-color: #bdb09e;
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .search-icon {
+      stroke: #655548;
+    }
+
+    .search-box input {
+      font-size: 13px;
+    }
+
+    .search-box input::placeholder {
+      color: #65594d;
+      opacity: 1;
+    }
+
+    .filter-button {
+      border-color: #bdb09e;
+      color: #40372f;
+      font-size: 11px;
+    }
+
+    .filter-button.active {
+      color: #fffdf7;
+    }
+
+    .entry-number {
+      color: #91432f;
+      font-size: 9px;
+    }
+
+    .entry-description {
+      color: #51463b;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .entry-category {
+      color: #665344;
+      font-size: 9px;
+    }
+
+    .entry-date {
+      font-size: 10px;
+    }
+
+    .year-heading {
+      border-bottom-color: #b7aa97;
+    }
+
+    .archive-entry {
+      border-bottom-color: #cfc3b2;
+    }
+
+    .search-box kbd {
+      border-color: #bdb09e;
+      color: #5f5347;
+    }
+
+    @media (max-width: 600px) {
+      .featured-meta {
+        font-size: 8px;
+      }
+
+      .featured-description {
+        font-size: 13px;
+      }
+
+      .aside-eyebrow {
+        font-size: 6.5px;
+      }
+
+      .aside-caption {
+        font-size: 6px;
+      }
+
+      .archive-total {
+        font-size: 7.5px;
+      }
+
+      .entry-description {
+        font-size: 12px;
+      }
+
+      .entry-date {
+        font-size: 9.5px;
+      }
+    }
+
+    /* POETRY CAROUSEL */
+
+    .poetry-section {
+      position: relative;
+      padding: 62px 0 58px;
+      border-top: 1px solid #b7aa97;
+    }
+
+    .poetry-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 28px;
+      margin-bottom: 34px;
+    }
+
+    .poetry-heading h2 {
+      margin: 13px 0 8px;
+      color: #24221f;
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: clamp(42px, 5.2vw, 68px);
+      font-weight: 400;
+      letter-spacing: -2.8px;
+      line-height: 1.08;
+    }
+
+    .poetry-heading h2 em {
+      color: #a64d36;
+      font-weight: 400;
+    }
+
+    .poetry-intro {
+      margin: 0;
+      color: #40372f;
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 15px;
+      font-style: italic;
+      line-height: 1.8;
+    }
+
+    .poetry-controls {
+      display: flex;
+      gap: 12px;
+      flex: 0 0 auto;
+      padding-bottom: 5px;
+    }
+
+    .poetry-arrow {
+      width: 50px;
+      height: 50px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #b7aa97;
+      border-radius: 50%;
+      background: transparent;
+      color: #5b4639;
+      cursor: pointer;
+      font-size: 22px;
+      transition:
+        background 180ms ease,
+        color 180ms ease,
+        border-color 180ms ease,
+        transform 180ms ease;
+    }
+
+    .poetry-arrow:hover {
+      transform: translateY(-2px);
+      border-color: #a64d36;
+      background: #a64d36;
+      color: #fffdf7;
+    }
+
+    .poetry-track {
+      display: flex;
+      gap: 22px;
+      overflow-x: auto;
+      padding: 5px 3px 12px;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      overscroll-behavior-x: contain;
+    }
+
+    .poetry-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .poem-card {
+      position: relative;
+      flex: 0 0 calc((100% - 44px) / 3);
+      min-width: 280px;
+      min-height: 340px;
+      overflow: hidden;
+      border: 1px solid #bca98f;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.23),
+          rgba(255, 255, 255, 0.04)
+        ),
+        rgba(242, 230, 210, 0.34);
+      scroll-snap-align: start;
+      transition:
+        border-color 220ms ease,
+        transform 220ms ease,
+        background 220ms ease;
+    }
+
+    /* Fine double-line corners echo the engraved frames in the journal artwork. */
+    .poem-card::before {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      border: 1px solid rgba(157, 125, 91, 0.55);
+      pointer-events: none;
+    }
+
+    .poem-card::after {
+      content: "✳";
+      position: absolute;
+      right: 24px;
+      bottom: 17px;
+      color: rgba(166, 77, 54, 0.23);
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 18px;
+      pointer-events: none;
+    }
+
+    .poem-card:hover {
+      transform: translateY(-4px);
+      border-color: #a87860;
+      background-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .poem-card-link {
+      position: relative;
+      z-index: 1;
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 27px 29px 25px;
+    }
+
+    .poem-card-top {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #5c4938;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .poem-number {
+      color: #91432f;
+    }
+
+    .poem-mark {
+      height: 43px;
+      margin: 17px 0 1px -3px;
+      color: #a64d36;
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 66px;
+      line-height: 1;
+    }
+
+    .poem-card h3 {
+      max-width: 100%;
+      margin: 0 0 11px;
+      color: #24221f;
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: clamp(22px, 2vw, 28px);
+      font-weight: 400;
+      letter-spacing: -0.9px;
+      line-height: 1.32;
+    }
+
+    .poem-card p {
+      display: -webkit-box;
+      overflow: hidden;
+      max-width: 420px;
+      margin: 0 0 22px;
+      color: #514438;
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 13px;
+      font-style: italic;
+      line-height: 1.8;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+    }
+
+    .poem-read {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: auto;
+      color: #a3442e;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .poetry-navigation {
+      margin-top: 15px;
+    }
+
+    .poetry-progress-group {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      max-width: 520px;
+      margin-bottom: 10px;
+      color: #5b4639;
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 23px;
+      line-height: 1;
+    }
+
+    .poetry-progress {
+      position: relative;
+      width: 100%;
+      height: 5px;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #c8b69e;
+    }
+
+    .poetry-progress-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 20%;
+      height: 100%;
+      border-radius: inherit;
+      background: #a64d36;
+      transition:
+        transform 160ms ease,
+        width 160ms ease;
+    }
+
+    .poetry-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: #5c4938;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+    }
+
+    .poetry-scroll-hint {
+      color: #5c4938;
+    }
+
+    @media (max-width: 800px) {
+      .poem-card {
+        flex-basis: calc((100% - 22px) / 2);
+      }
+
+      .poetry-progress-group {
+        max-width: 60%;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .poetry-section {
+        padding: 43px 0 34px;
+      }
+
+      .poetry-heading {
+        align-items: flex-end;
+        margin-bottom: 23px;
+      }
+
+      .poetry-heading h2 {
+        font-size: clamp(36px, 10vw, 48px);
+        letter-spacing: -1.8px;
+      }
+
+      .poetry-intro {
+        max-width: 270px;
+        font-size: 12px;
+      }
+
+      .poetry-controls {
+        gap: 6px;
+      }
+
+      .poetry-arrow {
+        width: 36px;
+        height: 36px;
+        font-size: 17px;
+      }
+
+      .poetry-track {
+        gap: 14px;
+        margin-right: -21px;
+        padding-right: 21px;
+      }
+
+      .poem-card {
+        flex-basis: 86%;
+        min-width: 0;
+        min-height: 300px;
+      }
+
+      .poem-card-link {
+        min-height: 300px;
+        padding: 23px 22px 21px;
+      }
+
+      .poem-card h3 {
+        font-size: 23px;
+      }
+
+      .poem-card p {
+        font-size: 12px;
+      }
+
+      .poetry-progress-group {
+        max-width: 75%;
+        gap: 9px;
+        font-size: 19px;
+      }
+
+      .poetry-footer {
+        font-size: 8px;
+        letter-spacing: 1.1px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .poetry-track {
+        scroll-behavior: auto;
+      }
+
+      .poem-card,
+      .poetry-arrow {
+        transition: none;
+      }
+    }
+
+    /* LEGIBILITY PASS: keep the parchment aesthetic, strengthen text contrast. */
+    .section-eyebrow,
+    .filter-label {
+      color: #76513f;
+      font-size: 9px;
+      letter-spacing: 1.6px;
+    }
+
+    .featured-meta,
+    .archive-total,
+    .year-count,
+    .entry-date {
+      color: #5f5347;
+    }
+
+    .featured-meta {
+      font-size: 10px;
+      letter-spacing: 1px;
+    }
+
+    .featured-description {
+      color: #40372f;
+      font-size: 15px;
+      line-height: 1.85;
+    }
+
+    .featured-label,
+    .aside-eyebrow,
+    .aside-caption {
+      color: #625345;
+    }
+
+    .aside-eyebrow,
+    .aside-caption {
+      font-size: 9px;
+    }
+
+    .archive-total {
+      font-size: 9px;
+    }
+
+    .search-box {
+      border-color: #bdb09e;
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .search-icon {
+      stroke: #655548;
+    }
+
+    .search-box input {
+      font-size: 13px;
+    }
+
+    .search-box input::placeholder {
+      color: #65594d;
+      opacity: 1;
+    }
+
+    .filter-button {
+      border-color: #bdb09e;
+      color: #40372f;
+      font-size: 11px;
+    }
+
+    .filter-button.active {
+      color: #fffdf7;
+    }
+
+    .entry-number {
+      color: #91432f;
+      font-size: 9px;
+    }
+
+    .entry-description {
+      color: #51463b;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .entry-category {
+      color: #665344;
+      font-size: 9px;
+    }
+
+    .entry-date {
+      font-size: 10px;
+    }
+
+    .year-heading {
+      border-bottom-color: #b7aa97;
+    }
+
+    .archive-entry {
+      border-bottom-color: #cfc3b2;
+    }
+
+    .search-box kbd {
+      border-color: #bdb09e;
+      color: #5f5347;
+    }
+
+    @media (max-width: 600px) {
+      .featured-meta {
+        font-size: 8px;
+      }
+
+      .featured-description {
+        font-size: 13px;
+      }
+
+      .aside-eyebrow {
+        font-size: 6.5px;
+      }
+
+      .aside-caption {
+        font-size: 6px;
+      }
+
+      .archive-total {
+        font-size: 7.5px;
+      }
+
+      .entry-description {
+        font-size: 12px;
+      }
+
+      .entry-date {
+        font-size: 9.5px;
+      }
+    }
+
+    /* POETRY CAROUSEL MOTION */
+    .poetry-heading,
+    .poetry-controls,
+    .poem-card {
+      will-change: opacity, transform;
+    }
+
+    .poetry-motion-ready .poetry-heading,
+    .poetry-motion-ready .poetry-controls,
+    .poetry-motion-ready .poem-card {
+      opacity: 0;
+      transform: translate3d(0, 24px, 0);
+      transition:
+        opacity 760ms cubic-bezier(0.2, 0.7, 0.2, 1),
+        transform 760ms cubic-bezier(0.2, 0.7, 0.2, 1);
+      transition-delay: var(--poetry-reveal-delay, 0ms);
+    }
+
+    .poetry-motion-ready .poetry-heading.is-poetry-visible,
+    .poetry-motion-ready .poetry-controls.is-poetry-visible,
+    .poetry-motion-ready .poem-card.is-poetry-visible {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .poetry-motion-ready .poem-card {
+      transition-delay: var(--poetry-reveal-delay, 0ms);
+    }
+
+    .poem-card::before {
+      transition:
+        inset 420ms ease,
+        border-color 420ms ease;
+    }
+
+    .poem-card::after {
+      transform-origin: center;
+      transition:
+        transform 500ms cubic-bezier(0.2, 0.7, 0.2, 1),
+        color 350ms ease;
+    }
+
+    .poem-card:hover::before {
+      inset: 9px;
+      border-color: rgba(166, 77, 54, 0.68);
+    }
+
+    .poem-card:hover::after {
+      color: rgba(166, 77, 54, 0.48);
+      transform: rotate(35deg) scale(1.2);
+    }
+
+    .poem-mark {
+      transition:
+        transform 450ms cubic-bezier(0.2, 0.7, 0.2, 1),
+        color 350ms ease;
+    }
+
+    .poem-card:hover .poem-mark {
+      color: #b6533b;
+      transform: translateY(-3px);
+    }
+
+    .poem-read span {
+      display: inline-block;
+      transition: transform 220ms ease;
+    }
+
+    .poem-card:hover .poem-read span {
+      transform: translate(3px, -3px);
+    }
+
+    .poetry-arrow {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .poetry-arrow::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(166, 77, 54, 0.55);
+      border-radius: inherit;
+      opacity: 0;
+      transform: scale(0.72);
+      transition:
+        opacity 260ms ease,
+        transform 260ms ease;
+    }
+
+    .poetry-arrow:hover::after {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .poetry-progress-fill {
+      transition:
+        transform 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
+        width 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .poetry-motion-ready .poetry-heading,
+      .poetry-motion-ready .poetry-controls,
+      .poetry-motion-ready .poem-card {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      .poem-card::before,
+      .poem-card::after,
+      .poem-mark,
+      .poem-read span,
+      .poetry-arrow::after,
+      .poetry-progress-fill {
+        transition: none !important;
       }
     }
   </style>
