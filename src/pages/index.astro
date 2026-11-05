@@ -612,7 +612,11 @@ const getPreviewExcerpt = (content: string) =>
     const openingScene = document.querySelector<HTMLElement>(".opening-scene");
     const openingStage = document.querySelector<HTMLElement>(".opening-stage");
 
-    if (openingScene && !reduceMotion) {
+    if (
+      openingScene &&
+      !reduceMotion &&
+      window.matchMedia("(min-width: 601px)").matches
+    ) {
       let ticking = false;
       const mobileOpening = window.matchMedia("(max-width: 600px)").matches;
 
@@ -5782,6 +5786,69 @@ const getPreviewExcerpt = (content: string) =>
         background-size: auto, auto;
         background-attachment: scroll;
         background-blend-mode: screen, screen;
+      }
+    }
+
+    /*
+     * MOBILE PERFORMANCE MODE
+     * Phones get a normal-flow hero: no sticky viewport-sized stage,
+     * no scroll-linked opacity/parallax, no continuously rotating artwork,
+     * and no full-scene texture layer. The dark panel simply scrolls away
+     * with the page, leaving the parchment section underneath.
+     */
+    @media (max-width: 600px) {
+      .has-motion .opening-scene,
+      .has-motion .opening-scene.is-visible {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+
+      .opening-scene {
+        position: relative !important;
+        min-height: 0 !important;
+        height: auto !important;
+        overflow: hidden !important;
+        background: #211f1c !important;
+        isolation: isolate;
+      }
+
+      .opening-scene::before {
+        display: none !important;
+        content: none !important;
+      }
+
+      .opening-stage {
+        position: relative !important;
+        top: auto !important;
+        min-height: 0 !important;
+        height: auto !important;
+        transform: none !important;
+        opacity: 1 !important;
+        will-change: auto !important;
+      }
+
+      .opening-art,
+      .opening-art.reading-compass {
+        animation: none !important;
+        transition: none !important;
+        will-change: auto !important;
+      }
+
+      .opening-art .orbit,
+      .opening-art .orbit-one,
+      .opening-art .orbit-two,
+      .opening-art .orbit-ring,
+      .opening-art .orbit-ring-one,
+      .opening-art .orbit-ring-two,
+      .opening-art .orbit-ring-three {
+        animation: none !important;
+        transform: none !important;
+      }
+
+      .has-motion .archive-entry,
+      .has-motion .archive-footnote {
+        filter: none !important;
       }
     }
 
