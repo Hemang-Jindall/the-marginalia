@@ -586,7 +586,10 @@ const getPreviewExcerpt = (content: string) =>
       window.setTimeout(() => introCurtain.remove(), reduceMotion ? 0 : 900);
     };
 
-    if (introCurtain) {
+    if (introCurtain && window.matchMedia("(max-width: 600px)").matches) {
+      // Mobile opens directly on the featured essay; skip the cinematic curtain.
+      introCurtain.remove();
+    } else if (introCurtain) {
       let alreadySeen = false;
       try {
         alreadySeen = sessionStorage.getItem("marginalia-intro-seen") === "1";
@@ -5866,6 +5869,23 @@ const getPreviewExcerpt = (content: string) =>
 
       .opening-art {
         transform: translateX(-50%) !important;
+      }
+    }
+
+    /*
+     * MOBILE HOMEPAGE: skip the cinematic opening entirely.
+     * The featured essay becomes the first visible section on phones.
+     * Desktop presentation is unaffected.
+     */
+    @media (max-width: 600px) {
+      .opening-scene,
+      .intro-curtain {
+        display: none !important;
+      }
+
+      :global(html.intro-active),
+      :global(html.intro-active body) {
+        overflow: auto !important;
       }
     }
 
