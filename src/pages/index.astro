@@ -6082,14 +6082,17 @@ const getPreviewExcerpt = (content: string) =>
     }
 
     /*
-     * MOBILE HOMEPAGE: skip the cinematic opening entirely.
-     * The featured essay becomes the first visible section on phones.
+     * MOBILE HOMEPAGE: skip only the cinematic intro curtain.
+     * Keep the opening hero and its title area visible on phones.
      * Desktop presentation is unaffected.
      */
     @media (max-width: 600px) {
-      .opening-scene,
       .intro-curtain {
         display: none !important;
+      }
+
+      .opening-scene {
+        display: block !important;
       }
 
       :global(html.intro-active),
