@@ -6082,11 +6082,12 @@ const getPreviewExcerpt = (content: string) =>
     }
 
     /*
-     * MOBILE HOMEPAGE: show the brown editorial opening on phones too.
-     * Keep it in normal document flow with the lightweight mobile styling
-     * above; the one-time full-screen intro curtain remains desktop-only.
+     * MOBILE HOMEPAGE: skip the cinematic opening entirely.
+     * The featured essay becomes the first visible section on phones.
+     * Desktop presentation is unaffected.
      */
     @media (max-width: 600px) {
+      .opening-scene,
       .intro-curtain {
         display: none !important;
       }
@@ -6885,5 +6886,36 @@ const getPreviewExcerpt = (content: string) =>
       }
     }
 
-  </style>
+  
+
+    /* MOBILE MASTHEAD FIX
+       Hide the wordmark only on phones and give About and the imprint
+       separate, non-overlapping positions. Desktop remains unchanged. */
+    @media (max-width: 600px) {
+      .opening-topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .opening-publication {
+        display: none !important;
+      }
+
+      .opening-about-link {
+        flex: 0 0 auto;
+        margin-left: 0 !important;
+        align-self: center;
+        font-size: 8px;
+        letter-spacing: 1.2px;
+      }
+
+      .opening-imprint {
+        flex: 0 0 auto;
+        margin-left: auto;
+        padding-left: 12px;
+      }
+    }
+</style>
 </html>
