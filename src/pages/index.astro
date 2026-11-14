@@ -6899,7 +6899,9 @@ const getPreviewExcerpt = (content: string) =>
         gap: 12px;
       }
 
-      .opening-publication {
+      /* Hide only the decorative monogram artwork on phones.
+         Keep the brown opening/hero area and its publication title intact. */
+      .opening-art {
         display: none !important;
       }
 
