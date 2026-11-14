@@ -751,6 +751,9 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     marginaliaNotes.replaceChildren();
 
     const noteElements: HTMLElement[] = [];
+    const isMobile = () => window.matchMedia("(max-width: 760px)").matches;
+    let activeMobileMarker: HTMLButtonElement | null = null;
+
     const activate = (index: number) => {
       noteElements.forEach((note, i) =>
         note.classList.toggle("is-active", i === index),
@@ -765,6 +768,107 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
         );
     };
 
+    // One shared, anchored popup serves all annotation markers on mobile.
+    // The desktop right-rail notes continue to use the original interaction.
+    const popup = document.createElement("section");
+    popup.id = "marginalia-mobile-popup";
+    popup.className = "marginalia-mobile-popup";
+    popup.hidden = true;
+    popup.setAttribute("role", "dialog");
+    popup.setAttribute("aria-modal", "false");
+    popup.setAttribute("aria-label", "Marginal note");
+
+    const popupContent = document.createElement("div");
+    popupContent.className = "marginalia-mobile-popup__content";
+
+    const popupClose = document.createElement("button");
+    popupClose.type = "button";
+    popupClose.className = "marginalia-mobile-popup__close";
+    popupClose.setAttribute("aria-label", "Close marginal note");
+    popupClose.textContent = "×";
+
+    popup.append(popupContent, popupClose);
+    document.body.append(popup);
+
+    const positionPopup = () => {
+      if (!activeMobileMarker || popup.hidden) return;
+
+      const rect = activeMobileMarker.getBoundingClientRect();
+      const width = Math.min(340, window.innerWidth - 32);
+      const left = Math.max(
+        16,
+        Math.min(
+          rect.left + rect.width / 2 - width / 2,
+          window.innerWidth - width - 16,
+        ),
+      );
+      const estimatedHeight = popup.offsetHeight || 190;
+      const below = rect.bottom + 12;
+      const top =
+        below + estimatedHeight <= window.innerHeight - 12
+          ? below
+          : Math.max(12, rect.top - estimatedHeight - 12);
+
+      popup.style.setProperty("--popup-left", `${left}px`);
+      popup.style.setProperty("--popup-top", `${top}px`);
+    };
+
+    const closePopup = () => {
+      if (popup.hidden) return;
+      popup.hidden = true;
+      popup.classList.remove("is-open");
+      activeMobileMarker?.setAttribute("aria-expanded", "false");
+      activeMobileMarker = null;
+      activate(-1);
+    };
+
+    popupClose.addEventListener("click", closePopup);
+
+    document.addEventListener("pointerdown", (event) => {
+      if (popup.hidden || !isMobile()) return;
+      const target = event.target;
+      if (
+        target instanceof Node &&
+        !popup.contains(target) &&
+        !(target instanceof Element && target.closest(".marginalia-marker"))
+      ) {
+        closePopup();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !popup.hidden) {
+        const marker = activeMobileMarker;
+        closePopup();
+        marker?.focus();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (popup.hidden) return;
+      if (!isMobile()) closePopup();
+      else positionPopup();
+    });
+
+    const openPopup = (index: number, marker: HTMLButtonElement) => {
+      const note = noteElements[index];
+      if (!note) return;
+
+      if (activeMobileMarker === marker && !popup.hidden) {
+        closePopup();
+        return;
+      }
+
+      activeMobileMarker?.setAttribute("aria-expanded", "false");
+      activeMobileMarker = marker;
+      popupContent.replaceChildren(note.cloneNode(true));
+      popup.hidden = false;
+      popup.classList.add("is-open");
+      marker.setAttribute("aria-expanded", "true");
+      activate(index);
+      positionPopup();
+    };
+
     const makeMarker = (index: number, note: Annotation) => {
       const marker = document.createElement("button");
       marker.type = "button";
@@ -775,17 +879,31 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
         "aria-label",
         `Open marginal note ${index + 1}: ${note.title}`,
       );
-      marker.setAttribute("aria-controls", `marginalia-note-${index + 1}`);
-      marker.addEventListener("mouseenter", () => activate(index));
-      marker.addEventListener("focus", () => activate(index));
-      marker.addEventListener("mouseleave", () => activate(-1));
-      marker.addEventListener("blur", () => activate(-1));
+      marker.setAttribute("aria-controls", "marginalia-mobile-popup");
+      marker.setAttribute("aria-expanded", "false");
+
+      marker.addEventListener("mouseenter", () => {
+        if (!isMobile()) activate(index);
+      });
+      marker.addEventListener("focus", () => {
+        if (!isMobile()) activate(index);
+      });
+      marker.addEventListener("mouseleave", () => {
+        if (!isMobile()) activate(-1);
+      });
+      marker.addEventListener("blur", () => {
+        if (!isMobile()) activate(-1);
+      });
       marker.addEventListener("click", () => {
-        activate(index);
-        noteElements[index]?.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-        });
+        if (isMobile()) {
+          openPopup(index, marker);
+        } else {
+          activate(index);
+          noteElements[index]?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+          });
+        }
       });
       return marker;
     };
@@ -878,9 +996,16 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
         card.append(source);
       }
 
-      card.addEventListener("mouseenter", () => activate(index));
-      card.addEventListener("focusin", () => activate(index));
-      card.addEventListener("mouseleave", () => activate(-1));
+      card.addEventListener("mouseenter", () => {
+        if (!isMobile()) activate(index);
+      });
+      card.addEventListener("focusin", () => {
+        if (!isMobile()) activate(index);
+      });
+      card.addEventListener("mouseleave", () => {
+        if (!isMobile()) activate(-1);
+      });
+
       const marker = makeMarker(index, note);
       const inserted = insertMarkerAfterPhrase(note.anchor, marker);
       if (inserted) {
@@ -2929,4 +3054,71 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
       line-height: 1.8;
     }
   }
+
+  /* MOBILE MARGINALIA: hide the stacked rail and show notes in a contextual popover. */
+  @media (max-width: 760px) {
+    .marginalia-sidebar {
+      display: none !important;
+    }
+  }
+
+  :global(.marginalia-mobile-popup) {
+    position: fixed;
+    z-index: 10000;
+    left: var(--popup-left, 16px);
+    top: var(--popup-top, 16px);
+    width: min(340px, calc(100vw - 32px));
+    max-height: min(55vh, 360px);
+    overflow-y: auto;
+    padding: 19px 42px 19px 20px;
+    border: 1px solid #d8cbb8;
+    background: #f8f1e5;
+    box-shadow: 0 12px 34px rgba(48, 37, 25, 0.18);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 160ms ease, transform 160ms ease;
+  }
+
+  :global(.marginalia-mobile-popup[hidden]) {
+    display: none !important;
+  }
+
+  :global(.marginalia-mobile-popup.is-open) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  :global(.marginalia-mobile-popup__content .marginalia-note) {
+    padding: 0;
+    color: #4c463e;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 12px;
+    line-height: 1.85;
+  }
+
+  :global(.marginalia-mobile-popup__close) {
+    position: absolute;
+    top: 7px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #8a5a43;
+    font: 24px/1 "DM Sans", sans-serif;
+    cursor: pointer;
+  }
+
+  :global(.marginalia-mobile-popup__close:focus-visible) {
+    outline: 1px solid #a64d36;
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.marginalia-mobile-popup) {
+      transition: none;
+    }
+  }
+
 </style>
