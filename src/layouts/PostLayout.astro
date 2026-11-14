@@ -9,6 +9,10 @@ interface Props {
   pubDate: Date;
 
   category: string;
+  sections?: {
+    title: string;
+    anchor: string;
+  }[];
   annotations?: {
     anchor: string;
     kind: string;
@@ -18,7 +22,14 @@ interface Props {
   }[];
 }
 
-const { title, description, pubDate, category, annotations = [] } = Astro.props;
+const {
+  title,
+  description,
+  pubDate,
+  category,
+  sections = [],
+  annotations = [],
+} = Astro.props;
 
 const isPoetry = category.trim().toLowerCase() === "poetry";
 
@@ -137,7 +148,10 @@ const editorialSectionsByPost: Record<
   ],
 };
 
-const editorialSections = editorialSectionsByPost[currentId] ?? [];
+const editorialSections =
+  sections.length > 0
+    ? sections
+    : editorialSectionsByPost[currentId] ?? [];
 
 const allPosts = (await getCollection("posts"))
 
