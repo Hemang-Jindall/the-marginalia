@@ -1262,15 +1262,21 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     margin-top: 54px;
   }
 
-  /* Collapse unused rails instead of leaving their grid tracks behind. */
+  /* Build only the columns that have real content. The section-index aside
+     remains in the markup for every post, so remove it from layout when its
+     generated table of contents is empty. */
+  .reading-layout:not(.has-index) > .section-index {
+    display: none;
+  }
+
   .reading-layout:not(.has-index):not(.has-notes) {
     grid-template-columns: minmax(0, 760px);
     justify-content: center;
   }
 
   .reading-layout:not(.has-index).has-notes {
-    grid-template-columns: minmax(0, 760px) minmax(300px, 340px);
-    column-gap: clamp(42px, 4.2vw, 64px);
+    grid-template-columns: minmax(0, 760px) minmax(210px, 260px);
+    column-gap: clamp(26px, 3.4vw, 54px);
     justify-content: center;
   }
 
@@ -1498,23 +1504,40 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
   @media (max-width: 1050px) {
     .reading-layout {
-      grid-template-columns: minmax(0, 1fr) minmax(240px, 290px);
-      column-gap: 30px;
+      column-gap: 22px;
     }
-    .reading-layout:not(.has-notes) {
+
+    /* No index and no notes: keep the essay in one centred column. */
+    .reading-layout:not(.has-index):not(.has-notes) {
+      grid-template-columns: minmax(0, 700px);
+      justify-content: center;
+    }
+
+    /* Notes without an index: article plus notes, with no phantom left rail. */
+    .reading-layout:not(.has-index).has-notes {
+      grid-template-columns: minmax(0, 1fr) minmax(210px, 250px);
+      justify-content: center;
+    }
+
+    /* Index without notes: the two columns are intentional. */
+    .reading-layout.has-index:not(.has-notes) {
       grid-template-columns: minmax(125px, 165px) minmax(0, 700px);
       justify-content: center;
     }
+
+    /* Keep all three columns only when all three contain content. */
+    .reading-layout.has-index.has-notes {
+      grid-template-columns:
+        minmax(125px, 165px)
+        minmax(0, 1fr)
+        minmax(210px, 250px);
+      column-gap: 22px;
+    }
+
     .reading-layout > article {
       max-width: 700px;
     }
-    .reading-layout.has-notes {
-      grid-template-columns: minmax(125px, 165px) minmax(0, 1fr) minmax(
-          210px,
-          250px
-        );
-      column-gap: 22px;
-    }
+
     .section-index {
       display: block;
       padding-right: 14px;
@@ -1535,6 +1558,10 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
       padding: 0 0 22px;
       border-right: 0;
       border-bottom: 1px solid #dcd6ca;
+    }
+
+    .reading-layout:not(.has-index) > .section-index {
+      display: none;
     }
     .section-index-toc {
       margin-top: 22px;
