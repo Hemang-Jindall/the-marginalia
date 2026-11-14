@@ -1,3 +1,4 @@
+
 ---
 title: "Where Are Daisies When Sunflowers Are Ablaze?"
 description: "An experimental work of philosophical fiction exploring novelty, change, suffering, stasis, loneliness, and the pursuit of truth through the journey of a man named Aden."
@@ -28,21 +29,21 @@ What remains, if not this uneasy silence? Death is a stalker, and it doesn’t b
 
 Green days of glee passed by as the singers nipped their lips shut. These lives of litter were meant not for thee. The deaths of our children were sent by the shepherds of the true spirit, singing among their children. The long before, to come forward. The long end, to last forever. The singers, long forgotten, their reality now conspicuous. What once was a jovial crowd had always been a patch of dry grassland.
 
-Belittling are thoughts  
-When comparison erupts  
-Do remember their words  
-It’s the other’s thinking  
-Which is naught
+*Belittling are thoughts*  
+*When comparison erupts*  
+*Do remember their words*  
+*It’s the other’s thinking*  
+*Which is naught*
 
 Stasis isn’t meant for the soul; a bereaved mother must always learn to live within a desert. A desert, not sought after, but formulated through considerable depth of character. This desert of sorrowless joy, of emptiness far beyond mental endurance, is where peace meets apathy. The brain, seeking absolute righteousness, prevails in all forms, optimising incongruity. Which reality must the mother look after, then? One without a child, or the one without childlessness? Alas, there is an argument within the argument. Stasis is for the good of the soul; death is a fact only as long as one lives. What runs through our hero’s mind? He is shattered, thinking of locomotion. The words change; the emotions stay. Words are quibbling with themselves, life singing for itself. What comes with thought? A choice already made. What comes with tomorrow? Today.
 
-Pearlescent days of glee  
-Come for thee  
-Must you stay?  
-Darkness answers some days  
-A joy forever bleak on others  
-Are you truly free when there’s  
-Always a need for you to be?
+*Pearlescent days of glee*  
+*Come for thee*  
+*Must you stay?*  
+*Darkness answers some days*  
+*A joy forever bleak on others*  
+*Are you truly free when there’s*  
+*Always a need for you to be?*
 
 You break the walls around you to become one without peace. Whatever can be demolished must be demolished. This epidemic of loneliness is still not so crucial, in the end. You lose your inhibitions, and you lose your sense of rites. Whatever stays is a lingering need for unchanging growth. Ever-present familiarity shall melt your heart, in the end.
 
@@ -54,12 +55,11 @@ And thus the walk began, fraught with granules of empiricism. Wherever you look,
 
 The ringing didn’t stop. Aden kept walking until his feet felt numb and his legs screamed with agonising crucifixion. As willpower balked in front of necessity, he drew close to a fenced-off alleyway. The door was left open; inside, a dog was barking out its prayers.
 
-Forever I must seek  
-Forever I am reek  
-The greatest dungeonmaster  
-The owner of no keys  
-Singing among other things  
-La belle vie
+*Forever I must seek*  
+*Forever I am reek*  
+*The greatest dungeonmaster*  
+*The owner of no keys*  
+*Singing among other things*  
+*La belle vie*
 
 As writers of art, it is our duty to be just. To value our perceived facts and devalue those which aren’t. Whenever that thought has come to me during the writing of this excerpt, I have beseeched my mind for needs of pretension, safety, whatever you might wanna call it. Truth be told, I’ll say it out loud. I have been martyred to narrative incoherence.
-
