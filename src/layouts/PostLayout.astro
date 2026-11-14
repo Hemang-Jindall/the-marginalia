@@ -1018,6 +1018,20 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     if (!marginaliaNotes.children.length)
       marginaliaSidebar.classList.add("is-empty");
+
+    // Hide the original stacked rail at the DOM level on mobile as well as
+    // in CSS. This prevents the desktop notes column from reappearing if
+    // mobile styles are delayed or overridden by another layout rule.
+    const syncMobileSidebar = () => {
+      if (isMobile()) {
+        marginaliaSidebar.style.setProperty("display", "none", "important");
+      } else {
+        marginaliaSidebar.style.removeProperty("display");
+      }
+    };
+
+    syncMobileSidebar();
+    window.addEventListener("resize", syncMobileSidebar, { passive: true });
   } else if (marginaliaSidebar) {
     marginaliaSidebar.classList.add("is-empty");
   }
@@ -3082,9 +3096,9 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     }
   }
 
-  /* MOBILE MARGINALIA: hide the stacked rail and show notes in a contextual popover. */
+  /* MOBILE MARGINALIA: hide the stacked rail and use the contextual popover. */
   @media (max-width: 760px) {
-    .marginalia-sidebar {
+    :global(#marginalia-sidebar) {
       display: none !important;
     }
   }
