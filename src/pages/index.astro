@@ -6846,5 +6846,45 @@ const getPreviewExcerpt = (content: string) =>
         transition: none !important;
       }
     }
+
+
+    /*
+     * MOBILE PERFORMANCE OVERRIDES
+     * Keep the paper palette, but avoid a viewport-fixed SVG turbulence layer
+     * and multi-layer fixed background blending on touch devices.
+     */
+    @media (max-width: 600px) {
+      .page::after {
+        display: none !important;
+        animation: none !important;
+        will-change: auto !important;
+      }
+
+      :global(body) {
+        background-attachment: scroll !important;
+        background-blend-mode: normal !important;
+        background-image:
+          radial-gradient(
+            ellipse at 12% 16%,
+            rgba(132, 91, 52, 0.13),
+            transparent 43%
+          ),
+          radial-gradient(
+            ellipse at 86% 74%,
+            rgba(157, 94, 57, 0.1),
+            transparent 46%
+          );
+        background-repeat: no-repeat;
+        background-size: 100% 100%, 100% 100%;
+      }
+
+      /* Avoid reserving compositor layers for every poem card on phones. */
+      .poetry-heading,
+      .poetry-controls,
+      .poem-card {
+        will-change: auto;
+      }
+    }
+
   </style>
 </html>
