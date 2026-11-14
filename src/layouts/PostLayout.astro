@@ -708,16 +708,97 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
       .closest(".section-index-toc")
       ?.classList.toggle("is-empty", targets.length === 0);
 
+    // On mobile, replace the stacked section rail with a compact contents sheet.
+    if (targets.length && readingLayout) {
+      const contentsToggle = document.createElement("button");
+      contentsToggle.type = "button";
+      contentsToggle.className = "mobile-contents-toggle";
+      contentsToggle.textContent = "In this essay  ↓";
+      contentsToggle.setAttribute("aria-expanded", "false");
+      contentsToggle.setAttribute("aria-controls", "mobile-contents-popup");
+
+      const contentsPopup = document.createElement("section");
+      contentsPopup.id = "mobile-contents-popup";
+      contentsPopup.className = "mobile-contents-popup";
+      contentsPopup.hidden = true;
+      contentsPopup.setAttribute("role", "dialog");
+      contentsPopup.setAttribute("aria-modal", "false");
+      contentsPopup.setAttribute("aria-label", "Contents");
+
+      const contentsClose = document.createElement("button");
+      contentsClose.type = "button";
+      contentsClose.className = "mobile-contents-popup__close";
+      contentsClose.textContent = "×";
+      contentsClose.setAttribute("aria-label", "Close contents");
+
+      const contentsHeading = document.createElement("p");
+      contentsHeading.className = "mobile-contents-popup__heading";
+      contentsHeading.textContent = "IN THIS ESSAY";
+
+      const contentsLinks = document.createElement("nav");
+      contentsLinks.className = "mobile-contents-popup__links";
+      contentsLinks.setAttribute("aria-label", "Essay sections");
+      Array.from(sectionIndex.children).forEach((item) => {
+        contentsLinks.appendChild(item.cloneNode(true));
+      });
+
+      contentsPopup.append(contentsClose, contentsHeading, contentsLinks);
+      readingLayout.insertBefore(contentsToggle, readingLayout.firstChild);
+      document.body.appendChild(contentsPopup);
+
+      const closeContentsPopup = (restoreFocus = false) => {
+        contentsPopup.hidden = true;
+        contentsToggle.setAttribute("aria-expanded", "false");
+        if (restoreFocus) contentsToggle.focus();
+      };
+
+      contentsToggle.addEventListener("click", () => {
+        const opening = contentsPopup.hidden;
+        contentsPopup.hidden = !opening;
+        contentsToggle.setAttribute("aria-expanded", String(opening));
+        if (opening) contentsClose.focus();
+      });
+
+      contentsClose.addEventListener("click", () => closeContentsPopup(true));
+      contentsLinks.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => closeContentsPopup());
+      });
+
+      document.addEventListener("pointerdown", (event) => {
+        const target = event.target;
+        if (
+          !contentsPopup.hidden &&
+          target instanceof Node &&
+          !contentsPopup.contains(target) &&
+          !contentsToggle.contains(target)
+        ) {
+          closeContentsPopup();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !contentsPopup.hidden) {
+          closeContentsPopup(true);
+        }
+      });
+    }
+
     if (targets.length && "IntersectionObserver" in window) {
       const links = Array.from(
         sectionIndex.querySelectorAll<HTMLAnchorElement>("a"),
+      );
+      const mobileLinks = Array.from(
+        document.querySelectorAll<HTMLAnchorElement>(
+          "#mobile-contents-popup a",
+        ),
       );
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (!entry.isIntersecting) return;
-            links.forEach((link) => {
-              const active = link.hash === `#${entry.target.id}`;
+            const activeHash = `#${entry.target.id}`;
+            [...links, ...mobileLinks].forEach((link) => {
+              const active = link.hash === activeHash;
               link.classList.toggle("is-active", active);
               if (active) link.setAttribute("aria-current", "location");
               else link.removeAttribute("aria-current");
@@ -1018,20 +1099,6 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 
     if (!marginaliaNotes.children.length)
       marginaliaSidebar.classList.add("is-empty");
-
-    // Hide the original stacked rail at the DOM level on mobile as well as
-    // in CSS. This prevents the desktop notes column from reappearing if
-    // mobile styles are delayed or overridden by another layout rule.
-    const syncMobileSidebar = () => {
-      if (isMobile()) {
-        marginaliaSidebar.style.setProperty("display", "none", "important");
-      } else {
-        marginaliaSidebar.style.removeProperty("display");
-      }
-    };
-
-    syncMobileSidebar();
-    window.addEventListener("resize", syncMobileSidebar, { passive: true });
   } else if (marginaliaSidebar) {
     marginaliaSidebar.classList.add("is-empty");
   }
@@ -1562,44 +1629,21 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     .reading-layout {
       display: flex;
       flex-direction: column;
-      gap: 42px;
+      gap: 0;
       margin-top: 42px;
     }
-    .section-index {
-      position: static;
-      order: -1;
-      width: 100%;
-      padding: 0 0 22px;
-      border-right: 0;
-      border-bottom: 1px solid #dcd6ca;
+
+    :global(.section-index),
+    :global(#marginalia-sidebar) {
+      display: none !important;
     }
 
-    .reading-layout:not(.has-index) > .section-index {
-      display: none;
-    }
-    .section-index-toc {
-      margin-top: 22px;
-    }
-    .section-index-toc.is-empty {
-      display: none;
-    }
     .reading-layout > article {
       order: 0;
     }
-    .marginalia-sidebar {
-      position: static;
-      order: 1;
-      width: 100%;
-      min-height: 0;
-      padding: 24px 0 0;
-      border-top: 1px solid #dcd6ca;
-      border-left: 0;
-    }
-    .marginalia-sidebar .rail-eyebrow {
-      margin-bottom: 18px;
-    }
-    .marginalia-notes .footnotes li {
-      margin-bottom: 20px;
+
+    :global(.mobile-contents-toggle) {
+      display: flex;
     }
   }
 
@@ -3096,11 +3140,76 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
     }
   }
 
-  /* MOBILE MARGINALIA: hide the stacked rail and use the contextual popover. */
-  @media (max-width: 760px) {
-    :global(#marginalia-sidebar) {
-      display: none !important;
-    }
+  /* MOBILE CONTENTS: replace the stacked section rail with a compact popup. */
+  :global(.mobile-contents-toggle) {
+    display: none;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 0;
+    margin: 0 0 10px;
+    border: 0;
+    border-bottom: 1px solid #dcd6ca;
+    background: transparent;
+    color: #a64d36;
+    font-family: "DM Sans", sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    text-align: left;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  :global(.mobile-contents-popup) {
+    position: fixed;
+    z-index: 10001;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    width: auto;
+    max-width: 460px;
+    max-height: min(65vh, 500px);
+    overflow-y: auto;
+    margin: 0 auto;
+    padding: 25px;
+    border: 1px solid #d8cbb8;
+    background: #f8f1e5;
+    box-shadow: 0 12px 34px rgba(48, 37, 25, 0.18);
+  }
+
+  :global(.mobile-contents-popup[hidden]) {
+    display: none !important;
+  }
+
+  :global(.mobile-contents-popup__heading) {
+    margin: 0 0 22px;
+    color: #a64d36;
+    font-family: "DM Sans", sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  :global(.mobile-contents-popup__close) {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    border: 0;
+    background: transparent;
+    color: #8a5a43;
+    font-size: 25px;
+    cursor: pointer;
+  }
+
+  :global(.mobile-contents-toggle:focus-visible),
+  :global(.mobile-contents-popup__close:focus-visible) {
+    outline: 1px solid #a64d36;
+    outline-offset: 3px;
+  }
+
+  :global(.mobile-contents-popup__links .section-index-item) {
+    margin-bottom: 13px;
   }
 
   :global(.marginalia-mobile-popup) {
