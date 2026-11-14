@@ -6,6 +6,7 @@ pubDate: "2026-11-14"
 category: "Fiction"
 draft: false
 
+pinned: true
 sections:
   - title: "I. The Arrival of Novelty"
     anchor: "Novelty hit the convergence"

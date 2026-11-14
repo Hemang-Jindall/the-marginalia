@@ -3,7 +3,7 @@ title: "Of Numbers, Souls, and Silence"
 description: "A philosophical exploration of Pythagoras, his ideas, and the curious story of the man who bit a snake."
 pubDate: 2025-08-05
 category: "Philosophy"
-pinned: true
+pinned: false
 draft: false
 sections:
   - title: "I. The Measure of Things"
